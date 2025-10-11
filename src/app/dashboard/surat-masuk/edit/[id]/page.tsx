@@ -2,7 +2,7 @@
 
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, use } from 'react'
 import Link from 'next/link'
 import { Save, X, ArrowLeft } from 'lucide-react'
 
@@ -22,7 +22,7 @@ interface SuratMasuk {
 }
 
 interface PageProps {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }
 
 export default function EditSuratMasukPage({ params }: PageProps) {
@@ -32,6 +32,7 @@ export default function EditSuratMasukPage({ params }: PageProps) {
   const [fetchLoading, setFetchLoading] = useState(true)
   const [error, setError] = useState('')
   const [surat, setSurat] = useState<SuratMasuk | null>(null)
+  const resolvedParams = use(params)
   const [formData, setFormData] = useState({
     nomorSurat: '',
     tanggalSurat: '',
@@ -50,15 +51,15 @@ export default function EditSuratMasukPage({ params }: PageProps) {
   }, [status, session, router])
 
   useEffect(() => {
-    if (session && params.id) {
+    if (session && resolvedParams.id) {
       fetchSuratData()
     }
-  }, [session, params.id])
+  }, [session, resolvedParams.id])
 
   const fetchSuratData = async () => {
     try {
       setFetchLoading(true)
-      const response = await fetch(`/api/surat-masuk/${params.id}`)
+      const response = await fetch(`/api/surat-masuk/${resolvedParams.id}`)
       
       if (response.ok) {
         const data = await response.json()
@@ -100,7 +101,7 @@ export default function EditSuratMasukPage({ params }: PageProps) {
     setError('')
 
     try {
-      const response = await fetch(`/api/surat-masuk/${params.id}`, {
+      const response = await fetch(`/api/surat-masuk/${resolvedParams.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

@@ -2,7 +2,7 @@
 
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, use } from 'react'
 import Link from 'next/link'
 import { 
   ArrowLeft, 
@@ -50,7 +50,7 @@ interface SuratMasuk {
 }
 
 interface PageProps {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }
 
 export default function SuratMasukDetailPage({ params }: PageProps) {
@@ -59,6 +59,7 @@ export default function SuratMasukDetailPage({ params }: PageProps) {
   const [surat, setSurat] = useState<SuratMasuk | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const resolvedParams = use(params)
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -67,15 +68,15 @@ export default function SuratMasukDetailPage({ params }: PageProps) {
   }, [status, router])
 
   useEffect(() => {
-    if (session && params.id) {
+    if (session && resolvedParams.id) {
       fetchSuratDetail()
     }
-  }, [session, params.id])
+  }, [session, resolvedParams.id])
 
   const fetchSuratDetail = async () => {
     try {
       setLoading(true)
-      const response = await fetch(`/api/surat-masuk/${params.id}`)
+      const response = await fetch(`/api/surat-masuk/${resolvedParams.id}`)
       
       if (response.ok) {
         const data = await response.json()
