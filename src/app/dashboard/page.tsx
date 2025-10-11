@@ -197,7 +197,7 @@ export default function DashboardPage() {
           {session.user.role === 'ADMIN' && (
             <div className="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden">
               <div className="bg-gradient-to-r from-slate-50 to-blue-50 px-6 py-4 border-b border-slate-200">
-                <h3 className="text-lg font-semibold text-slate-800 flex items-center">
+                <h3 className="text-lg font-semibold text-gray-900 flex items-center">
                   <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-lg flex items-center justify-center mr-3">
                     <Plus className="h-4 w-4 text-white" />
                   </div>
@@ -250,7 +250,7 @@ export default function DashboardPage() {
           {/* Recent Activity */}
           <div className="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden">
             <div className="bg-gradient-to-r from-slate-50 to-emerald-50 px-6 py-4 border-b border-slate-200">
-              <h3 className="text-lg font-semibold text-slate-800 flex items-center">
+              <h3 className="text-lg font-semibold text-gray-900 flex items-center">
                 <div className="w-8 h-8 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-lg flex items-center justify-center mr-3">
                   <Clock className="h-4 w-4 text-white" />
                 </div>
@@ -299,3 +299,4 @@ export default function DashboardPage() {
     </DashboardLayout>
   )
 }
+

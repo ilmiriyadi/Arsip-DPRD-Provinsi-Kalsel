@@ -202,7 +202,7 @@ export default function EditSuratMasukPage({ params }: PageProps) {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="nomorSurat" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="nomorSurat" className="block text-sm font-medium text-gray-900 mb-2">
                     Nomor Surat <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -212,13 +212,13 @@ export default function EditSuratMasukPage({ params }: PageProps) {
                     value={formData.nomorSurat}
                     onChange={handleChange}
                     required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                     placeholder="Contoh: SM/001/X/2024"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="tanggalSurat" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="tanggalSurat" className="block text-sm font-medium text-gray-900 mb-2">
                     Tanggal Surat <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -228,13 +228,13 @@ export default function EditSuratMasukPage({ params }: PageProps) {
                     value={formData.tanggalSurat}
                     onChange={handleChange}
                     required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                   />
                 </div>
               </div>
 
               <div>
-                <label htmlFor="asalSurat" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="asalSurat" className="block text-sm font-medium text-gray-900 mb-2">
                   Asal Surat <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -244,13 +244,13 @@ export default function EditSuratMasukPage({ params }: PageProps) {
                   value={formData.asalSurat}
                   onChange={handleChange}
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                   placeholder="Contoh: Dinas Pendidikan Kota"
                 />
               </div>
 
               <div>
-                <label htmlFor="perihal" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="perihal" className="block text-sm font-medium text-gray-900 mb-2">
                   Perihal <span className="text-red-500">*</span>
                 </label>
                 <textarea
@@ -260,13 +260,13 @@ export default function EditSuratMasukPage({ params }: PageProps) {
                   onChange={handleChange}
                   required
                   rows={3}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                   placeholder="Jelaskan perihal atau subjek surat..."
                 />
               </div>
 
               <div>
-                <label htmlFor="keterangan" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="keterangan" className="block text-sm font-medium text-gray-900 mb-2">
                   Keterangan
                 </label>
                 <textarea
@@ -275,13 +275,13 @@ export default function EditSuratMasukPage({ params }: PageProps) {
                   value={formData.keterangan}
                   onChange={handleChange}
                   rows={3}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                   placeholder="Catatan atau keterangan tambahan (opsional)"
                 />
               </div>
 
               <div>
-                <label htmlFor="filePath" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="filePath" className="block text-sm font-medium text-gray-900 mb-2">
                   Path File
                 </label>
                 <input
@@ -290,7 +290,7 @@ export default function EditSuratMasukPage({ params }: PageProps) {
                   name="filePath"
                   value={formData.filePath}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                   placeholder="Path file dokumen surat (opsional)"
                 />
               </div>
@@ -308,7 +308,7 @@ export default function EditSuratMasukPage({ params }: PageProps) {
             <div className="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
               <Link
                 href="/dashboard/surat-masuk"
-                className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+                className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-900 bg-white hover:bg-gray-50"
               >
                 <X className="h-4 w-4 mr-2" />
                 Batal

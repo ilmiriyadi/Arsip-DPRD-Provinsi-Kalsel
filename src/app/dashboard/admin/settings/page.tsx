@@ -250,7 +250,7 @@ export default function SettingsPage() {
                       value={profileData.name}
                       onChange={handleProfileChange}
                       required
-                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                     />
                   </div>
                 </div>
@@ -268,7 +268,7 @@ export default function SettingsPage() {
                       value={profileData.email}
                       onChange={handleProfileChange}
                       required
-                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                     />
                   </div>
                 </div>
@@ -292,7 +292,7 @@ export default function SettingsPage() {
                         name="newPassword"
                         value={profileData.newPassword}
                         onChange={handleProfileChange}
-                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                         placeholder="Kosongkan jika tidak ingin mengubah password"
                       />
                     </div>
@@ -312,7 +312,7 @@ export default function SettingsPage() {
                           value={profileData.confirmPassword}
                           onChange={handleProfileChange}
                           required={!!profileData.newPassword}
-                          className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                           placeholder="Ulangi password baru"
                         />
                       </div>
@@ -406,3 +406,4 @@ export default function SettingsPage() {
     </div>
   )
 }
+

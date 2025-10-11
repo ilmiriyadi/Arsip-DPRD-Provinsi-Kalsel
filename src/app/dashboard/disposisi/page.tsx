@@ -225,7 +225,7 @@ export default function DisposisiPage() {
         {/* Search and Filter */}
         <div className="bg-white rounded-2xl shadow-xl border border-slate-200 mb-8 overflow-hidden">
           <div className="bg-gradient-to-r from-slate-50 to-emerald-50 px-6 py-4 border-b border-slate-200">
-            <h3 className="text-lg font-semibold text-slate-800 flex items-center">
+            <h3 className="text-lg font-semibold text-gray-900 flex items-center">
               <div className="w-8 h-8 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-lg flex items-center justify-center mr-3">
                 <Filter className="h-4 w-4 text-white" />
               </div>
@@ -339,7 +339,7 @@ export default function DisposisiPage() {
                   <ClipboardList className="w-4 h-4 text-white" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-slate-800">
+                  <h3 className="text-lg font-semibold text-gray-900">
                     Daftar Disposisi
                   </h3>
                   {pagination.total > 0 && (
@@ -443,13 +443,13 @@ export default function DisposisiPage() {
                                 {index + 1 + (pagination.page - 1) * 10}
                               </div>
                               <div>
-                                <div className="font-semibold text-slate-800">#{disposisi.noUrut}</div>
+                                <div className="font-semibold text-gray-900">#{disposisi.noUrut}</div>
                               </div>
                             </div>
                           </td>
                           <td className="px-6 py-4">
                             <div className="max-w-xs">
-                              <div className="font-semibold text-slate-800 mb-1">{disposisi.suratMasuk.nomorSurat}</div>
+                              <div className="font-semibold text-gray-900 mb-1">{disposisi.suratMasuk.nomorSurat}</div>
                               <div className="text-slate-600 text-sm line-clamp-2" title={disposisi.suratMasuk.perihal}>
                                 {disposisi.suratMasuk.perihal}
                               </div>
@@ -545,7 +545,7 @@ export default function DisposisiPage() {
                     <div className="flex items-center space-x-2">
                       <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
                       <p className="text-sm font-medium text-slate-600">
-                        Menampilkan <span className="font-bold text-slate-800">{(pagination.page - 1) * pagination.limit + 1}</span> - <span className="font-bold text-slate-800">{Math.min(pagination.page * pagination.limit, pagination.total)}</span> dari <span className="font-bold text-slate-800">{pagination.total}</span> disposisi
+                        Menampilkan <span className="font-bold text-gray-900">{(pagination.page - 1) * pagination.limit + 1}</span> - <span className="font-bold text-gray-900">{Math.min(pagination.page * pagination.limit, pagination.total)}</span> dari <span className="font-bold text-gray-900">{pagination.total}</span> disposisi
                       </p>
                     </div>
                     <div className="flex items-center space-x-2">
@@ -579,3 +579,4 @@ export default function DisposisiPage() {
     </DashboardLayout>
   )
 }
+

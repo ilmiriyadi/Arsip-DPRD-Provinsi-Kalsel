@@ -218,7 +218,7 @@ export default function EditDisposisiPage() {
             <div className="flex items-center space-x-4">
               <Link
                 href={`/dashboard/disposisi/${id}`}
-                className="inline-flex items-center text-gray-500 hover:text-gray-700"
+                className="inline-flex items-center text-gray-500 hover:text-gray-900"
               >
                 <ArrowLeft className="h-5 w-5 mr-1" />
                 Kembali
@@ -257,7 +257,7 @@ export default function EditDisposisiPage() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <label htmlFor="noUrut" className="block text-sm font-medium text-gray-700 mb-2">
+                      <label htmlFor="noUrut" className="block text-sm font-medium text-gray-900 mb-2">
                         No Urut <span className="text-red-500">*</span>
                       </label>
                       <input
@@ -278,7 +278,7 @@ export default function EditDisposisiPage() {
                     </div>
 
                     <div>
-                      <label htmlFor="tanggalDisposisi" className="block text-sm font-medium text-gray-700 mb-2">
+                      <label htmlFor="tanggalDisposisi" className="block text-sm font-medium text-gray-900 mb-2">
                         <Calendar className="inline h-4 w-4 mr-1" />
                         Tanggal Disposisi <span className="text-red-500">*</span>
                       </label>
@@ -289,13 +289,13 @@ export default function EditDisposisiPage() {
                         value={formData.tanggalDisposisi}
                         onChange={handleChange}
                         required
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label htmlFor="suratMasukId" className="block text-sm font-medium text-gray-700 mb-2">
+                    <label htmlFor="suratMasukId" className="block text-sm font-medium text-gray-900 mb-2">
                       <FileText className="inline h-4 w-4 mr-1" />
                       Surat Masuk Terkait <span className="text-red-500">*</span>
                     </label>
@@ -305,7 +305,7 @@ export default function EditDisposisiPage() {
                       value={formData.suratMasukId}
                       onChange={handleChange}
                       required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                     >
                       <option value="">Pilih Surat Masuk</option>
                       {suratMasukList.map((surat) => (
@@ -317,7 +317,7 @@ export default function EditDisposisiPage() {
                   </div>
 
                   <div>
-                    <label htmlFor="tujuanDisposisi" className="block text-sm font-medium text-gray-700 mb-2">
+                    <label htmlFor="tujuanDisposisi" className="block text-sm font-medium text-gray-900 mb-2">
                       <Building className="inline h-4 w-4 mr-1" />
                       Tujuan Disposisi <span className="text-red-500">*</span>
                     </label>
@@ -331,7 +331,7 @@ export default function EditDisposisiPage() {
                         }
                       }}
                       required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent mb-2"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 mb-2"
                     >
                       {tujuanOptions.map((option) => (
                         <option key={option} value={option}>{option}</option>
@@ -346,13 +346,13 @@ export default function EditDisposisiPage() {
                         onChange={handleChange}
                         placeholder="Ketik tujuan disposisi..."
                         required
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                       />
                     )}
                   </div>
 
                   <div>
-                    <label htmlFor="isiDisposisi" className="block text-sm font-medium text-gray-700 mb-2">
+                    <label htmlFor="isiDisposisi" className="block text-sm font-medium text-gray-900 mb-2">
                       <FileText className="inline h-4 w-4 mr-1" />
                       Isi Disposisi <span className="text-red-500">*</span>
                     </label>
@@ -363,13 +363,13 @@ export default function EditDisposisiPage() {
                       onChange={handleChange}
                       required
                       rows={4}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                       placeholder="Masukkan isi disposisi..."
                     />
                   </div>
 
                   <div>
-                    <label htmlFor="keterangan" className="block text-sm font-medium text-gray-700 mb-2">
+                    <label htmlFor="keterangan" className="block text-sm font-medium text-gray-900 mb-2">
                       <MessageSquare className="inline h-4 w-4 mr-1" />
                       Keterangan
                     </label>
@@ -379,7 +379,7 @@ export default function EditDisposisiPage() {
                       value={formData.keterangan}
                       onChange={handleChange}
                       rows={3}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                       placeholder="Keterangan tambahan (opsional)"
                     />
                   </div>
@@ -388,7 +388,7 @@ export default function EditDisposisiPage() {
                 <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 rounded-b-lg flex justify-end space-x-3">
                   <Link
                     href={`/dashboard/disposisi/${id}`}
-                    className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+                    className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-900 bg-white hover:bg-gray-50"
                   >
                     <X className="h-4 w-4 mr-2" />
                     Batal
@@ -426,7 +426,7 @@ export default function EditDisposisiPage() {
                 </div>
                 <div className="p-6 space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-gray-900 mb-1">
                       No Urut
                     </label>
                     <div className="text-blue-600 font-medium">
@@ -434,7 +434,7 @@ export default function EditDisposisiPage() {
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-gray-900 mb-1">
                       Nomor Surat
                     </label>
                     <div className="text-gray-900 font-medium">
@@ -442,7 +442,7 @@ export default function EditDisposisiPage() {
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-gray-900 mb-1">
                       Perihal
                     </label>
                     <div className="text-gray-900">
@@ -450,7 +450,7 @@ export default function EditDisposisiPage() {
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-gray-900 mb-1">
                       Asal Surat
                     </label>
                     <div className="text-gray-900">

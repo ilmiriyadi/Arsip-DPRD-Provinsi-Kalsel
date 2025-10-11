@@ -293,7 +293,7 @@ export default function SuratMasukPage() {
         {/* Search and Filter */}
         <div className="bg-white rounded-2xl shadow-xl border border-slate-200 mb-8 overflow-hidden">
           <div className="bg-gradient-to-r from-slate-50 to-blue-50 px-6 py-4 border-b border-slate-200">
-            <h3 className="text-lg font-semibold text-slate-800 flex items-center">
+            <h3 className="text-lg font-semibold text-gray-900 flex items-center">
               <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-lg flex items-center justify-center mr-3">
                 <Filter className="h-4 w-4 text-white" />
               </div>
@@ -408,7 +408,7 @@ export default function SuratMasukPage() {
                   <FileText className="w-4 h-4 text-white" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-slate-800">
+                  <h3 className="text-lg font-semibold text-gray-900">
                     Daftar Surat Masuk
                   </h3>
                   {pagination.total > 0 && (
@@ -704,7 +704,7 @@ export default function SuratMasukPage() {
             
             <div className="px-6 py-6 space-y-6">
               <div>
-                <label className="block text-sm font-semibold text-slate-800 mb-4">
+                <label className="block text-sm font-semibold text-gray-900 mb-4">
                   🎯 Pilih Tujuan Disposisi
                 </label>
                 <div className="space-y-3">
@@ -737,7 +737,7 @@ export default function SuratMasukPage() {
 
               {selectedTujuan === 'custom' && (
                 <div className="p-4 bg-blue-50 rounded-xl border border-blue-200">
-                  <label htmlFor="customTujuan" className="block text-sm font-semibold text-slate-800 mb-3">
+                  <label htmlFor="customTujuan" className="block text-sm font-semibold text-gray-900 mb-3">
                     📝 Tujuan Custom
                   </label>
                   <input
@@ -774,3 +774,4 @@ export default function SuratMasukPage() {
     </DashboardLayout>
   )
 }
+

@@ -190,7 +190,7 @@ export default function AddDisposisiPage() {
 
               {/* Pilih Surat Masuk */}
               <div>
-                <label htmlFor="suratMasukId" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="suratMasukId" className="block text-sm font-medium text-gray-900 mb-2">
                   Pilih Surat Masuk <span className="text-red-500">*</span>
                 </label>
                 <select
@@ -199,7 +199,7 @@ export default function AddDisposisiPage() {
                   value={formData.suratMasukId}
                   onChange={(e) => handleSuratSelection(e.target.value)}
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                 >
                   <option value="">Pilih surat masuk...</option>
                   {suratMasukList.map((surat) => (
@@ -230,7 +230,7 @@ export default function AddDisposisiPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="noUrut" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="noUrut" className="block text-sm font-medium text-gray-900 mb-2">
                     No Urut <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -255,7 +255,7 @@ export default function AddDisposisiPage() {
                 </div>
 
                 <div>
-                  <label htmlFor="tanggalDisposisi" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="tanggalDisposisi" className="block text-sm font-medium text-gray-900 mb-2">
                     Tanggal Disposisi <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -265,14 +265,14 @@ export default function AddDisposisiPage() {
                     value={formData.tanggalDisposisi}
                     onChange={handleChange}
                     required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="tujuanDisposisi" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="tujuanDisposisi" className="block text-sm font-medium text-gray-900 mb-2">
                     Tujuan Disposisi <span className="text-red-500">*</span>
                   </label>
                   <div className="space-y-2">
@@ -282,7 +282,7 @@ export default function AddDisposisiPage() {
                       value={formData.tujuanDisposisi}
                       onChange={handleChange}
                       required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                     >
                       <option value="">Pilih tujuan disposisi...</option>
                       <option value="Pimpinan DPRD">Pimpinan DPRD</option>
@@ -297,7 +297,7 @@ export default function AddDisposisiPage() {
                       placeholder="Atau ketik tujuan lainnya..."
                       value={formData.tujuanDisposisi}
                       onChange={handleChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 text-sm"
                     />
                     <p className="text-xs text-gray-500">
                       Pilih dari dropdown atau ketik tujuan custom di input bawah
@@ -306,7 +306,7 @@ export default function AddDisposisiPage() {
                 </div>
 
                 <div>
-                  <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="status" className="block text-sm font-medium text-gray-900 mb-2">
                     Status <span className="text-red-500">*</span>
                   </label>
                   <div className="flex items-center space-x-2 px-3 py-2 bg-green-50 border border-green-200 rounded-md">
@@ -319,7 +319,7 @@ export default function AddDisposisiPage() {
               </div>
 
               <div>
-                <label htmlFor="isiDisposisi" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="isiDisposisi" className="block text-sm font-medium text-gray-900 mb-2">
                   Isi Disposisi <span className="text-red-500">*</span>
                 </label>
                 <textarea
@@ -329,13 +329,13 @@ export default function AddDisposisiPage() {
                   onChange={handleChange}
                   required
                   rows={4}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                   placeholder="Tulis instruksi atau perintah disposisi..."
                 />
               </div>
 
               <div>
-                <label htmlFor="keterangan" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="keterangan" className="block text-sm font-medium text-gray-900 mb-2">
                   Keterangan
                 </label>
                 <textarea
@@ -344,7 +344,7 @@ export default function AddDisposisiPage() {
                   value={formData.keterangan}
                   onChange={handleChange}
                   rows={3}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                   placeholder="Catatan atau keterangan tambahan (opsional)"
                 />
               </div>
@@ -353,7 +353,7 @@ export default function AddDisposisiPage() {
             <div className="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
               <Link
                 href="/dashboard/disposisi"
-                className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+                className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-900 bg-white hover:bg-gray-50"
               >
                 <X className="h-4 w-4 mr-2" />
                 Batal
@@ -373,3 +373,4 @@ export default function AddDisposisiPage() {
     </div>
   )
 }
+

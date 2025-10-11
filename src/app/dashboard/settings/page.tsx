@@ -245,7 +245,7 @@ export default function SettingsPage() {
                 {/* Users Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0 mb-6">
                   <div>
-                    <h2 className="text-xl font-semibold text-slate-800 flex items-center space-x-2">
+                    <h2 className="text-xl font-semibold text-gray-900 flex items-center space-x-2">
                       <Users className="w-5 h-5" />
                       <span>Kelola Pengguna</span>
                     </h2>
@@ -339,7 +339,7 @@ export default function SettingsPage() {
                                       {user.name.charAt(0).toUpperCase()}
                                     </div>
                                     <div>
-                                      <div className="font-semibold text-slate-800">{user.name}</div>
+                                      <div className="font-semibold text-gray-900">{user.name}</div>
                                       <div className="text-slate-600 text-sm">{user.email}</div>
                                     </div>
                                   </div>
@@ -407,7 +407,7 @@ export default function SettingsPage() {
             <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full">
               <div className="p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-semibold text-slate-800 flex items-center space-x-2">
+                  <h2 className="text-xl font-semibold text-gray-900 flex items-center space-x-2">
                     <UserPlus className="w-5 h-5" />
                     <span>Tambah Pengguna</span>
                   </h2>
@@ -504,7 +504,7 @@ export default function SettingsPage() {
             <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full">
               <div className="p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-semibold text-slate-800 flex items-center space-x-2">
+                  <h2 className="text-xl font-semibold text-gray-900 flex items-center space-x-2">
                     <Edit className="w-5 h-5" />
                     <span>Edit Pengguna</span>
                   </h2>
@@ -600,7 +600,7 @@ export default function SettingsPage() {
             <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full">
               <div className="p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-semibold text-slate-800 flex items-center space-x-2">
+                  <h2 className="text-xl font-semibold text-gray-900 flex items-center space-x-2">
                     <Trash2 className="w-5 h-5 text-red-600" />
                     <span>Hapus Pengguna</span>
                   </h2>
@@ -646,3 +646,4 @@ export default function SettingsPage() {
     </DashboardLayout>
   )
 }
+

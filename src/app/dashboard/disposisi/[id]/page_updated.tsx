@@ -251,7 +251,7 @@ export default function DetailDisposisiPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-slate-800 mb-2">
                     <Building className="inline h-4 w-4 mr-1" />
                     Tujuan Disposisi
                   </label>
@@ -261,7 +261,7 @@ export default function DetailDisposisiPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-slate-800 mb-2">
                     <FileText className="inline h-4 w-4 mr-1" />
                     Isi Disposisi
                   </label>
@@ -272,7 +272,7 @@ export default function DetailDisposisiPage() {
 
                 {disposisi.keterangan && (
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-slate-800 mb-2">
                       <MessageSquare className="inline h-4 w-4 mr-1" />
                       Keterangan
                     </label>
@@ -283,7 +283,7 @@ export default function DetailDisposisiPage() {
                 )}
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-slate-800 mb-2">
                     Status
                   </label>
                   {getStatusBadge(disposisi.status)}
@@ -304,7 +304,7 @@ export default function DetailDisposisiPage() {
               </div>
               <div className="p-6 space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-slate-800 mb-1">
                     No Urut Surat
                   </label>
                   <div className="text-blue-600 font-medium">
@@ -312,7 +312,7 @@ export default function DetailDisposisiPage() {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-slate-800 mb-1">
                     Nomor Surat
                   </label>
                   <div className="text-gray-900 font-medium">
@@ -320,7 +320,7 @@ export default function DetailDisposisiPage() {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-slate-800 mb-1">
                     Perihal
                   </label>
                   <div className="text-gray-900">
@@ -328,7 +328,7 @@ export default function DetailDisposisiPage() {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-slate-800 mb-1">
                     Asal Surat
                   </label>
                   <div className="text-gray-900">
@@ -336,7 +336,7 @@ export default function DetailDisposisiPage() {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-slate-800 mb-1">
                     Tanggal Surat
                   </label>
                   <div className="text-gray-900">
@@ -365,20 +365,20 @@ export default function DetailDisposisiPage() {
               </div>
               <div className="p-6 space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-slate-800 mb-1">
                     Dibuat Oleh
                   </label>
                   <div className="text-gray-900">{disposisi.createdBy.name}</div>
                   <div className="text-sm text-gray-500">{disposisi.createdBy.email}</div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-slate-800 mb-1">
                     Dibuat Pada
                   </label>
                   <div className="text-gray-900">{formatDate(disposisi.createdAt)}</div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-slate-800 mb-1">
                     Terakhir Diupdate
                   </label>
                   <div className="text-gray-900">{formatDate(disposisi.updatedAt)}</div>
