@@ -89,7 +89,7 @@ export async function PUT(
       }
     }
 
-    const updateData: any = {}
+    const updateData: Record<string, string> = {}
     if (data.name) updateData.name = data.name
     if (data.email) updateData.email = data.email
     if (data.role) updateData.role = data.role

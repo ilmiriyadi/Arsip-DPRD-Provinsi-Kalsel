@@ -363,7 +363,7 @@ export default function SuratMasukPage() {
                     <>
                       {debouncedSearchTerm && (
                         <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 border border-blue-200">
-                          🔍 "{debouncedSearchTerm}"
+                          🔍 &quot;{debouncedSearchTerm}&quot;
                         </span>
                       )}
                       {dateFilter && (

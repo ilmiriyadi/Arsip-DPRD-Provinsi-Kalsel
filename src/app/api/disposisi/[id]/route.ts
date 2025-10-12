@@ -84,9 +84,9 @@ export async function PUT(
     }
 
     // Validasi bahwa noUrut disposisi harus sama dengan noUrut surat masuk
-    if (data.noUrut !== (suratMasuk as any).noUrut) {
+    if (data.noUrut !== suratMasuk.noUrut) {
       return NextResponse.json(
-        { error: `No urut disposisi harus sama dengan no urut surat masuk (${(suratMasuk as any).noUrut})` },
+        { error: `No urut disposisi harus sama dengan no urut surat masuk (${suratMasuk.noUrut})` },
         { status: 400 }
       )
     }

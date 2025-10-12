@@ -5,9 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { 
-  Settings, 
   Database,
-  Shield,
   User,
   Mail,
   Lock,
@@ -99,7 +97,7 @@ export default function SettingsPage() {
     setLoading(true)
     
     try {
-      const updateData: any = {
+      const updateData: Record<string, string> = {
         name: profileData.name,
         email: profileData.email
       }

@@ -32,7 +32,7 @@ export async function GET(req: NextRequest) {
 
     const skip = (page - 1) * limit
 
-    const where: any = {}
+    const where: Record<string, unknown> = {}
 
     if (search) {
       where.OR = [
@@ -122,9 +122,9 @@ export async function POST(req: NextRequest) {
     }
 
     // Validasi bahwa noUrut disposisi harus sama dengan noUrut surat masuk
-    if (data.noUrut !== (suratMasuk as any).noUrut) {
+    if (data.noUrut !== suratMasuk.noUrut) {
       return NextResponse.json(
-        { error: `No urut disposisi harus sama dengan no urut surat masuk (${(suratMasuk as any).noUrut})` },
+        { error: `No urut disposisi harus sama dengan no urut surat masuk (${suratMasuk.noUrut})` },
         { status: 400 }
       )
     }

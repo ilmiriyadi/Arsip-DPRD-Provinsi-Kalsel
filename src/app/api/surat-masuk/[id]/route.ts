@@ -107,7 +107,7 @@ export async function PUT(
     }
 
     // Handle unique constraint error
-    if ((error as any)?.code === 'P2002') {
+    if (error && typeof error === 'object' && 'code' in error && error.code === 'P2002') {
       return NextResponse.json(
         { error: "Nomor surat sudah ada, gunakan nomor yang berbeda" },
         { status: 400 }

@@ -8,7 +8,6 @@ import DashboardLayout from '@/components/layout/DashboardLayout'
 import { 
   FileText, 
   ClipboardList, 
-  Users, 
   Calendar,
   Search,
   Plus,
@@ -16,11 +15,28 @@ import {
   Clock,
   AlertCircle,
   CheckCircle,
-  BarChart3,
-  Activity,
-  Eye,
-  Download
+  Eye
 } from 'lucide-react'
+
+interface SuratMasuk {
+  id: string
+  noUrut: number
+  nomorSurat: string
+  tanggalSurat: string
+  asalSurat: string
+  perihal: string
+  keterangan?: string
+}
+
+interface SuratMasukResponse {
+  suratMasuk?: SuratMasuk[]
+  pagination?: {
+    total: number
+    page: number
+    limit: number
+    totalPages: number
+  }
+}
 
 export default function DashboardPage() {
   const { data: session, status } = useSession()
@@ -57,7 +73,7 @@ export default function DashboardPage() {
           const currentMonth = new Date().getMonth()
           const currentYear = new Date().getFullYear()
           
-          const suratBulanIni = suratData.suratMasuk?.filter((surat: any) => {
+          const suratBulanIni = (suratData as SuratMasukResponse).suratMasuk?.filter((surat: SuratMasuk) => {
             const suratDate = new Date(surat.tanggalSurat)
             return suratDate.getMonth() === currentMonth && suratDate.getFullYear() === currentYear
           }).length || 0
@@ -260,7 +276,7 @@ export default function DashboardPage() {
             <div className="p-6">
               {recentSurats.length > 0 ? (
                 <div className="space-y-4">
-                  {recentSurats.map((surat: any, index) => (
+                  {recentSurats.map((surat: SuratMasuk) => (
                     <div key={surat.id} className="flex items-center p-3 bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors">
                       <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-lg flex items-center justify-center text-white text-sm font-bold shadow-sm">
                         {surat.noUrut}

@@ -43,12 +43,12 @@ export async function POST(
     // Generate nomorDisposisi otomatis: DISP/SM{noUrut}/DSP/MM/YYYY
     const bulan = (today.getMonth() + 1).toString().padStart(2, '0')
     const tahun = today.getFullYear()
-    const nomorDisposisi = `DISP/SM${(surat as any).noUrut.toString().padStart(3, '0')}/DSP/${bulan}/${tahun}`
+    const nomorDisposisi = `DISP/SM${surat.noUrut.toString().padStart(3, '0')}/DSP/${bulan}/${tahun}`
 
     // Create disposisi with noUrut sama dengan surat masuk
-    const disposisi = await (prisma.disposisi.create as any)({
+    const disposisi = await prisma.disposisi.create({
       data: {
-        noUrut: (surat as any).noUrut, // noUrut disposisi SAMA dengan surat masuk
+        noUrut: surat.noUrut, // noUrut disposisi SAMA dengan surat masuk
         nomorDisposisi: nomorDisposisi,
         tanggalDisposisi: today,
         tujuanDisposisi: tujuanDisposisi.trim(),
