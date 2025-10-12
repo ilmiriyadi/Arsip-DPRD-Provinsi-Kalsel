@@ -1,26 +1,46 @@
-# Arsip DPRD Provinsi Kalimantan Selatan - Production
+# Deployment ke Vercel
 
-## Live Application
-🔗 **Production URL:** https://arsip-dprd-provinsi-kalsel-dw4bk1fh2-ilmiriyadis-projects.vercel.app
+## Environment Variables yang Diperlukan
 
-## Admin Credentials
-- **Email:** admin@dprd-kalsel.gov.id
-- **Password:** admin123
+Saat deploy ke Vercel, tambahkan environment variables berikut:
 
-## Environment Setup
-- **Database:** Neon PostgreSQL (Cloud)
-- **Hosting:** Vercel
-- **Authentication:** NextAuth.js
+### 1. NEXTAUTH_SECRET
+```
+NEXTAUTH_SECRET=your-super-secret-key-min-32-characters
+```
 
-## Features
-- ✅ Role-based access control (Admin/Member)
-- ✅ Document management (Surat Masuk & Disposisi)
-- ✅ Date/month filtering
-- ✅ User registration and login
-- ✅ CRUD operations for documents
-- ✅ 20+ sample documents with dispositions
+### 2. NEXTAUTH_URL
+```
+NEXTAUTH_URL=https://your-project-name.vercel.app
+```
 
-## Database Schema
-- **Users:** Admin and member roles
-- **Surat Masuk:** Incoming documents
-- **Disposisi:** Document dispositions
+### 3. DATABASE_URL (SQLite lokal tidak bisa di cloud)
+Untuk production, gunakan database cloud seperti:
+- Neon (PostgreSQL) - gratis
+- PlanetScale (MySQL) - gratis
+- Supabase (PostgreSQL) - gratis
+
+Contoh untuk Neon:
+```
+DATABASE_URL="postgresql://username:password@host/database?sslmode=require"
+```
+
+## Langkah Deploy
+
+1. Buka https://vercel.com
+2. Login dengan GitHub
+3. Import repository: ilmiriyadi/Arsip-DPRD-Provinsi-Kalsel
+4. Tambahkan environment variables di atas
+5. Deploy!
+
+## Database Setup
+
+Karena SQLite tidak support di Vercel, pilih salah satu:
+1. **Neon** (Recommended): https://neon.tech
+2. **Supabase**: https://supabase.com
+3. **PlanetScale**: https://planetscale.com
+
+Setelah dapat DATABASE_URL, jalankan:
+```bash
+npx prisma db push
+```
