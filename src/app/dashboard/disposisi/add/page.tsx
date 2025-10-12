@@ -2,7 +2,7 @@
 
 import { useSession } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import Link from 'next/link'
 import { Save, X, FileText, CheckCircle } from 'lucide-react'
 
@@ -15,7 +15,7 @@ interface SuratMasuk {
   tanggalSurat: string
 }
 
-export default function AddDisposisiPage() {
+function AddDisposisiContent() {
   const { data: session, status } = useSession()
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -371,6 +371,21 @@ export default function AddDisposisiPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function AddDisposisiPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Memuat...</p>
+        </div>
+      </div>
+    }>
+      <AddDisposisiContent />
+    </Suspense>
   )
 }
 
