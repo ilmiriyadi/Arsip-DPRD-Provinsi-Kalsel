@@ -73,6 +73,7 @@ export default function SuratMasukPage() {
   const [selectedSurat, setSelectedSurat] = useState<{ id: string, nomorSurat: string } | null>(null)
   const [selectedTujuan, setSelectedTujuan] = useState('')
   const [customTujuan, setCustomTujuan] = useState('')
+  const [tanggalDisposisi, setTanggalDisposisi] = useState('')
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -195,6 +196,7 @@ export default function SuratMasukPage() {
     setSelectedSurat({ id: suratId, nomorSurat })
     setSelectedTujuan('')
     setCustomTujuan('')
+    setTanggalDisposisi('')
     setShowTujuanModal(true)
   }
 
@@ -208,6 +210,11 @@ export default function SuratMasukPage() {
       return
     }
 
+    if (!tanggalDisposisi.trim()) {
+      alert('Silakan pilih tanggal disposisi')
+      return
+    }
+
     try {
       const response = await fetch(`/api/surat-masuk/${selectedSurat.id}/copy-disposisi`, {
         method: 'POST',
@@ -215,7 +222,8 @@ export default function SuratMasukPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          tujuanDisposisi: tujuan.trim()
+          tujuanDisposisi: tujuan.trim(),
+          tanggalDisposisi: tanggalDisposisi
         }),
       })
 
@@ -225,6 +233,9 @@ export default function SuratMasukPage() {
         alert('Surat berhasil disalin ke disposisi!')
         setShowTujuanModal(false)
         setSelectedSurat(null)
+        setSelectedTujuan('')
+        setCustomTujuan('')
+        setTanggalDisposisi('')
         fetchSuratMasuk() // Refresh data
       } else {
         alert(data.error || 'Gagal menyalin surat ke disposisi')
@@ -240,6 +251,7 @@ export default function SuratMasukPage() {
     setSelectedSurat(null)
     setSelectedTujuan('')
     setCustomTujuan('')
+    setTanggalDisposisi('')
   }
 
   if (status === 'loading') {
@@ -750,6 +762,19 @@ export default function SuratMasukPage() {
                   />
                 </div>
               )}
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-900 mb-3">
+                  📅 Tanggal Disposisi
+                </label>
+                <input
+                  type="date"
+                  value={tanggalDisposisi}
+                  onChange={(e) => setTanggalDisposisi(e.target.value)}
+                  required
+                  className="w-full px-4 py-3 border-2 border-slate-300 rounded-xl bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-slate-700"
+                />
+              </div>
             </div>
 
             <div className="px-6 py-5 bg-slate-50 border-t border-slate-200 flex justify-end space-x-3">

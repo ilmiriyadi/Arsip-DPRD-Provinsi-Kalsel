@@ -26,7 +26,7 @@ function AddDisposisiContent() {
   const [selectedSurat, setSelectedSurat] = useState<SuratMasuk | null>(null)
   const [formData, setFormData] = useState({
     noUrut: '',
-    tanggalDisposisi: new Date().toISOString().split('T')[0], // Set today as default
+    tanggalDisposisi: '',
     tujuanDisposisi: '',
     isiDisposisi: '',
     keterangan: '',
@@ -228,46 +228,29 @@ function AddDisposisiContent() {
                 </div>
               )}
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label htmlFor="noUrut" className="block text-sm font-medium text-gray-900 mb-2">
-                    No Urut <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="number"
-                    id="noUrut"
-                    name="noUrut"
-                    value={formData.noUrut}
-                    onChange={handleChange}
-                    required
-                    min="1"
-                    readOnly={!!selectedSurat}
-                    className={`w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                      selectedSurat ? 'bg-gray-100 cursor-not-allowed' : ''
-                    }`}
-                    placeholder="Akan otomatis terisi saat memilih surat masuk"
-                  />
-                  {selectedSurat && (
-                    <p className="mt-1 text-sm text-green-600">
-                      ✓ No Urut disposisi sama dengan surat masuk #{selectedSurat.noUrut}
-                    </p>
-                  )}
-                </div>
-
-                <div>
-                  <label htmlFor="tanggalDisposisi" className="block text-sm font-medium text-gray-900 mb-2">
-                    Tanggal Disposisi <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="date"
-                    id="tanggalDisposisi"
-                    name="tanggalDisposisi"
-                    value={formData.tanggalDisposisi}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
-                  />
-                </div>
+              <div>
+                <label htmlFor="noUrut" className="block text-sm font-medium text-gray-900 mb-2">
+                  No Urut <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="number"
+                  id="noUrut"
+                  name="noUrut"
+                  value={formData.noUrut}
+                  onChange={handleChange}
+                  required
+                  min="1"
+                  readOnly={!!selectedSurat}
+                  className={`w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                    selectedSurat ? 'bg-gray-100 cursor-not-allowed' : ''
+                  }`}
+                  placeholder="Akan otomatis terisi saat memilih surat masuk"
+                />
+                {selectedSurat && (
+                  <p className="mt-1 text-sm text-green-600">
+                    ✓ No Urut disposisi sama dengan surat masuk #{selectedSurat.noUrut}
+                  </p>
+                )}
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -306,16 +289,31 @@ function AddDisposisiContent() {
                 </div>
 
                 <div>
-                  <label htmlFor="status" className="block text-sm font-medium text-gray-900 mb-2">
-                    Status <span className="text-red-500">*</span>
+                  <label htmlFor="tanggalDisposisi" className="block text-sm font-medium text-gray-900 mb-2">
+                    Tanggal Disposisi <span className="text-red-500">*</span>
                   </label>
-                  <div className="flex items-center space-x-2 px-3 py-2 bg-green-50 border border-green-200 rounded-md">
-                    <CheckCircle className="h-5 w-5 text-green-600" />
-                    <span className="text-green-800 font-medium">Selesai</span>
-                    <span className="text-sm text-green-600">(Disposisi otomatis selesai)</span>
-                  </div>
-                  <input type="hidden" name="status" value="SELESAI" />
+                  <input
+                    type="date"
+                    id="tanggalDisposisi"
+                    name="tanggalDisposisi"
+                    value={formData.tanggalDisposisi}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  />
                 </div>
+              </div>
+
+              <div>
+                <label htmlFor="status" className="block text-sm font-medium text-gray-900 mb-2">
+                  Status <span className="text-red-500">*</span>
+                </label>
+                <div className="flex items-center space-x-2 px-3 py-2 bg-green-50 border border-green-200 rounded-md">
+                  <CheckCircle className="h-5 w-5 text-green-600" />
+                  <span className="text-green-800 font-medium">Selesai</span>
+                  <span className="text-sm text-green-600">(Disposisi otomatis selesai)</span>
+                </div>
+                <input type="hidden" name="status" value="SELESAI" />
               </div>
 
               <div>

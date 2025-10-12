@@ -16,12 +16,20 @@ export async function POST(
 
     const { id } = await params
     const body = await req.json()
-    const { tujuanDisposisi } = body
+    const { tujuanDisposisi, tanggalDisposisi } = body
 
     // Validate tujuan disposisi
     if (!tujuanDisposisi || !tujuanDisposisi.trim()) {
       return NextResponse.json(
         { error: "Tujuan disposisi wajib diisi" },
+        { status: 400 }
+      )
+    }
+
+    // Validate tanggal disposisi
+    if (!tanggalDisposisi || !tanggalDisposisi.trim()) {
+      return NextResponse.json(
+        { error: "Tanggal disposisi wajib diisi" },
         { status: 400 }
       )
     }
@@ -38,11 +46,11 @@ export async function POST(
       )
     }
 
-    const today = new Date()
+    const disposisiDate = new Date(tanggalDisposisi)
     
     // Generate nomorDisposisi otomatis: DISP/SM{noUrut}/DSP/MM/YYYY
-    const bulan = (today.getMonth() + 1).toString().padStart(2, '0')
-    const tahun = today.getFullYear()
+    const bulan = (disposisiDate.getMonth() + 1).toString().padStart(2, '0')
+    const tahun = disposisiDate.getFullYear()
     const nomorDisposisi = `DISP/SM${surat.noUrut.toString().padStart(3, '0')}/DSP/${bulan}/${tahun}`
 
     // Create disposisi with noUrut sama dengan surat masuk
@@ -50,7 +58,7 @@ export async function POST(
       data: {
         noUrut: surat.noUrut, // noUrut disposisi SAMA dengan surat masuk
         nomorDisposisi: nomorDisposisi,
-        tanggalDisposisi: today,
+        tanggalDisposisi: disposisiDate,
         tujuanDisposisi: tujuanDisposisi.trim(),
         isiDisposisi: `Disposisi untuk surat nomor ${surat.nomorSurat} dengan perihal "${surat.perihal}" dari ${surat.asalSurat}. Mohon untuk ditindaklanjuti sesuai dengan ketentuan yang berlaku.`,
         keterangan: `Auto-generated dari surat masuk ${surat.nomorSurat} ke ${tujuanDisposisi.trim()}`,
