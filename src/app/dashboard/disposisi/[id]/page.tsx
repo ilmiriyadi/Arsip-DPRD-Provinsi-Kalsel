@@ -126,15 +126,6 @@ export default function DetailDisposisiPage() {
     })
   }
 
-  const getStatusBadge = (status: string) => {
-    return (
-      <span className="inline-flex items-center px-3 py-1 text-sm font-semibold rounded-full bg-green-100 text-green-800">
-        <CheckCircle className="h-4 w-4 mr-1" />
-        Selesai
-      </span>
-    )
-  }
-
   if (status === 'loading' || loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
