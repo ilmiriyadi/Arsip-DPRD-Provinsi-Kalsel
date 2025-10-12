@@ -14,7 +14,6 @@ import {
   Building,
   FileText,
   MessageSquare,
-  CheckCircle,
   Hash
 } from 'lucide-react'
 
@@ -277,7 +276,6 @@ export default function DetailDisposisiPage() {
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Status
                   </label>
-                  {getStatusBadge(disposisi.status)}
                 </div>
               </div>
             </div>

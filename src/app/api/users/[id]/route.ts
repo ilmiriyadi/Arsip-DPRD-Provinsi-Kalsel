@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import bcrypt from "bcryptjs"
 import { z } from "zod"
+import { use } from "react"
 
 const updateUserSchema = z.object({
   name: z.string().min(2, "Nama minimal 2 karakter").optional(),
@@ -15,7 +16,7 @@ const updateUserSchema = z.object({
 // GET - Get user by ID
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions)
@@ -23,8 +24,9 @@ export async function GET(
       return NextResponse.json({ error: "Forbidden" }, { status: 403 })
     }
 
+    const resolvedParams = use(params)
     const user = await prisma.user.findUnique({
-      where: { id: params.id },
+      where: { id: resolvedParams.id },
       select: {
         id: true,
         name: true,
@@ -61,7 +63,7 @@ export async function GET(
 // PUT - Update user
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions)
@@ -69,6 +71,7 @@ export async function PUT(
       return NextResponse.json({ error: "Forbidden" }, { status: 403 })
     }
 
+    const resolvedParams = use(params)
     const body = await req.json()
     const data = updateUserSchema.parse(body)
 
@@ -77,7 +80,7 @@ export async function PUT(
       const existingUser = await prisma.user.findFirst({
         where: { 
           email: data.email,
-          NOT: { id: params.id }
+          NOT: { id: resolvedParams.id }
         }
       })
 
@@ -98,7 +101,7 @@ export async function PUT(
     }
 
     const updatedUser = await prisma.user.update({
-      where: { id: params.id },
+      where: { id: resolvedParams.id },
       data: updateData,
       select: {
         id: true,
@@ -130,7 +133,7 @@ export async function PUT(
 // DELETE - Delete user
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions)
@@ -138,8 +141,9 @@ export async function DELETE(
       return NextResponse.json({ error: "Forbidden" }, { status: 403 })
     }
 
+    const resolvedParams = use(params)
     // Prevent deleting own account
-    if (session.user.id === params.id) {
+    if (session.user.id === resolvedParams.id) {
       return NextResponse.json(
         { error: "Tidak dapat menghapus akun sendiri" },
         { status: 400 }
@@ -159,7 +163,7 @@ export async function DELETE(
     }
 
     await prisma.user.delete({
-      where: { id: params.id }
+      where: { id: resolvedParams.id }
     })
 
     return NextResponse.json({ message: "User berhasil dihapus" })
