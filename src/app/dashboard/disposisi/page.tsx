@@ -294,7 +294,7 @@ export default function DisposisiPage() {
                     <>
                       {debouncedSearchTerm && (
                         <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 border border-emerald-200">
-                          🔍 "{debouncedSearchTerm}"
+                          🔍 &quot;{debouncedSearchTerm}&quot;
                         </span>
                       )}
                       {dateFilter && (

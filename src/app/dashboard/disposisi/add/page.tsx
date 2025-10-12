@@ -30,7 +30,7 @@ export default function AddDisposisiPage() {
     tujuanDisposisi: '',
     isiDisposisi: '',
     keterangan: '',
-    status: 'SELESAI' as 'SELESAI',
+    status: 'SELESAI' as const,
     suratMasukId: suratId || '',
   })
 

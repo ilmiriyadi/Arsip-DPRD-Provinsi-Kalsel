@@ -49,7 +49,7 @@ export default function EditDisposisiPage() {
     tujuanDisposisi: '',
     isiDisposisi: '',
     keterangan: '',
-    status: 'SELESAI' as 'SELESAI',
+    status: 'SELESAI' as const,
     suratMasukId: '',
   })
 
