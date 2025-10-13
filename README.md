@@ -48,17 +48,18 @@ Sistem informasi manajemen arsip surat masuk dan disposisi yang dikhususkan untu
 
 ### Frontend
 - **Framework**: Next.js 15.5.4 dengan App Router & Turbopack
-- **Language**: TypeScript untuk type safety
-- **Styling**: Tailwind CSS dengan custom gradient design
-- **UI Components**: Lucide React Icons
-- **State Management**: React Hooks (useState, useEffect)
-- **Form Handling**: Native form handling dengan real-time validation
+- **Language**: TypeScript 5+ untuk type safety
+- **Styling**: Tailwind CSS 4+ dengan custom gradient design
+- **UI Components**: Lucide React Icons v0.545.0
+- **State Management**: React 19.1.0 Hooks (useState, useEffect)
+- **Form Handling**: React Hook Form v7.64.0 dengan Zod validation
 
 ### Backend
-- **Runtime**: Node.js dengan Next.js API Routes
+- **Runtime**: Node.js dengan Next.js 15 API Routes
 - **Database**: SQLite (development) / PostgreSQL (production ready)
-- **ORM**: Prisma ORM dengan auto-migration
-- **Authentication**: NextAuth.js dengan session strategy
+- **ORM**: Prisma v6.17.0 dengan auto-migration dan Client generation
+- **Authentication**: NextAuth.js v4.24.11 dengan Prisma adapter
+- **Security**: bcryptjs untuk password hashing
 
 ### Development Tools
 - **Package Manager**: npm
@@ -122,13 +123,10 @@ Sistem informasi manajemen arsip surat masuk dan disposisi yang dikhususkan untu
 
 3. **Environment Setup**
    ```bash
-   # Copy environment file
-   cp .env.example .env.local
-   
-   # Edit .env.local dengan konfigurasi Anda:
-   # DATABASE_URL="file:./dev.db"
-   # NEXTAUTH_SECRET="your-secret-key"
-   # NEXTAUTH_URL="http://localhost:3000"
+   # Buat file .env.local dengan konfigurasi berikut:
+   DATABASE_URL="file:./dev.db"
+   NEXTAUTH_SECRET="your-super-secret-key-min-32-characters"
+   NEXTAUTH_URL="http://localhost:3000"
    ```
 
 4. **Database Setup**
@@ -139,8 +137,8 @@ Sistem informasi manajemen arsip surat masuk dan disposisi yang dikhususkan untu
    # Run database migrations
    npx prisma migrate dev --name init
    
-   # (Optional) Seed database dengan data sample
-   npx prisma db seed
+   # Push schema to database (alternative)
+   npx prisma db push
    ```
 
 5. **Development Server**
@@ -153,10 +151,42 @@ Sistem informasi manajemen arsip surat masuk dan disposisi yang dikhususkan untu
    - Register akun pertama (akan menjadi ADMIN)
    - Login dan mulai mengelola arsip surat
 
+## 🔧 Perubahan Terbaru & Fixes
+
+### v1.1.0 - Oktober 2025
+- ✅ **Fix Path Alias**: Diperbaiki konfigurasi `@/*` di tsconfig.json untuk mengatasi module resolution error
+- ✅ **Build Script Fix**: Dihapus referensi ke `check-schema.js` yang tidak diperlukan
+- ✅ **Turbopack Integration**: Full support untuk Turbopack di development dan build
+- ✅ **Module Resolution**: Semua import paths sudah tervalidasi dan berfungsi dengan baik
+- ✅ **Production Ready**: Build process sudah dioptimalkan untuk deployment
+
+### Troubleshooting Common Issues
+
+#### Build Errors
+```bash
+# Jika mengalami module not found error:
+npm install
+npx prisma generate
+npm run build
+
+# Jika path alias bermasalah, pastikan tsconfig.json:
+"paths": { "@/*": ["./*"] }
+```
+
+#### Database Issues  
+```bash
+# Reset database jika diperlukan:
+npx prisma migrate reset
+npx prisma db push
+
+# Generate client jika ada perubahan schema:
+npx prisma generate
+```
+
 ### 🏗️ Build & Production
 
 ```bash
-# Build for production
+# Build for production (dengan Turbopack)
 npm run build
 
 # Start production server
@@ -164,6 +194,9 @@ npm start
 
 # Lint code
 npm run lint
+
+# Development dengan Turbopack
+npm run dev
 ```
 
 ## 🗄️ Struktur Database
@@ -364,34 +397,104 @@ git clone https://github.com/ilmiriyadi/Arsip-DPRD-Provinsi-Kalsel.git
 cd Arsip-DPRD-Provinsi-Kalsel
 npm install
 
+# Setup environment variables
+cp .env.example .env.production
+# Edit .env.production dengan konfigurasi production
+
+# Database setup untuk production
+npx prisma generate
+npx prisma migrate deploy
+
 # Production build
 npm run build
 
 # Start dengan PM2 (recommended)
 npm install pm2 -g
 pm2 start npm --name "arsip-surat" -- start
+pm2 startup
+pm2 save
+```
+
+### Docker Deployment (Optional)
+```dockerfile
+# Dockerfile contoh
+FROM node:18-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+COPY . .
+RUN npx prisma generate
+RUN npm run build
+EXPOSE 3000
+CMD ["npm", "start"]
 ```
 
 ## 📁 Struktur Proyek
 ```
 arsip-surat/
-├── src/
-│   ├── app/                    # Next.js 15 App Router
-│   │   ├── api/               # API Routes
-│   │   ├── dashboard/         # Protected dashboard pages
-│   │   ├── login/            # Authentication pages
-│   │   └── register/
-│   ├── components/            # React components
-│   │   ├── layout/           # Layout components
-│   │   └── ui/              # UI components
-│   ├── lib/                  # Utility libraries
-│   └── types/               # TypeScript type definitions
-├── prisma/
+├── app/                        # Next.js 15 App Router
+│   ├── api/                   # API Routes
+│   │   ├── auth/
+│   │   │   └── [...nextauth]/ # NextAuth.js endpoint
+│   │   ├── disposisi/         # Disposisi API endpoints
+│   │   │   ├── route.ts       # GET, POST disposisi
+│   │   │   └── [id]/          # Individual disposisi operations
+│   │   ├── register/          # User registration API
+│   │   ├── surat-masuk/       # Surat masuk API endpoints
+│   │   │   ├── route.ts       # GET, POST surat masuk
+│   │   │   └── [id]/          # Individual surat operations
+│   │   │       └── copy-disposisi/ # Copy to disposisi API
+│   │   └── users/             # User management API
+│   ├── dashboard/             # Protected dashboard pages
+│   │   ├── page.tsx          # Main dashboard
+│   │   ├── admin/            # Admin-only pages
+│   │   │   ├── settings/     # Admin settings
+│   │   │   └── users/        # User management
+│   │   ├── disposisi/        # Disposisi management
+│   │   │   ├── page.tsx      # Disposisi list
+│   │   │   ├── [id]/         # Disposisi detail
+│   │   │   ├── add/          # Add new disposisi
+│   │   │   └── edit/[id]/    # Edit disposisi
+│   │   ├── settings/         # User settings
+│   │   └── surat-masuk/      # Surat masuk management
+│   │       ├── page.tsx      # Surat masuk list
+│   │       ├── [id]/         # Surat detail
+│   │       ├── add/          # Add new surat
+│   │       └── edit/[id]/    # Edit surat
+│   ├── login/                 # Authentication pages
+│   ├── register/             # User registration
+│   ├── layout.tsx            # Root layout
+│   ├── page.tsx              # Home page
+│   └── globals.css           # Global styles
+├── components/                # React components
+│   ├── layout/               # Layout components
+│   │   └── DashboardLayout.tsx # Main dashboard layout
+│   └── providers.tsx         # Context providers
+├── lib/                      # Utility libraries
+│   ├── auth.ts              # NextAuth configuration
+│   └── prisma.ts            # Prisma client setup
+├── prisma/                   # Database configuration
 │   ├── schema.prisma        # Database schema
-│   └── migrations/          # Migration files
-├── public/                  # Static assets
+│   └── migrations/          # Database migration files
+├── types/                    # TypeScript type definitions
+│   └── next-auth.d.ts       # NextAuth type extensions
+├── public/                   # Static assets
+├── middleware.ts             # Next.js middleware for route protection
+├── next.config.ts            # Next.js configuration
+├── tsconfig.json            # TypeScript configuration
+├── tailwind.config.js       # Tailwind CSS configuration
+├── eslint.config.mjs        # ESLint configuration
+├── package.json             # Dependencies and scripts
 └── README.md               # Project documentation
 ```
+
+### 📋 Key Features dari Struktur
+- **App Router**: Menggunakan Next.js 15 App Router untuk file-based routing
+- **API Routes**: RESTful API dengan proper error handling dan validation
+- **Middleware**: Route protection dan authentication middleware
+- **TypeScript**: Full type safety di seluruh aplikasi
+- **Prisma**: Type-safe database operations dengan migration support
+- **Modular Components**: Reusable components dengan proper separation of concerns
 
 
 ## 🙏 Acknowledgments
