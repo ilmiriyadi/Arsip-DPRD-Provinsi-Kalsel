@@ -2,6 +2,11 @@
 
 Sistem informasi manajemen arsip surat masuk dan disposisi yang dikhususkan untuk DPRD Provinsi Kalimantan Selatan. Aplikasi ini menyediakan platform digital untuk mengelola dokumen resmi dengan workflow yang terstruktur dan role-based access control.
 
+## 🌐 Live Demo
+**🔗 Akses Aplikasi: [https://arsipdprdkalsel.vercel.app/](https://arsipdprdkalsel.vercel.app/)**
+
+> **Catatan**: Silakan daftar akun baru untuk mencoba aplikasi. Akun pertama yang mendaftar akan otomatis menjadi Administrator.
+
 ## ✨ Fitur Utama
 
 ### 🔐 Sistem Autentikasi & Keamanan
