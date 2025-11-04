@@ -15,7 +15,8 @@ import {
   Menu,
   X,
   ChevronDown,
-  Shield
+  Shield,
+  Send
 } from 'lucide-react'
 
 interface DashboardLayoutProps {
@@ -34,6 +35,12 @@ const navigationItems = [
     href: '/dashboard/surat-masuk',
     icon: FileText,
     description: 'Kelola Surat Masuk'
+  },
+  {
+    name: 'Surat Keluar',
+    href: '/dashboard/surat-keluar',
+    icon: Send,
+    description: 'Kelola Surat Keluar'
   },
   {
     name: 'Disposisi',

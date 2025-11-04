@@ -4,21 +4,39 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import DashboardLayout from '@/components/layout/DashboardLayout'
 import { Save, X } from 'lucide-react'
 
-export default function AddSuratMasukPage() {
+interface SuratMasuk {
+  id: string
+  nomorSurat: string
+  perihal: string
+  tanggalSurat: string
+}
+
+const PENGOLAH_OPTIONS = [
+  { value: 'KETUA_DPRD', label: 'Ketua DPRD' },
+  { value: 'WAKIL_KETUA_1', label: 'Wakil Ketua 1' },
+  { value: 'WAKIL_KETUA_2', label: 'Wakil Ketua 2' },
+  { value: 'WAKIL_KETUA_3', label: 'Wakil Ketua 3' },
+  { value: 'SEKWAN', label: 'Sekwan' }
+]
+
+export default function AddSuratKeluarPage() {
   const { data: session, status } = useSession()
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [suratMasukList, setSuratMasukList] = useState<SuratMasuk[]>([])
+  
   const [formData, setFormData] = useState({
     noUrut: '',
-    nomorSurat: '',
+    klas: '',
+    pengolah: '',
     tanggalSurat: '',
-    tanggalDiteruskan: '',
-    asalSurat: '',
-    perihal: '',
-    keterangan: '',
+    perihalSurat: '',
+    kirimKepada: '',
+    suratMasukId: '' // optional
   })
 
   useEffect(() => {
@@ -29,11 +47,54 @@ export default function AddSuratMasukPage() {
     }
   }, [status, session, router])
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData(prev => ({
-      ...prev,
-      [e.target.name]: e.target.value
-    }))
+  // Fetch surat masuk untuk dropdown
+  useEffect(() => {
+    fetchSuratMasuk()
+  }, [])
+
+  const fetchSuratMasuk = async () => {
+    try {
+      const response = await fetch('/api/surat-masuk?limit=100')
+      if (response.ok) {
+        const data = await response.json()
+        setSuratMasukList(data.suratMasuk || [])
+      }
+    } catch (error) {
+      console.error('Error fetching surat masuk:', error)
+    }
+  }
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target
+    setFormData(prev => ({ ...prev, [name]: value }))
+  }
+
+  const handleSuratMasukChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedId = e.target.value
+    setFormData(prev => ({ ...prev, suratMasukId: selectedId }))
+    
+    // Auto-fill perihal and tanggal surat if surat masuk is selected
+    if (selectedId) {
+      const selectedSurat = suratMasukList.find(s => s.id === selectedId)
+      if (selectedSurat) {
+        // Format tanggal surat masuk ke format input date (YYYY-MM-DD)
+        const tanggalSurat = new Date(selectedSurat.tanggalSurat)
+        const formattedTanggal = tanggalSurat.toISOString().split('T')[0]
+        
+        setFormData(prev => ({
+          ...prev,
+          perihalSurat: `Re: ${selectedSurat.perihal}`,
+          tanggalSurat: formattedTanggal
+        }))
+      }
+    } else {
+      // Reset fields when no surat masuk selected
+      setFormData(prev => ({
+        ...prev,
+        perihalSurat: '',
+        tanggalSurat: ''
+      }))
+    }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -42,7 +103,7 @@ export default function AddSuratMasukPage() {
     setError('')
 
     try {
-      const response = await fetch('/api/surat-masuk', {
+      const response = await fetch('/api/surat-keluar', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -51,19 +112,18 @@ export default function AddSuratMasukPage() {
           ...formData,
           noUrut: parseInt(formData.noUrut),
           tanggalSurat: new Date(formData.tanggalSurat).toISOString(),
-          tanggalDiteruskan: new Date(formData.tanggalDiteruskan).toISOString(),
         }),
       })
 
       const data = await response.json()
 
       if (response.ok) {
-        router.push('/dashboard/surat-masuk')
+        router.push('/dashboard/surat-keluar')
       } else {
         setError(data.error || 'Terjadi kesalahan saat menyimpan surat')
       }
     } catch (error) {
-      console.error('Error saving surat masuk:', error)
+      console.error('Error saving surat keluar:', error)
       setError('Terjadi kesalahan sistem')
     } finally {
       setLoading(false)
@@ -86,15 +146,16 @@ export default function AddSuratMasukPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <DashboardLayout>
+      <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="bg-white shadow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Tambah Surat Masuk</h1>
+              <h1 className="text-2xl font-bold text-gray-900">Tambah Surat Keluar</h1>
               <p className="mt-1 text-sm text-gray-600">
-                Tambahkan surat masuk baru ke dalam sistem
+                Tambahkan surat keluar baru ke dalam sistem
               </p>
             </div>
           </div>
@@ -106,7 +167,7 @@ export default function AddSuratMasukPage() {
           <form onSubmit={handleSubmit}>
             <div className="px-6 py-4 border-b border-gray-200">
               <h3 className="text-lg font-medium text-gray-900">
-                Informasi Surat Masuk
+                Informasi Surat Keluar
               </h3>
             </div>
 
@@ -136,19 +197,40 @@ export default function AddSuratMasukPage() {
                 </div>
                 
                 <div>
-                  <label htmlFor="nomorSurat" className="block text-sm font-medium text-gray-900 mb-2">
-                    Nomor Surat <span className="text-red-500">*</span>
+                  <label htmlFor="klas" className="block text-sm font-medium text-gray-900 mb-2">
+                    Klas <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
-                    id="nomorSurat"
-                    name="nomorSurat"
-                    value={formData.nomorSurat}
+                    id="klas"
+                    name="klas"
+                    value={formData.klas}
                     onChange={handleChange}
                     required
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
-                    placeholder="Contoh: 001/SKM/X/2024"
+                    placeholder="Contoh: SR.01/UM"
                   />
+                </div>
+
+                <div>
+                  <label htmlFor="pengolah" className="block text-sm font-medium text-gray-900 mb-2">
+                    Pengolah <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    id="pengolah"
+                    name="pengolah"
+                    value={formData.pengolah}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  >
+                    <option value="">Pilih Pengolah</option>
+                    {PENGOLAH_OPTIONS.map(option => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
                 <div>
@@ -165,74 +247,67 @@ export default function AddSuratMasukPage() {
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                   />
                 </div>
-
-                <div>
-                  <label htmlFor="tanggalDiteruskan" className="block text-sm font-medium text-gray-900 mb-2">
-                    Tanggal Diteruskan <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="date"
-                    id="tanggalDiteruskan"
-                    name="tanggalDiteruskan"
-                    value={formData.tanggalDiteruskan}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
-                  />
-                </div>
               </div>
 
               <div>
-                <label htmlFor="asalSurat" className="block text-sm font-medium text-gray-900 mb-2">
-                  Asal Surat <span className="text-red-500">*</span>
+                <label htmlFor="suratMasukId" className="block text-sm font-medium text-gray-900 mb-2">
+                  Hubungkan dengan Surat Masuk (Opsional)
                 </label>
-                <input
-                  type="text"
-                  id="asalSurat"
-                  name="asalSurat"
-                  value={formData.asalSurat}
-                  onChange={handleChange}
-                  required
+                <select
+                  id="suratMasukId"
+                  name="suratMasukId"
+                  value={formData.suratMasukId}
+                  onChange={handleSuratMasukChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
-                  placeholder="Contoh: Dinas Pendidikan Kota Jakarta"
-                />
+                >
+                  <option value="">Pilih Surat Masuk (jika ada hubungannya)</option>
+                  {suratMasukList.map(surat => (
+                    <option key={surat.id} value={surat.id}>
+                      {surat.nomorSurat} - {surat.perihal}
+                    </option>
+                  ))}
+                </select>
+                <p className="mt-1 text-xs text-gray-500">
+                  Jika dipilih, perihal akan terisi otomatis dari surat masuk
+                </p>
               </div>
 
               <div>
-                <label htmlFor="perihal" className="block text-sm font-medium text-gray-900 mb-2">
-                  Perihal <span className="text-red-500">*</span>
+                <label htmlFor="perihalSurat" className="block text-sm font-medium text-gray-900 mb-2">
+                  Perihal Surat <span className="text-red-500">*</span>
                 </label>
-                <input
-                  type="text"
-                  id="perihal"
-                  name="perihal"
-                  value={formData.perihal}
+                <textarea
+                  id="perihalSurat"
+                  name="perihalSurat"
+                  value={formData.perihalSurat}
                   onChange={handleChange}
                   required
+                  rows={3}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                   placeholder="Contoh: Undangan Rapat Koordinasi"
                 />
               </div>
 
               <div>
-                <label htmlFor="keterangan" className="block text-sm font-medium text-gray-900 mb-2">
-                  Keterangan
+                <label htmlFor="kirimKepada" className="block text-sm font-medium text-gray-900 mb-2">
+                  Kirim Kepada <span className="text-red-500">*</span>
                 </label>
                 <textarea
-                  id="keterangan"
-                  name="keterangan"
-                  value={formData.keterangan}
+                  id="kirimKepada"
+                  name="kirimKepada"
+                  value={formData.kirimKepada}
                   onChange={handleChange}
+                  required
                   rows={4}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
-                  placeholder="Catatan atau keterangan tambahan (opsional)"
+                  placeholder="Contoh: Dinas Pendidikan Kota Jakarta"
                 />
               </div>
             </div>
 
             <div className="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
               <Link
-                href="/dashboard/surat-masuk"
+                href="/dashboard/surat-keluar"
                 className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-900 bg-white hover:bg-gray-50"
               >
                 <X className="h-4 w-4 mr-2" />
@@ -251,6 +326,6 @@ export default function AddSuratMasukPage() {
         </div>
       </div>
     </div>
+    </DashboardLayout>
   )
 }
-

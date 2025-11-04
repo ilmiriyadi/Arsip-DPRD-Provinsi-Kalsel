@@ -4,44 +4,66 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState, use } from 'react'
 import Link from 'next/link'
+import DashboardLayout from '@/components/layout/DashboardLayout'
 import { Save, X, ArrowLeft } from 'lucide-react'
 
-interface SuratMasuk {
+interface SuratKeluar {
   id: string
-  nomorSurat: string
+  noUrut: number
+  klas: string
+  pengolah: string
   tanggalSurat: string
-  tanggalDiteruskan: string
-  asalSurat: string
-  perihal: string
-  keterangan?: string
-  filePath?: string
+  perihalSurat: string
+  kirimKepada: string
   createdBy: {
     id: string
     name: string
     email: string
   }
+  suratMasuk?: {
+    id: string
+    nomorSurat: string
+    perihal: string
+  }
+}
+
+interface SuratMasuk {
+  id: string
+  nomorSurat: string
+  perihal: string
+  tanggalSurat: string
 }
 
 interface PageProps {
   params: Promise<{ id: string }>
 }
 
-export default function EditSuratMasukPage({ params }: PageProps) {
+const PENGOLAH_OPTIONS = [
+  { value: 'KETUA_DPRD', label: 'Ketua DPRD' },
+  { value: 'WAKIL_KETUA_1', label: 'Wakil Ketua 1' },
+  { value: 'WAKIL_KETUA_2', label: 'Wakil Ketua 2' },
+  { value: 'WAKIL_KETUA_3', label: 'Wakil Ketua 3' },
+  { value: 'SEKWAN', label: 'Sekwan' }
+]
+
+export default function EditSuratKeluarPage({ params }: PageProps) {
   const { data: session, status } = useSession()
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [fetchLoading, setFetchLoading] = useState(true)
   const [error, setError] = useState('')
-  const [surat, setSurat] = useState<SuratMasuk | null>(null)
+  const [surat, setSurat] = useState<SuratKeluar | null>(null)
+  const [suratMasukList, setSuratMasukList] = useState<SuratMasuk[]>([])
   const resolvedParams = use(params)
+  
   const [formData, setFormData] = useState({
-    nomorSurat: '',
+    noUrut: '',
+    klas: '',
+    pengolah: '',
     tanggalSurat: '',
-    tanggalDiteruskan: '',
-    asalSurat: '',
-    perihal: '',
-    keterangan: '',
-    filePath: ''
+    perihalSurat: '',
+    kirimKepada: '',
+    suratMasukId: ''
   })
 
   useEffect(() => {
@@ -55,13 +77,14 @@ export default function EditSuratMasukPage({ params }: PageProps) {
   useEffect(() => {
     if (session && resolvedParams.id) {
       fetchSuratData()
+      fetchSuratMasuk()
     }
   }, [session, resolvedParams.id])
 
   const fetchSuratData = async () => {
     try {
       setFetchLoading(true)
-      const response = await fetch(`/api/surat-masuk/${resolvedParams.id}`)
+      const response = await fetch(`/api/surat-keluar/${resolvedParams.id}`)
       
       if (response.ok) {
         const data = await response.json()
@@ -69,18 +92,18 @@ export default function EditSuratMasukPage({ params }: PageProps) {
         
         // Pre-fill form with existing data
         setFormData({
-          nomorSurat: data.nomorSurat,
+          noUrut: data.noUrut.toString(),
+          klas: data.klas,
+          pengolah: data.pengolah,
           tanggalSurat: new Date(data.tanggalSurat).toISOString().split('T')[0],
-          tanggalDiteruskan: new Date(data.tanggalDiteruskan).toISOString().split('T')[0],
-          asalSurat: data.asalSurat,
-          perihal: data.perihal,
-          keterangan: data.keterangan || '',
-          filePath: data.filePath || ''
+          perihalSurat: data.perihalSurat,
+          kirimKepada: data.kirimKepada,
+          suratMasukId: data.suratMasuk?.id || ''
         })
       } else if (response.status === 404) {
-        setError('Surat masuk tidak ditemukan')
+        setError('Surat keluar tidak ditemukan')
       } else {
-        setError('Gagal mengambil data surat masuk')
+        setError('Gagal mengambil data surat keluar')
       }
     } catch (error) {
       console.error('Error fetching surat data:', error)
@@ -90,12 +113,45 @@ export default function EditSuratMasukPage({ params }: PageProps) {
     }
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const fetchSuratMasuk = async () => {
+    try {
+      const response = await fetch('/api/surat-masuk?limit=100')
+      if (response.ok) {
+        const data = await response.json()
+        setSuratMasukList(data.suratMasuk || [])
+      }
+    } catch (error) {
+      console.error('Error fetching surat masuk:', error)
+    }
+  }
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setFormData(prev => ({
       ...prev,
       [name]: value
     }))
+  }
+
+  const handleSuratMasukChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedId = e.target.value
+    setFormData(prev => ({ ...prev, suratMasukId: selectedId }))
+    
+    // Auto-fill perihal and tanggal surat if surat masuk is selected
+    if (selectedId) {
+      const selectedSurat = suratMasukList.find(s => s.id === selectedId)
+      if (selectedSurat) {
+        // Format tanggal surat masuk ke format input date (YYYY-MM-DD)
+        const tanggalSurat = new Date(selectedSurat.tanggalSurat)
+        const formattedTanggal = tanggalSurat.toISOString().split('T')[0]
+        
+        setFormData(prev => ({
+          ...prev,
+          perihalSurat: `Re: ${selectedSurat.perihal}`,
+          tanggalSurat: formattedTanggal
+        }))
+      }
+    }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -104,26 +160,26 @@ export default function EditSuratMasukPage({ params }: PageProps) {
     setError('')
 
     try {
-      const response = await fetch(`/api/surat-masuk/${resolvedParams.id}`, {
+      const response = await fetch(`/api/surat-keluar/${resolvedParams.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           ...formData,
+          noUrut: parseInt(formData.noUrut),
           tanggalSurat: new Date(formData.tanggalSurat).toISOString(),
-          tanggalDiteruskan: new Date(formData.tanggalDiteruskan).toISOString(),
         }),
       })
 
       if (response.ok) {
-        router.push('/dashboard/surat-masuk')
+        router.push('/dashboard/surat-keluar')
       } else {
         const data = await response.json()
-        setError(data.error || 'Terjadi kesalahan saat mengupdate surat masuk')
+        setError(data.error || 'Terjadi kesalahan saat mengupdate surat keluar')
       }
     } catch (error) {
-      console.error('Error updating surat masuk:', error)
+      console.error('Error updating surat keluar:', error)
       setError('Terjadi kesalahan sistem')
     } finally {
       setLoading(false)
@@ -152,7 +208,7 @@ export default function EditSuratMasukPage({ params }: PageProps) {
           <div className="text-red-600 text-lg font-medium">{error}</div>
           <div className="mt-4">
             <Link
-              href="/dashboard/surat-masuk"
+              href="/dashboard/surat-keluar"
               className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
@@ -165,22 +221,23 @@ export default function EditSuratMasukPage({ params }: PageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <DashboardLayout>
+      <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="bg-white shadow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center space-x-4">
               <Link
-                href="/dashboard/surat-masuk"
+                href="/dashboard/surat-keluar"
                 className="text-gray-400 hover:text-gray-600"
               >
                 <ArrowLeft className="h-6 w-6" />
               </Link>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">Edit Surat Masuk</h1>
+                <h1 className="text-2xl font-bold text-gray-900">Edit Surat Keluar</h1>
                 <p className="mt-1 text-sm text-gray-600">
-                  Edit informasi surat masuk yang sudah ada
+                  Edit informasi surat keluar yang sudah ada
                 </p>
               </div>
             </div>
@@ -193,7 +250,7 @@ export default function EditSuratMasukPage({ params }: PageProps) {
           <form onSubmit={handleSubmit}>
             <div className="px-6 py-4 border-b border-gray-200">
               <h3 className="text-lg font-medium text-gray-900">
-                Informasi Surat Masuk
+                Informasi Surat Keluar
               </h3>
             </div>
 
@@ -206,19 +263,57 @@ export default function EditSuratMasukPage({ params }: PageProps) {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="nomorSurat" className="block text-sm font-medium text-gray-900 mb-2">
-                    Nomor Surat <span className="text-red-500">*</span>
+                  <label htmlFor="noUrut" className="block text-sm font-medium text-gray-900 mb-2">
+                    No Urut <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    id="noUrut"
+                    name="noUrut"
+                    value={formData.noUrut}
+                    onChange={handleChange}
+                    required
+                    min="1"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                    placeholder="Contoh: 1, 2, 3..."
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="klas" className="block text-sm font-medium text-gray-900 mb-2">
+                    Klas <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
-                    id="nomorSurat"
-                    name="nomorSurat"
-                    value={formData.nomorSurat}
+                    id="klas"
+                    name="klas"
+                    value={formData.klas}
                     onChange={handleChange}
                     required
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
-                    placeholder="Contoh: SM/001/X/2024"
+                    placeholder="Contoh: SR.01/UM"
                   />
+                </div>
+
+                <div>
+                  <label htmlFor="pengolah" className="block text-sm font-medium text-gray-900 mb-2">
+                    Pengolah <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    id="pengolah"
+                    name="pengolah"
+                    value={formData.pengolah}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  >
+                    <option value="">Pilih Pengolah</option>
+                    {PENGOLAH_OPTIONS.map(option => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
                 <div>
@@ -235,82 +330,60 @@ export default function EditSuratMasukPage({ params }: PageProps) {
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                   />
                 </div>
-
-                <div>
-                  <label htmlFor="tanggalDiteruskan" className="block text-sm font-medium text-gray-900 mb-2">
-                    Tanggal Diteruskan <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="date"
-                    id="tanggalDiteruskan"
-                    name="tanggalDiteruskan"
-                    value={formData.tanggalDiteruskan}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
-                  />
-                </div>
               </div>
 
               <div>
-                <label htmlFor="asalSurat" className="block text-sm font-medium text-gray-900 mb-2">
-                  Asal Surat <span className="text-red-500">*</span>
+                <label htmlFor="suratMasukId" className="block text-sm font-medium text-gray-900 mb-2">
+                  Hubungkan dengan Surat Masuk (Opsional)
                 </label>
-                <input
-                  type="text"
-                  id="asalSurat"
-                  name="asalSurat"
-                  value={formData.asalSurat}
-                  onChange={handleChange}
-                  required
+                <select
+                  id="suratMasukId"
+                  name="suratMasukId"
+                  value={formData.suratMasukId}
+                  onChange={handleSuratMasukChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
-                  placeholder="Contoh: Dinas Pendidikan Kota"
-                />
+                >
+                  <option value="">Pilih Surat Masuk (jika ada hubungannya)</option>
+                  {suratMasukList.map(surat => (
+                    <option key={surat.id} value={surat.id}>
+                      {surat.nomorSurat} - {surat.perihal}
+                    </option>
+                  ))}
+                </select>
+                <p className="mt-1 text-xs text-gray-500">
+                  Jika dipilih, perihal akan terisi otomatis dari surat masuk
+                </p>
               </div>
 
               <div>
-                <label htmlFor="perihal" className="block text-sm font-medium text-gray-900 mb-2">
-                  Perihal <span className="text-red-500">*</span>
+                <label htmlFor="perihalSurat" className="block text-sm font-medium text-gray-900 mb-2">
+                  Perihal Surat <span className="text-red-500">*</span>
                 </label>
                 <textarea
-                  id="perihal"
-                  name="perihal"
-                  value={formData.perihal}
+                  id="perihalSurat"
+                  name="perihalSurat"
+                  value={formData.perihalSurat}
                   onChange={handleChange}
                   required
                   rows={3}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
-                  placeholder="Jelaskan perihal atau subjek surat..."
+                  placeholder="Contoh: Undangan Rapat Koordinasi"
                 />
               </div>
 
               <div>
-                <label htmlFor="keterangan" className="block text-sm font-medium text-gray-900 mb-2">
-                  Keterangan
+                <label htmlFor="kirimKepada" className="block text-sm font-medium text-gray-900 mb-2">
+                  Kirim Kepada <span className="text-red-500">*</span>
                 </label>
                 <textarea
-                  id="keterangan"
-                  name="keterangan"
-                  value={formData.keterangan}
+                  id="kirimKepada"
+                  name="kirimKepada"
+                  value={formData.kirimKepada}
                   onChange={handleChange}
-                  rows={3}
+                  required
+                  rows={4}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
-                  placeholder="Catatan atau keterangan tambahan (opsional)"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="filePath" className="block text-sm font-medium text-gray-900 mb-2">
-                  Path File
-                </label>
-                <input
-                  type="text"
-                  id="filePath"
-                  name="filePath"
-                  value={formData.filePath}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
-                  placeholder="Path file dokumen surat (opsional)"
+                  placeholder="Contoh: Dinas Pendidikan Kota Jakarta"
                 />
               </div>
 
@@ -320,13 +393,18 @@ export default function EditSuratMasukPage({ params }: PageProps) {
                   <p className="text-sm text-gray-600">
                     Dibuat oleh: <span className="font-medium">{surat.createdBy.name}</span>
                   </p>
+                  {surat.suratMasuk && (
+                    <p className="text-sm text-gray-600 mt-1">
+                      Terkait surat masuk: <span className="font-medium">{surat.suratMasuk.nomorSurat}</span>
+                    </p>
+                  )}
                 </div>
               )}
             </div>
 
             <div className="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
               <Link
-                href="/dashboard/surat-masuk"
+                href="/dashboard/surat-keluar"
                 className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-900 bg-white hover:bg-gray-50"
               >
                 <X className="h-4 w-4 mr-2" />
@@ -345,5 +423,6 @@ export default function EditSuratMasukPage({ params }: PageProps) {
         </div>
       </div>
     </div>
+    </DashboardLayout>
   )
 }

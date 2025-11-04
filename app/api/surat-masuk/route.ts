@@ -8,6 +8,7 @@ const suratMasukSchema = z.object({
   noUrut: z.number().min(1, "No urut wajib diisi"),
   nomorSurat: z.string().min(1, "Nomor surat wajib diisi"),
   tanggalSurat: z.string().datetime(),
+  tanggalDiteruskan: z.string().datetime(),
   asalSurat: z.string().min(1, "Asal surat wajib diisi"),
   perihal: z.string().min(1, "Perihal wajib diisi"),
   keterangan: z.string().optional(),
@@ -139,6 +140,7 @@ export async function POST(req: NextRequest) {
       data: {
         ...data,
         tanggalSurat: new Date(data.tanggalSurat),
+        tanggalDiteruskan: new Date(data.tanggalDiteruskan),
         createdById: session.user.id,
       },
       include: {

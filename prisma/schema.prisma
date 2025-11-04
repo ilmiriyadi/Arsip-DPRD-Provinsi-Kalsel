@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,63 +8,75 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  password  String
-  role      Role     @default(MEMBER)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // Relation untuk surat yang dibuat user
-  suratMasuk SuratMasuk[]
-  disposisi  Disposisi[]
+  id          String        @id @default(cuid())
+  email       String        @unique
+  name        String?
+  password    String
+  role        Role          @default(MEMBER)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  disposisi   Disposisi[]
+  suratKeluar SuratKeluar[]
+  suratMasuk  SuratMasuk[]
 
   @@map("users")
 }
 
 model SuratMasuk {
-  id             String   @id @default(cuid())
-  noUrut         Int      @unique
-  nomorSurat     String   @unique
-  tanggalSurat   DateTime
-  asalSurat      String
-  perihal        String
-  keterangan     String?
-  filePath       String?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-
-  // Foreign key
-  createdById    String
-  createdBy      User     @relation(fields: [createdById], references: [id])
-
-  // Relation ke disposisi
-  disposisi      Disposisi[]
+  id               String        @id @default(cuid())
+  noUrut           Int           @unique
+  nomorSurat       String        @unique
+  tanggalSurat     DateTime
+  tanggalDiteruskan DateTime
+  asalSurat        String
+  perihal          String
+  keterangan       String?
+  filePath         String?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  createdById      String
+  disposisi        Disposisi[]
+  suratKeluar      SuratKeluar[]
+  createdBy        User          @relation(fields: [createdById], references: [id])
 
   @@map("surat_masuk")
 }
 
 model Disposisi {
-  id                String     @id @default(cuid())
-  nomorDisposisi    String?    @unique
-  noUrut            Int
-  tanggalDisposisi  DateTime
-  tujuanDisposisi   String
-  isiDisposisi      String
-  keterangan        String?
-  status            StatusDisposisi @default(SELESAI)
-  createdAt         DateTime   @default(now())
-  updatedAt         DateTime   @updatedAt
-
-  // Foreign keys
-  suratMasukId      String
-  suratMasuk        SuratMasuk @relation(fields: [suratMasukId], references: [id], onDelete: Cascade)
-  
-  createdById       String
-  createdBy         User       @relation(fields: [createdById], references: [id])
+  id               String          @id @default(cuid())
+  nomorDisposisi   String?         @unique
+  noUrut           Int
+  tanggalDisposisi DateTime
+  tujuanDisposisi  String
+  isiDisposisi     String
+  keterangan       String?
+  status           StatusDisposisi @default(SELESAI)
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  suratMasukId     String
+  createdById      String
+  createdBy        User            @relation(fields: [createdById], references: [id])
+  suratMasuk       SuratMasuk      @relation(fields: [suratMasukId], references: [id], onDelete: Cascade)
 
   @@map("disposisi")
+}
+
+model SuratKeluar {
+  id           String        @id @default(cuid())
+  noUrut       Int           @unique
+  klas         String
+  pengolah     PengolahSurat
+  tanggalSurat DateTime
+  perihalSurat String
+  kirimKepada  String
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  suratMasukId String?
+  createdById  String
+  createdBy    User          @relation(fields: [createdById], references: [id])
+  suratMasuk   SuratMasuk?   @relation(fields: [suratMasukId], references: [id])
+
+  @@map("surat_keluar")
 }
 
 enum Role {
@@ -77,4 +86,12 @@ enum Role {
 
 enum StatusDisposisi {
   SELESAI
+}
+
+enum PengolahSurat {
+  KETUA_DPRD
+  WAKIL_KETUA_1
+  WAKIL_KETUA_2
+  WAKIL_KETUA_3
+  SEKWAN
 }

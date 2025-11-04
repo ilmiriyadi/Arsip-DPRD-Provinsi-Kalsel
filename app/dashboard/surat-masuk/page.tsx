@@ -19,7 +19,8 @@ import {
   ChevronRight,
   FileOutput,
   Copy,
-  CheckCircle
+  CheckCircle,
+  Send
 } from 'lucide-react'
 
 interface SuratMasuk {
@@ -27,6 +28,7 @@ interface SuratMasuk {
   noUrut: number
   nomorSurat: string
   tanggalSurat: string
+  tanggalDiteruskan: string
   asalSurat: string
   perihal: string
   keterangan?: string
@@ -75,6 +77,14 @@ export default function SuratMasukPage() {
   const [selectedSubBagian, setSelectedSubBagian] = useState('')
   const [keteranganDisposisi, setKeteranganDisposisi] = useState('')
   const [tanggalDisposisi, setTanggalDisposisi] = useState('')
+
+  // Modal Surat Keluar states
+  const [showSuratKeluarModal, setShowSuratKeluarModal] = useState(false)
+  const [selectedSuratForKeluar, setSelectedSuratForKeluar] = useState<SuratMasuk | null>(null)
+  const [noUrutKeluar, setNoUrutKeluar] = useState('')
+  const [klaSurat, setKlasSurat] = useState('')
+  const [pengolahSurat, setPengolahSurat] = useState('')
+  const [kirimKepada, setKirimKepada] = useState('')
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -208,6 +218,14 @@ export default function SuratMasukPage() {
     ]
   }
 
+  const pengolahOptions = [
+    { value: 'KETUA_DPRD', label: 'Ketua DPRD' },
+    { value: 'WAKIL_KETUA_1', label: 'Wakil Ketua 1' },
+    { value: 'WAKIL_KETUA_2', label: 'Wakil Ketua 2' },
+    { value: 'WAKIL_KETUA_3', label: 'Wakil Ketua 3' },
+    { value: 'SEKWAN', label: 'Sekwan' }
+  ]
+
   const handleCopyToDisposisi = (suratId: string, nomorSurat: string) => {
     setSelectedSurat({ id: suratId, nomorSurat })
     setSelectedTujuan('')
@@ -215,6 +233,15 @@ export default function SuratMasukPage() {
     setKeteranganDisposisi('')
     setTanggalDisposisi('')
     setShowTujuanModal(true)
+  }
+
+  const handleCreateSuratKeluar = (surat: SuratMasuk) => {
+    setSelectedSuratForKeluar(surat)
+    setNoUrutKeluar('')
+    setKlasSurat('')
+    setPengolahSurat('')
+    setKirimKepada('')
+    setShowSuratKeluarModal(true)
   }
 
   const handleConfirmCopy = async () => {
@@ -277,6 +304,57 @@ export default function SuratMasukPage() {
     setSelectedSubBagian('')
     setKeteranganDisposisi('')
     setTanggalDisposisi('')
+  }
+
+  const handleConfirmSuratKeluar = async () => {
+    if (!selectedSuratForKeluar || !noUrutKeluar || !klaSurat || !pengolahSurat || !kirimKepada) {
+      alert('Harap lengkapi semua field yang wajib diisi')
+      return
+    }
+
+    try {
+      const response = await fetch('/api/surat-keluar', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          noUrut: parseInt(noUrutKeluar),
+          klas: klaSurat,
+          pengolah: pengolahSurat,
+          tanggalSurat: selectedSuratForKeluar.tanggalSurat,
+          perihalSurat: selectedSuratForKeluar.perihal,
+          kirimKepada: kirimKepada,
+          suratMasukId: selectedSuratForKeluar.id
+        }),
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        alert('Surat keluar berhasil dibuat!')
+        setShowSuratKeluarModal(false)
+        setSelectedSuratForKeluar(null)
+        setNoUrutKeluar('')
+        setKlasSurat('')
+        setPengolahSurat('')
+        setKirimKepada('')
+      } else {
+        alert(data.error || 'Gagal membuat surat keluar')
+      }
+    } catch (error) {
+      console.error('Error creating surat keluar:', error)
+      alert('Terjadi kesalahan sistem')
+    }
+  }
+
+  const handleCancelSuratKeluar = () => {
+    setShowSuratKeluarModal(false)
+    setSelectedSuratForKeluar(null)
+    setNoUrutKeluar('')
+    setKlasSurat('')
+    setPengolahSurat('')
+    setKirimKepada('')
   }
 
   if (status === 'loading') {
@@ -515,7 +593,10 @@ export default function SuratMasukPage() {
                         📄 Nomor Surat
                       </th>
                       <th className="px-6 py-4 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider border-b border-slate-200">
-                        📅 Tanggal
+                        📅 Tanggal Surat
+                      </th>
+                      <th className="px-6 py-4 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider border-b border-slate-200">
+                        📤 Tanggal Diteruskan
                       </th>
                       <th className="px-6 py-4 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider border-b border-slate-200">
                         🏢 Asal Surat
@@ -554,6 +635,14 @@ export default function SuratMasukPage() {
                             <div className="w-2 h-2 bg-green-400 rounded-full"></div>
                             <span className="text-sm text-slate-600 font-medium">
                               {formatDate(surat.tanggalSurat)}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="px-6 py-5 whitespace-nowrap">
+                          <div className="flex items-center space-x-2">
+                            <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                            <span className="text-sm text-slate-600 font-medium">
+                              {formatDate(surat.tanggalDiteruskan)}
                             </span>
                           </div>
                         </td>
@@ -625,6 +714,13 @@ export default function SuratMasukPage() {
                                     <Plus className="h-4 w-4" />
                                   </Link>
                                 )}
+                                <button
+                                  onClick={() => handleCreateSuratKeluar(surat)}
+                                  className="inline-flex items-center justify-center w-8 h-8 bg-green-100 text-green-700 hover:bg-green-200 rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md"
+                                  title="Buat Surat Keluar"
+                                >
+                                  <Send className="h-4 w-4" />
+                                </button>
                                 <Link
                                   href={`/dashboard/surat-masuk/edit/${surat.id}`}
                                   className="inline-flex items-center justify-center w-8 h-8 bg-amber-100 text-amber-700 hover:bg-amber-200 rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md"
@@ -828,6 +924,120 @@ export default function SuratMasukPage() {
                 className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-indigo-600 border border-transparent rounded-lg hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 shadow-lg hover:shadow-xl"
               >
                 ✅ Buat Disposisi
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Buat Surat Keluar */}
+      {showSuratKeluarModal && selectedSuratForKeluar && (
+        <div className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full mx-4 max-h-[90vh] flex flex-col overflow-hidden">
+            <div className="bg-gradient-to-r from-green-600 to-emerald-600 px-6 py-5 text-white">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-white bg-opacity-20 rounded-xl flex items-center justify-center">
+                  <Send className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold">
+                    Buat Surat Keluar
+                  </h3>
+                  <p className="text-green-100 text-sm">
+                    Dari: <span className="font-medium">{selectedSuratForKeluar.nomorSurat}</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
+              <div>
+                <label className="block text-sm font-semibold text-gray-900 mb-3">
+                  📄 Nomor Urut Surat Keluar
+                </label>
+                <input
+                  type="number"
+                  value={noUrutKeluar}
+                  onChange={(e) => setNoUrutKeluar(e.target.value)}
+                  placeholder="Contoh: 1, 2, 3..."
+                  min="1"
+                  required
+                  className="w-full px-3 py-2 border-2 border-slate-300 rounded-lg bg-white focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 text-slate-700 placeholder-slate-400"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-900 mb-3">
+                  📂 Klas Surat
+                </label>
+                <input
+                  type="text"
+                  value={klaSurat}
+                  onChange={(e) => setKlasSurat(e.target.value)}
+                  placeholder="Contoh: 001/DPRD/XI/2024"
+                  required
+                  className="w-full px-3 py-2 border-2 border-slate-300 rounded-lg bg-white focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 text-slate-700 placeholder-slate-400"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-900 mb-3">
+                  👤 Pengolah Surat
+                </label>
+                <div className="space-y-2">
+                  {pengolahOptions.map((option) => (
+                    <label key={option.value} className="flex items-center p-2.5 rounded-lg border-2 border-slate-200 hover:border-green-300 hover:bg-green-50 transition-all duration-200 cursor-pointer group">
+                      <input
+                        type="radio"
+                        name="pengolah"
+                        value={option.value}
+                        checked={pengolahSurat === option.value}
+                        onChange={(e) => setPengolahSurat(e.target.value)}
+                        className="h-4 w-4 text-green-600 focus:ring-green-500 border-slate-300"
+                      />
+                      <span className="ml-3 text-sm font-medium text-slate-700 group-hover:text-green-700">{option.label}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-900 mb-3">
+                  📤 Kirim Kepada
+                </label>
+                <input
+                  type="text"
+                  value={kirimKepada}
+                  onChange={(e) => setKirimKepada(e.target.value)}
+                  placeholder="Contoh: Dinas Pendidikan Provinsi Kalimantan Selatan"
+                  required
+                  className="w-full px-3 py-2 border-2 border-slate-300 rounded-lg bg-white focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 text-slate-700 placeholder-slate-400"
+                />
+              </div>
+
+              <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                <h4 className="text-sm font-semibold text-slate-700 mb-2">📋 Data Otomatis (dari Surat Masuk):</h4>
+                <div className="space-y-1 text-sm text-slate-600">
+                  <p><strong>Tanggal Surat:</strong> {new Date(selectedSuratForKeluar.tanggalSurat).toLocaleDateString('id-ID')}</p>
+                  <p><strong>Perihal Surat:</strong> {selectedSuratForKeluar.perihal}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex-shrink-0 px-6 py-4 bg-slate-50 border-t border-slate-200 flex justify-end space-x-3">
+              <button
+                type="button"
+                onClick={handleCancelSuratKeluar}
+                className="px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transition-all duration-200 shadow-sm hover:shadow-md"
+              >
+                ❌ Batal
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmSuratKeluar}
+                className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-green-600 to-emerald-600 border border-transparent rounded-lg hover:from-green-700 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-all duration-200 shadow-lg hover:shadow-xl"
+              >
+                ✅ Buat Surat Keluar
               </button>
             </div>
           </div>

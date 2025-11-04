@@ -22,6 +22,7 @@ interface SuratMasuk {
   id: string
   nomorSurat: string
   tanggalSurat: string
+  tanggalDiteruskan: string
   asalSurat: string
   perihal: string
   keterangan?: string
@@ -215,25 +216,38 @@ export default function SuratMasukDetailPage({ params }: PageProps) {
                 </h3>
               </div>
               <div className="p-6 space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">Nomor Surat</label>
-                    <p className="mt-1 text-sm text-gray-900 font-semibold">{surat.nomorSurat}</p>
+                <div className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Nomor Surat</label>
+                      <p className="mt-1 text-sm text-gray-900 font-semibold">{surat.nomorSurat}</p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Asal Surat</label>
+                      <p className="mt-1 text-sm text-gray-900 flex items-center">
+                        <Building className="h-4 w-4 mr-1 text-gray-400" />
+                        {surat.asalSurat}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">Tanggal Surat</label>
-                    <p className="mt-1 text-sm text-gray-900 flex items-center">
-                      <Calendar className="h-4 w-4 mr-1 text-gray-400" />
-                      {formatDate(surat.tanggalSurat)}
-                    </p>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Tanggal Surat</label>
+                      <p className="mt-1 text-sm text-gray-900 flex items-center">
+                        <Calendar className="h-4 w-4 mr-1 text-gray-400" />
+                        {formatDate(surat.tanggalSurat)}
+                      </p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Tanggal Diteruskan</label>
+                      <p className="mt-1 text-sm text-gray-900 flex items-center">
+                        <FileOutput className="h-4 w-4 mr-1 text-gray-400" />
+                        {formatDate(surat.tanggalDiteruskan)}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">Asal Surat</label>
-                    <p className="mt-1 text-sm text-gray-900 flex items-center">
-                      <Building className="h-4 w-4 mr-1 text-gray-400" />
-                      {surat.asalSurat}
-                    </p>
-                  </div>
+
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Dibuat Oleh</label>
                     <p className="mt-1 text-sm text-gray-900 flex items-center">

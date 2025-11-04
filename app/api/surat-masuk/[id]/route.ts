@@ -7,6 +7,7 @@ import { z } from "zod"
 const suratMasukSchema = z.object({
   nomorSurat: z.string().min(1, "Nomor surat wajib diisi"),
   tanggalSurat: z.string().datetime(),
+  tanggalDiteruskan: z.string().datetime(),
   asalSurat: z.string().min(1, "Asal surat wajib diisi"),
   perihal: z.string().min(1, "Perihal wajib diisi"),
   keterangan: z.string().optional(),
@@ -85,6 +86,7 @@ export async function PUT(
       data: {
         ...data,
         tanggalSurat: new Date(data.tanggalSurat),
+        tanggalDiteruskan: new Date(data.tanggalDiteruskan),
       },
       include: {
         createdBy: {
