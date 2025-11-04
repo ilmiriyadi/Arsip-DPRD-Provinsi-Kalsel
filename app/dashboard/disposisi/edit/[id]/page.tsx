@@ -43,6 +43,8 @@ export default function EditDisposisiPage() {
   const [error, setError] = useState('')
   const [suratMasukList, setSuratMasukList] = useState<SuratMasuk[]>([])
   const [disposisi, setDisposisi] = useState<Disposisi | null>(null)
+  const [selectedBagian, setSelectedBagian] = useState('')
+  const [selectedSubBagian, setSelectedSubBagian] = useState('')
   const [formData, setFormData] = useState({
     noUrut: '',
     tanggalDisposisi: '',
@@ -58,6 +60,24 @@ export default function EditDisposisiPage() {
     'Bagian Fasilitasi Penganggaran dan Pengawasan',
     'Bagian Umum dan Keuangan'
   ]
+
+  const subBagianOptions = {
+    'Bagian Persidangan dan Perundang-Undangan': [
+      'Sub Bagian Kajian Perundang-Undangan',
+      'Sub Bagian Persidangan dan Risalah',
+      'Sub Bagian Humas, Protokol dan Publikasi'
+    ],
+    'Bagian Fasilitasi Penganggaran dan Pengawasan': [
+      'Sub Bagian Fasilitasi dan Penganggaran',
+      'Sub Bagian Fasilitasi Pengawasan',
+      'Sub Bagian Kerjasama dan Aspirasi'
+    ],
+    'Bagian Umum dan Keuangan': [
+      'Sub Bagian Perencanaan dan Keuangan',
+      'Sub Bagian Tata Usaha dan Kepegawaian',
+      'Sub Bagian Rumah Tangga & Aset'
+    ]
+  }
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -81,6 +101,16 @@ export default function EditDisposisiPage() {
       if (response.ok) {
         const data = await response.json()
         setDisposisi(data)
+        // Parse existing tujuanDisposisi to extract bagian and sub bagian
+        const tujuanParts = data.tujuanDisposisi.split(' - ')
+        const bagian = tujuanParts[0]
+        const subBagian = tujuanParts[1] || ''
+        
+        if (tujuanOptions.includes(bagian)) {
+          setSelectedBagian(bagian)
+          setSelectedSubBagian(subBagian)
+        }
+        
         setFormData({
           noUrut: data.noUrut.toString(),
           tanggalDisposisi: new Date(data.tanggalDisposisi).toISOString().split('T')[0],
@@ -138,6 +168,19 @@ export default function EditDisposisiPage() {
     e.preventDefault()
     setLoading(true)
     setError('')
+
+    // Validasi sub bagian
+    if (!selectedBagian) {
+      setError('Silakan pilih bagian tujuan')
+      setLoading(false)
+      return
+    }
+
+    if (!selectedSubBagian) {
+      setError('Silakan pilih sub bagian')
+      setLoading(false)
+      return
+    }
 
     try {
       const response = await fetch(`/api/disposisi/${id}`, {
@@ -314,39 +357,54 @@ export default function EditDisposisiPage() {
                   </div>
 
                   <div>
-                    <label htmlFor="tujuanDisposisi" className="block text-sm font-medium text-gray-900 mb-2">
+                    <label htmlFor="bagianTujuan" className="block text-sm font-medium text-gray-900 mb-2">
                       <Building className="inline h-4 w-4 mr-1" />
-                      Tujuan Disposisi <span className="text-red-500">*</span>
+                      Bagian Tujuan <span className="text-red-500">*</span>
                     </label>
                     <select
-                      id="tujuanDisposisi"
-                      name="tujuanDisposisi"
-                      value={tujuanOptions.includes(formData.tujuanDisposisi) ? formData.tujuanDisposisi : 'custom'}
+                      id="bagianTujuan"
+                      value={selectedBagian}
                       onChange={(e) => {
-                        if (e.target.value !== 'custom') {
-                          setFormData(prev => ({ ...prev, tujuanDisposisi: e.target.value }))
-                        }
+                        setSelectedBagian(e.target.value)
+                        setSelectedSubBagian('')
+                        setFormData(prev => ({ ...prev, tujuanDisposisi: '' }))
                       }}
                       required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 mb-2"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                     >
+                      <option value="">Pilih bagian tujuan...</option>
                       {tujuanOptions.map((option) => (
                         <option key={option} value={option}>{option}</option>
                       ))}
-                      <option value="custom">Lainnya (ketik manual)</option>
                     </select>
-                    {!tujuanOptions.includes(formData.tujuanDisposisi) && (
-                      <input
-                        type="text"
-                        name="tujuanDisposisi"
-                        value={formData.tujuanDisposisi}
-                        onChange={handleChange}
-                        placeholder="Ketik tujuan disposisi..."
+                  </div>
+
+                  {selectedBagian && (
+                    <div>
+                      <label htmlFor="subBagianTujuan" className="block text-sm font-medium text-gray-900 mb-2">
+                        <Building className="inline h-4 w-4 mr-1" />
+                        Sub Bagian <span className="text-red-500">*</span>
+                      </label>
+                      <select
+                        id="subBagianTujuan"
+                        value={selectedSubBagian}
+                        onChange={(e) => {
+                          setSelectedSubBagian(e.target.value)
+                          setFormData(prev => ({ 
+                            ...prev, 
+                            tujuanDisposisi: `${selectedBagian} - ${e.target.value}` 
+                          }))
+                        }}
                         required
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
-                      />
-                    )}
-                  </div>
+                      >
+                        <option value="">Pilih sub bagian...</option>
+                        {subBagianOptions[selectedBagian as keyof typeof subBagianOptions]?.map((subOption) => (
+                          <option key={subOption} value={subOption}>{subOption}</option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
 
                   <div>
                     <label htmlFor="isiDisposisi" className="block text-sm font-medium text-gray-900 mb-2">

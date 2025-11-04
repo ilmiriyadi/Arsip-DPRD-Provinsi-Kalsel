@@ -72,7 +72,8 @@ export default function SuratMasukPage() {
   const [showTujuanModal, setShowTujuanModal] = useState(false)
   const [selectedSurat, setSelectedSurat] = useState<{ id: string, nomorSurat: string } | null>(null)
   const [selectedTujuan, setSelectedTujuan] = useState('')
-  const [customTujuan, setCustomTujuan] = useState('')
+  const [selectedSubBagian, setSelectedSubBagian] = useState('')
+  const [keteranganDisposisi, setKeteranganDisposisi] = useState('')
   const [tanggalDisposisi, setTanggalDisposisi] = useState('')
 
   useEffect(() => {
@@ -189,10 +190,29 @@ export default function SuratMasukPage() {
     'Bagian Umum dan Keuangan'
   ]
 
+  const subBagianOptions = {
+    'Bagian Persidangan dan Perundang-Undangan': [
+      'Sub Bagian Kajian Perundang-Undangan',
+      'Sub Bagian Persidangan dan Risalah',
+      'Sub Bagian Humas, Protokol dan Publikasi'
+    ],
+    'Bagian Fasilitasi Penganggaran dan Pengawasan': [
+      'Sub Bagian Fasilitasi dan Penganggaran',
+      'Sub Bagian Fasilitasi Pengawasan',
+      'Sub Bagian Kerjasama dan Aspirasi'
+    ],
+    'Bagian Umum dan Keuangan': [
+      'Sub Bagian Perencanaan dan Keuangan',
+      'Sub Bagian Tata Usaha dan Kepegawaian',
+      'Sub Bagian Rumah Tangga & Aset'
+    ]
+  }
+
   const handleCopyToDisposisi = (suratId: string, nomorSurat: string) => {
     setSelectedSurat({ id: suratId, nomorSurat })
     setSelectedTujuan('')
-    setCustomTujuan('')
+    setSelectedSubBagian('')
+    setKeteranganDisposisi('')
     setTanggalDisposisi('')
     setShowTujuanModal(true)
   }
@@ -200,10 +220,13 @@ export default function SuratMasukPage() {
   const handleConfirmCopy = async () => {
     if (!selectedSurat) return
 
-    const tujuan = selectedTujuan === 'custom' ? customTujuan : selectedTujuan
-    
-    if (!tujuan.trim()) {
-      alert('Silakan pilih atau masukkan tujuan disposisi')
+    if (!selectedTujuan.trim()) {
+      alert('Silakan pilih tujuan disposisi')
+      return
+    }
+
+    if (!selectedSubBagian.trim()) {
+      alert('Silakan pilih sub bagian')
       return
     }
 
@@ -212,6 +235,8 @@ export default function SuratMasukPage() {
       return
     }
 
+    const finalTujuan = `${selectedTujuan} - ${selectedSubBagian}`
+
     try {
       const response = await fetch(`/api/surat-masuk/${selectedSurat.id}/copy-disposisi`, {
         method: 'POST',
@@ -219,8 +244,9 @@ export default function SuratMasukPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          tujuanDisposisi: tujuan.trim(),
-          tanggalDisposisi: tanggalDisposisi
+          tujuanDisposisi: finalTujuan.trim(),
+          tanggalDisposisi: tanggalDisposisi,
+          keterangan: keteranganDisposisi.trim()
         }),
       })
 
@@ -231,7 +257,8 @@ export default function SuratMasukPage() {
         setShowTujuanModal(false)
         setSelectedSurat(null)
         setSelectedTujuan('')
-        setCustomTujuan('')
+        setSelectedSubBagian('')
+        setKeteranganDisposisi('')
         setTanggalDisposisi('')
         fetchSuratMasuk() // Refresh data
       } else {
@@ -247,7 +274,8 @@ export default function SuratMasukPage() {
     setShowTujuanModal(false)
     setSelectedSurat(null)
     setSelectedTujuan('')
-    setCustomTujuan('')
+    setSelectedSubBagian('')
+    setKeteranganDisposisi('')
     setTanggalDisposisi('')
   }
 
@@ -694,7 +722,7 @@ export default function SuratMasukPage() {
       {/* Modal Pilih Tujuan Disposisi */}
       {showTujuanModal && (
         <div className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 overflow-hidden">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full mx-4 max-h-[90vh] flex flex-col overflow-hidden">
             <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-5 text-white">
               <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 bg-white bg-opacity-20 rounded-xl flex items-center justify-center">
@@ -711,54 +739,66 @@ export default function SuratMasukPage() {
               </div>
             </div>
             
-            <div className="px-6 py-6 space-y-6">
+            <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
               <div>
-                <label className="block text-sm font-semibold text-gray-900 mb-4">
-                  🎯 Pilih Tujuan Disposisi
+                <label className="block text-sm font-semibold text-gray-900 mb-3">
+                  🎯 Pilih Bagian Tujuan
                 </label>
-                <div className="space-y-3">
+                <div className="space-y-2">
                   {tujuanOptions.map((option) => (
-                    <label key={option} className="flex items-center p-3 rounded-xl border-2 border-slate-200 hover:border-blue-300 hover:bg-blue-50 transition-all duration-200 cursor-pointer group">
+                    <label key={option} className="flex items-center p-2.5 rounded-lg border-2 border-slate-200 hover:border-blue-300 hover:bg-blue-50 transition-all duration-200 cursor-pointer group">
                       <input
                         type="radio"
                         name="tujuan"
                         value={option}
                         checked={selectedTujuan === option}
-                        onChange={(e) => setSelectedTujuan(e.target.value)}
+                        onChange={(e) => {
+                          setSelectedTujuan(e.target.value)
+                          setSelectedSubBagian('') // Reset sub bagian when changing main bagian
+                        }}
                         className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-300"
                       />
                       <span className="ml-3 text-sm font-medium text-slate-700 group-hover:text-blue-700">{option}</span>
                     </label>
                   ))}
-                  <label className="flex items-center p-3 rounded-xl border-2 border-dashed border-slate-300 hover:border-blue-400 hover:bg-blue-50 transition-all duration-200 cursor-pointer group">
-                    <input
-                      type="radio"
-                      name="tujuan"
-                      value="custom"
-                      checked={selectedTujuan === 'custom'}
-                      onChange={(e) => setSelectedTujuan(e.target.value)}
-                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-300"
-                    />
-                    <span className="ml-3 text-sm font-medium text-slate-600 group-hover:text-blue-700">✏️ Lainnya (ketik sendiri)</span>
-                  </label>
                 </div>
               </div>
 
-              {selectedTujuan === 'custom' && (
-                <div className="p-4 bg-blue-50 rounded-xl border border-blue-200">
-                  <label htmlFor="customTujuan" className="block text-sm font-semibold text-gray-900 mb-3">
-                    📝 Tujuan Custom
+              {selectedTujuan && subBagianOptions[selectedTujuan as keyof typeof subBagianOptions] && (
+                <div>
+                  <label className="block text-sm font-semibold text-gray-900 mb-3">
+                    📋 Pilih Sub Bagian
                   </label>
-                  <input
-                    type="text"
-                    id="customTujuan"
-                    value={customTujuan}
-                    onChange={(e) => setCustomTujuan(e.target.value)}
-                    placeholder="Masukkan tujuan disposisi..."
-                    className="w-full px-4 py-3 border-2 border-slate-300 rounded-xl bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-slate-700 placeholder-slate-400"
-                  />
+                  <div className="space-y-1.5">
+                    {subBagianOptions[selectedTujuan as keyof typeof subBagianOptions].map((subOption) => (
+                      <label key={subOption} className="flex items-center p-2 rounded-lg border border-slate-200 hover:border-blue-300 hover:bg-blue-50 transition-all duration-200 cursor-pointer group">
+                        <input
+                          type="radio"
+                          name="subBagian"
+                          value={subOption}
+                          checked={selectedSubBagian === subOption}
+                          onChange={(e) => setSelectedSubBagian(e.target.value)}
+                          className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-300"
+                        />
+                        <span className="ml-3 text-xs font-medium text-slate-600 group-hover:text-blue-700">{subOption}</span>
+                      </label>
+                    ))}
+                  </div>
                 </div>
               )}
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-900 mb-3">
+                  📝 Keterangan Disposisi
+                </label>
+                <textarea
+                  value={keteranganDisposisi}
+                  onChange={(e) => setKeteranganDisposisi(e.target.value)}
+                  placeholder="Masukkan keterangan disposisi..."
+                  rows={2}
+                  className="w-full px-3 py-2 border-2 border-slate-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-slate-700 placeholder-slate-400 resize-none"
+                />
+              </div>
 
               <div>
                 <label className="block text-sm font-semibold text-gray-900 mb-3">
@@ -769,23 +809,23 @@ export default function SuratMasukPage() {
                   value={tanggalDisposisi}
                   onChange={(e) => setTanggalDisposisi(e.target.value)}
                   required
-                  className="w-full px-4 py-3 border-2 border-slate-300 rounded-xl bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-slate-700"
+                  className="w-full px-3 py-2 border-2 border-slate-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-slate-700"
                 />
               </div>
             </div>
 
-            <div className="px-6 py-5 bg-slate-50 border-t border-slate-200 flex justify-end space-x-3">
+            <div className="flex-shrink-0 px-6 py-4 bg-slate-50 border-t border-slate-200 flex justify-end space-x-3">
               <button
                 type="button"
                 onClick={handleCancelCopy}
-                className="px-6 py-2.5 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-xl hover:bg-slate-50 hover:border-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 shadow-sm"
+                className="px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 hover:border-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 shadow-sm"
               >
                 ❌ Batal
               </button>
               <button
                 type="button"
                 onClick={handleConfirmCopy}
-                className="px-6 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-indigo-600 border border-transparent rounded-xl hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 shadow-lg hover:shadow-xl"
+                className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-indigo-600 border border-transparent rounded-lg hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 shadow-lg hover:shadow-xl"
               >
                 ✅ Buat Disposisi
               </button>

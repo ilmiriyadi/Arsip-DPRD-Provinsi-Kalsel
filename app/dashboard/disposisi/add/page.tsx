@@ -24,6 +24,8 @@ function AddDisposisiContent() {
   const [error, setError] = useState('')
   const [suratMasukList, setSuratMasukList] = useState<SuratMasuk[]>([])
   const [selectedSurat, setSelectedSurat] = useState<SuratMasuk | null>(null)
+  const [selectedBagian, setSelectedBagian] = useState('')
+  const [selectedSubBagian, setSelectedSubBagian] = useState('')
   const [formData, setFormData] = useState({
     noUrut: '',
     tanggalDisposisi: '',
@@ -33,6 +35,30 @@ function AddDisposisiContent() {
     status: 'SELESAI' as const,
     suratMasukId: suratId || '',
   })
+
+  const tujuanOptions = [
+    'Bagian Persidangan dan Perundang-Undangan',
+    'Bagian Fasilitasi Penganggaran dan Pengawasan',
+    'Bagian Umum dan Keuangan'
+  ]
+
+  const subBagianOptions = {
+    'Bagian Persidangan dan Perundang-Undangan': [
+      'Sub Bagian Kajian Perundang-Undangan',
+      'Sub Bagian Persidangan dan Risalah',
+      'Sub Bagian Humas, Protokol dan Publikasi'
+    ],
+    'Bagian Fasilitasi Penganggaran dan Pengawasan': [
+      'Sub Bagian Fasilitasi dan Penganggaran',
+      'Sub Bagian Fasilitasi Pengawasan',
+      'Sub Bagian Kerjasama dan Aspirasi'
+    ],
+    'Bagian Umum dan Keuangan': [
+      'Sub Bagian Perencanaan dan Keuangan',
+      'Sub Bagian Tata Usaha dan Kepegawaian',
+      'Sub Bagian Rumah Tangga & Aset'
+    ]
+  }
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -99,6 +125,19 @@ function AddDisposisiContent() {
     e.preventDefault()
     setLoading(true)
     setError('')
+
+    // Validasi sub bagian
+    if (!selectedBagian) {
+      setError('Silakan pilih bagian tujuan')
+      setLoading(false)
+      return
+    }
+
+    if (!selectedSubBagian) {
+      setError('Silakan pilih sub bagian')
+      setLoading(false)
+      return
+    }
 
     try {
       const response = await fetch('/api/disposisi', {
@@ -255,35 +294,52 @@ function AddDisposisiContent() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="tujuanDisposisi" className="block text-sm font-medium text-gray-900 mb-2">
-                    Tujuan Disposisi <span className="text-red-500">*</span>
+                  <label htmlFor="bagianTujuan" className="block text-sm font-medium text-gray-900 mb-2">
+                    Bagian Tujuan <span className="text-red-500">*</span>
                   </label>
-                  <div className="space-y-2">
+                  <select
+                    id="bagianTujuan"
+                    value={selectedBagian}
+                    onChange={(e) => {
+                      setSelectedBagian(e.target.value)
+                      setSelectedSubBagian('')
+                      setFormData(prev => ({ ...prev, tujuanDisposisi: '' }))
+                    }}
+                    required
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  >
+                    <option value="">Pilih bagian tujuan...</option>
+                    {tujuanOptions.map((option) => (
+                      <option key={option} value={option}>{option}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {selectedBagian && (
+                  <div>
+                    <label htmlFor="subBagianTujuan" className="block text-sm font-medium text-gray-900 mb-2">
+                      Sub Bagian <span className="text-red-500">*</span>
+                    </label>
                     <select
-                      id="tujuanDisposisi"
-                      name="tujuanDisposisi"
-                      value={formData.tujuanDisposisi}
-                      onChange={handleChange}
+                      id="subBagianTujuan"
+                      value={selectedSubBagian}
+                      onChange={(e) => {
+                        setSelectedSubBagian(e.target.value)
+                        setFormData(prev => ({ 
+                          ...prev, 
+                          tujuanDisposisi: `${selectedBagian} - ${e.target.value}` 
+                        }))
+                      }}
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                     >
-                      <option value="">Pilih tujuan disposisi...</option>
-                      <option value="Bagian Persidangan dan Perundang-Undangan">Bagian Persidangan dan Perundang-Undangan</option>
-                      <option value="Bagian Fasilitasi Penganggaran dan Pengawasan">Bagian Fasilitasi Penganggaran dan Pengawasan</option>
-                      <option value="Bagian Umum dan Keuangan">Bagian Umum dan Keuangan</option>
+                      <option value="">Pilih sub bagian...</option>
+                      {subBagianOptions[selectedBagian as keyof typeof subBagianOptions]?.map((subOption) => (
+                        <option key={subOption} value={subOption}>{subOption}</option>
+                      ))}
                     </select>
-                    <input
-                      type="text"
-                      placeholder="Atau ketik tujuan lainnya..."
-                      value={formData.tujuanDisposisi}
-                      onChange={handleChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 text-sm"
-                    />
-                    <p className="text-xs text-gray-500">
-                      Pilih dari dropdown atau ketik tujuan custom di input bawah
-                    </p>
                   </div>
-                </div>
+                )}
 
                 <div>
                   <label htmlFor="tanggalDisposisi" className="block text-sm font-medium text-gray-900 mb-2">
