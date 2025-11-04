@@ -21,7 +21,9 @@ import {
   Users,
   CheckCircle,
   User,
-  Settings
+  Settings,
+  Download,
+  Loader2
 } from 'lucide-react'
 
 interface Disposisi {
@@ -68,6 +70,7 @@ export default function DisposisiPage() {
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
   const [dateFilter, setDateFilter] = useState('')
   const [monthFilter, setMonthFilter] = useState('')
+  const [isExporting, setIsExporting] = useState(false)
 
 
   useEffect(() => {
@@ -147,6 +150,39 @@ export default function DisposisiPage() {
     }
   }
 
+  const handleExportExcel = async () => {
+    try {
+      setIsExporting(true)
+      const response = await fetch('/api/disposisi/export')
+      
+      if (!response.ok) {
+        throw new Error('Gagal mengexport data')
+      }
+
+      // Get filename from response headers
+      const contentDisposition = response.headers.get('Content-Disposition')
+      const filename = contentDisposition?.match(/filename="(.+)"/)?.[1] || 'disposisi-export.xlsx'
+
+      // Create blob and download
+      const blob = await response.blob()
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = filename
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      window.URL.revokeObjectURL(url)
+
+      alert('Data disposisi berhasil diexport ke Excel!')
+    } catch (error) {
+      console.error('Error exporting to Excel:', error)
+      alert('Gagal mengexport data ke Excel')
+    } finally {
+      setIsExporting(false)
+    }
+  }
+
   const handleClearSearch = () => {
     setSearchTerm('')
     setPagination(prev => ({ ...prev, page: 1 }))
@@ -207,6 +243,18 @@ export default function DisposisiPage() {
               </div>
             </div>
             <div className="flex space-x-3">
+              <button
+                onClick={handleExportExcel}
+                disabled={isExporting}
+                className="inline-flex items-center px-5 py-2.5 border border-emerald-300 rounded-xl shadow-lg text-sm font-medium text-emerald-700 bg-white hover:bg-emerald-50 transition-all duration-200 hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isExporting ? (
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                ) : (
+                  <Download className="h-4 w-4 mr-2" />
+                )}
+                {isExporting ? 'Mengexport...' : 'Export Excel'}
+              </button>
               {session.user.role === 'ADMIN' && (
                 <Link
                   href="/dashboard/disposisi/add"

@@ -2,6 +2,11 @@
 
 Sistem informasi manajemen arsip surat masuk dan disposisi yang dikhususkan untuk DPRD Provinsi Kalimantan Selatan. Aplikasi ini menyediakan platform digital untuk mengelola dokumen resmi dengan workflow yang terstruktur dan role-based access control.
 
+## 🌐 Live Demo
+**🔗 Akses Aplikasi: [https://arsipdprdkalsel.vercel.app/](https://arsipdprdkalsel.vercel.app/)**
+
+> **Catatan**: Silakan daftar akun baru untuk mencoba aplikasi. Akun pertama yang mendaftar akan otomatis menjadi Administrator.
+
 ## ✨ Fitur Utama
 
 ### 🔐 Sistem Autentikasi & Keamanan
@@ -23,6 +28,7 @@ Sistem informasi manajemen arsip surat masuk dan disposisi yang dikhususkan untu
 - **Auto Content Generation**: Isi disposisi auto-generate dengan template yang dapat diedit
 - **Status Simplified**: Status "SELESAI" untuk workflow yang efisien
 - **Quick Copy Feature**: Copy surat masuk ke disposisi dengan modal selection
+- **Excel Export**: Export semua data disposisi ke format Excel dengan format standar
 
 ### 🔍 Pencarian & Filter Canggih
 - **Real-time Search**: Pencarian instant dengan 300ms debouncing
@@ -35,6 +41,7 @@ Sistem informasi manajemen arsip surat masuk dan disposisi yang dikhususkan untu
 - **Statistics Overview**: Statistik total surat masuk, disposisi, dan pending dispositions
 - **Pending Calculator**: Otomatis hitung disposisi pending (surat masuk - disposisi selesai)
 - **User Management**: Admin dapat mengelola pengguna sistem
+- **Data Export**: Export disposisi ke Excel dengan format yang terstruktur
 - **Clean Interface**: Dashboard dengan DPRD Kalimantan Selatan branding
 
 ### 🎨 User Experience
@@ -53,6 +60,7 @@ Sistem informasi manajemen arsip surat masuk dan disposisi yang dikhususkan untu
 - **UI Components**: Lucide React Icons v0.545.0
 - **State Management**: React 19.1.0 Hooks (useState, useEffect)
 - **Form Handling**: React Hook Form v7.64.0 dengan Zod validation
+- **Excel Export**: SheetJS (xlsx) untuk export data ke format Excel
 
 ### Backend
 - **Runtime**: Node.js dengan Next.js 15 API Routes
@@ -283,6 +291,7 @@ POST   /api/disposisi                   - Create disposisi (Admin only)
 GET    /api/disposisi/[id]              - Get disposisi detail
 PUT    /api/disposisi/[id]              - Update disposisi (Admin only)  
 DELETE /api/disposisi/[id]              - Delete disposisi (Admin only)
+GET    /api/disposisi/export            - Export semua disposisi ke Excel
 ```
 
 ### Query Parameters
@@ -350,6 +359,11 @@ DELETE /api/disposisi/[id]              - Delete disposisi (Admin only)
    - Isi disposisi akan auto-generate
    - Edit jika diperlukan dan simpan
 
+3. **Export Data ke Excel**:
+   - Di halaman Disposisi, klik tombol "Export Excel"
+   - File Excel akan otomatis terdownload
+   - Format Excel mencakup: Nomor, Nomor Surat, Hari/Tanggal, Hal, Asal Surat, Disposisi Surat, Tanggal Disposisi
+
 #### User Management
 1. **Tambah User**: 
    - Masuk ke Settings → Manajemen Pengguna
@@ -371,6 +385,13 @@ DELETE /api/disposisi/[id]              - Delete disposisi (Admin only)
 2. **Filter Tanggal**: Gunakan date picker untuk filter range
 3. **Filter Bulan**: Pilih bulan specific dari dropdown
 4. **Combine Filters**: Gabungkan search + date filter untuk hasil optimal
+
+### 📊 Export Data (All Users)
+1. **Excel Export**: 
+   - Klik tombol "Export Excel" di halaman Disposisi
+   - Semua data disposisi akan diexport dalam format Excel
+   - Format sesuai standar dengan kolom: Nomor, Nomor Surat, Hari/Tanggal, Hal, Asal Surat, Disposisi Surat, Tanggal Disposisi
+   - File otomatis terdownload dengan nama file berisi tanggal export
 
 ## 🚀 Deployment
 
