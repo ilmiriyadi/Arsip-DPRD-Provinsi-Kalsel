@@ -9,17 +9,12 @@ import {
   FileOutput, 
   Plus, 
   Search, 
-  Calendar,
-  ArrowLeft, 
   Edit, 
   Trash2, 
   Eye,
   Filter,
   ChevronLeft,
-  ChevronRight,
-  CheckCircle,
-  Users,
-  FileText
+  ChevronRight
 } from 'lucide-react'
 
 interface SuratKeluar {
@@ -303,7 +298,7 @@ export default function SuratKeluarPage() {
                       <div className="flex flex-wrap gap-2">
                         {debouncedSearchTerm && (
                           <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-green-100 text-green-800 border border-green-200">
-                            Pencarian: "{debouncedSearchTerm}"
+                            Pencarian: &quot;{debouncedSearchTerm}&quot;
                           </span>
                         )}
                         {dateFilter && (

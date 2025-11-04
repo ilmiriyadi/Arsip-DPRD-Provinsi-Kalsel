@@ -8,15 +8,11 @@ import DashboardLayout from '@/components/layout/DashboardLayout'
 import {
   ArrowLeft,
   Edit,
-  Trash2,
   Calendar,
   FileText,
-  Users,
   Building,
-  Mail,
-  Hash,
   User,
-  Clock,
+  Users,
   Link as LinkIcon
 } from 'lucide-react'
 

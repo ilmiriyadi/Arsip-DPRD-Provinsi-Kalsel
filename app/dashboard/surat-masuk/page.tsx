@@ -9,17 +9,13 @@ import {
   FileText, 
   Plus, 
   Search, 
-  Calendar,
-  ArrowLeft, 
   Edit, 
   Trash2, 
   Eye,
   Filter,
   ChevronLeft,
   ChevronRight,
-  FileOutput,
   Copy,
-  CheckCircle,
   Send
 } from 'lucide-react'
 
