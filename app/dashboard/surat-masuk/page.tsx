@@ -40,6 +40,10 @@ interface SuratMasuk {
     noUrut: number
     status: 'SELESAI'
   }[]
+  suratKeluar: {
+    id: string
+    noUrut: number
+  }[]
 }
 
 interface Pagination {
@@ -710,13 +714,23 @@ export default function SuratMasukPage() {
                                     <Plus className="h-4 w-4" />
                                   </Link>
                                 )}
-                                <button
-                                  onClick={() => handleCreateSuratKeluar(surat)}
-                                  className="inline-flex items-center justify-center w-8 h-8 bg-green-100 text-green-700 hover:bg-green-200 rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md"
-                                  title="Buat Surat Keluar"
-                                >
-                                  <Send className="h-4 w-4" />
-                                </button>
+                                {surat.suratKeluar.length === 0 ? (
+                                  <button
+                                    onClick={() => handleCreateSuratKeluar(surat)}
+                                    className="inline-flex items-center justify-center w-8 h-8 bg-green-100 text-green-700 hover:bg-green-200 rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md"
+                                    title="Buat Surat Keluar"
+                                  >
+                                    <Send className="h-4 w-4" />
+                                  </button>
+                                ) : (
+                                  <button
+                                    onClick={() => handleCreateSuratKeluar(surat)}
+                                    className="inline-flex items-center justify-center w-8 h-8 bg-green-100 text-green-700 hover:bg-green-200 rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md"
+                                    title="Tambah Surat Keluar Baru"
+                                  >
+                                    <Plus className="h-4 w-4" />
+                                  </button>
+                                )}
                                 <Link
                                   href={`/dashboard/surat-masuk/edit/${surat.id}`}
                                   className="inline-flex items-center justify-center w-8 h-8 bg-amber-100 text-amber-700 hover:bg-amber-200 rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md"

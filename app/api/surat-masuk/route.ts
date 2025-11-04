@@ -81,6 +81,12 @@ export async function GET(req: NextRequest) {
               noUrut: true,
               status: true,
             }
+          },
+          suratKeluar: {
+            select: {
+              id: true,
+              noUrut: true,
+            }
           }
         },
         orderBy: { noUrut: "asc" },
