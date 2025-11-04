@@ -268,12 +268,9 @@ function AddDisposisiContent() {
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                     >
                       <option value="">Pilih tujuan disposisi...</option>
-                      <option value="Pimpinan DPRD">Pimpinan DPRD</option>
-                      <option value="SEKWAN">SEKWAN</option>
-                      <option value="RTA">RTA</option>
-                      <option value="Persidangan">Persidangan</option>
-                      <option value="Keuangan">Keuangan</option>
-                      <option value="Fraksi">Fraksi</option>
+                      <option value="Bagian Persidangan dan Perundang-Undangan">Bagian Persidangan dan Perundang-Undangan</option>
+                      <option value="Bagian Fasilitasi Penganggaran dan Pengawasan">Bagian Fasilitasi Penganggaran dan Pengawasan</option>
+                      <option value="Bagian Umum dan Keuangan">Bagian Umum dan Keuangan</option>
                     </select>
                     <input
                       type="text"

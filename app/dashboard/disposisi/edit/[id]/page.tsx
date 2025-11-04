@@ -54,12 +54,9 @@ export default function EditDisposisiPage() {
   })
 
   const tujuanOptions = [
-    'Pimpinan DPRD',
-    'SEKWAN', 
-    'RTA',
-    'Persidangan',
-    'Keuangan',
-    'Fraksi'
+    'Bagian Persidangan dan Perundang-Undangan',
+    'Bagian Fasilitasi Penganggaran dan Pengawasan',
+    'Bagian Umum dan Keuangan'
   ]
 
   useEffect(() => {
