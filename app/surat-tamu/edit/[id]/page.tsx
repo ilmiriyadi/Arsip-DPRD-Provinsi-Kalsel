@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import DashboardLayout from '@/components/layout/DashboardLayout'
 
@@ -40,9 +40,9 @@ export default function EditSuratTamu() {
     if (id) fetchItem()
   }, [id, router])
 
-  const handleChange = (e: any) => setForm({ ...form, [e.target.name]: e.target.value })
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => setForm({ ...form, [e.target.name]: e.target.value })
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     try {
       setSaving(true)
