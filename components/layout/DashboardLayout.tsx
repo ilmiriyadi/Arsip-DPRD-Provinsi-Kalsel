@@ -157,8 +157,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 })}
               </div>
 
-              {/* Admin Navigation */}
-              {session?.user.role === 'ADMIN' && (
+              {/* Admin Navigation (hide for tamu area) */}
+              {session?.user.role === 'ADMIN' && !isTamu && (
                 <div className="pt-6 space-y-1">
                   <p className="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">
                     Administrator
@@ -306,7 +306,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 </div>
 
                 {/* Admin Navigation */}
-                {session?.user.role === 'ADMIN' && (
+                {session?.user.role === 'ADMIN' && !isTamu && (
                   <div className="pt-6 space-y-1">
                     <p className="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">
                       Administrator
