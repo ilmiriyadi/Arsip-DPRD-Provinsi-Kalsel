@@ -18,26 +18,27 @@ model User {
   disposisi   Disposisi[]
   suratKeluar SuratKeluar[]
   suratMasuk  SuratMasuk[]
+  SuratTamu   SuratTamu[]
 
   @@map("users")
 }
 
 model SuratMasuk {
-  id               String        @id @default(cuid())
-  noUrut           Int           @unique
-  nomorSurat       String        @unique
-  tanggalSurat     DateTime
+  id                String        @id @default(cuid())
+  noUrut            Int           @unique
+  nomorSurat        String        @unique
+  tanggalSurat      DateTime
   tanggalDiteruskan DateTime
-  asalSurat        String
-  perihal          String
-  keterangan       String?
-  filePath         String?
-  createdAt        DateTime      @default(now())
-  updatedAt        DateTime      @updatedAt
-  createdById      String
-  disposisi        Disposisi[]
-  suratKeluar      SuratKeluar[]
-  createdBy        User          @relation(fields: [createdById], references: [id])
+  asalSurat         String
+  perihal           String
+  keterangan        String?
+  filePath          String?
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  createdById       String
+  disposisi         Disposisi[]
+  suratKeluar       SuratKeluar[]
+  createdBy         User          @relation(fields: [createdById], references: [id])
 
   @@map("surat_masuk")
 }
@@ -94,4 +95,22 @@ enum PengolahSurat {
   WAKIL_KETUA_2
   WAKIL_KETUA_3
   SEKWAN
+}
+
+// Model for guest visits / surat tamu
+model SuratTamu {
+  id          String   @id @default(cuid())
+  noUrut      Int      @unique
+  nama        String
+  keperluan   String
+  asalSurat   String
+  tujuanSurat String
+  nomorTelpon String?
+  tanggal     DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  createdById String
+  createdBy   User     @relation(fields: [createdById], references: [id])
+
+  @@map("surat_tamu")
 }
