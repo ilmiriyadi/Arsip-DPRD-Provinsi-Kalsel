@@ -90,7 +90,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const isTamu = pathname?.startsWith('/tamu') || pathname?.startsWith('/surat-tamu')
 
   const handleSignOut = () => {
-    signOut({ callbackUrl: '/login' })
+    const redirectTo = isTamu ? '/tamu/login' : '/arsip/login'
+    signOut({ callbackUrl: redirectTo })
   }
 
   return (
