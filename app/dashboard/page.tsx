@@ -15,7 +15,8 @@ import {
   Clock,
   AlertCircle,
   CheckCircle,
-  Eye
+  Eye,
+  Send
 } from 'lucide-react'
 
 interface SuratMasuk {
@@ -43,6 +44,7 @@ export default function DashboardPage() {
   const router = useRouter()
   const [stats, setStats] = useState({
     totalSurat: 0,
+    totalSuratKeluar: 0,
     totalDisposisi: 0,
     suratBulanIni: 0,
     disposisiPending: 0
@@ -61,14 +63,16 @@ export default function DashboardPage() {
     const fetchDashboardData = async () => {
       try {
         setLoading(true)
-        const [suratRes, disposisiRes] = await Promise.all([
+        const [suratRes, disposisiRes, suratKeluarRes] = await Promise.all([
           fetch('/api/surat-masuk?limit=5'),
-          fetch('/api/disposisi')
+          fetch('/api/disposisi'),
+          fetch('/api/surat-keluar')
         ])
         
-        if (suratRes.ok && disposisiRes.ok) {
+        if (suratRes.ok && disposisiRes.ok && suratKeluarRes.ok) {
           const suratData = await suratRes.json()
           const disposisiData = await disposisiRes.json()
+          const suratKeluarData = await suratKeluarRes.json()
           
           const currentMonth = new Date().getMonth()
           const currentYear = new Date().getFullYear()
@@ -79,11 +83,13 @@ export default function DashboardPage() {
           }).length || 0
           
           const totalSurat = suratData.pagination?.total || 0
+          const totalSuratKeluar = suratKeluarData.pagination?.total || 0
           const totalDisposisi = disposisiData.pagination?.total || 0
           const disposisiPending = Math.max(0, totalSurat - totalDisposisi)
           
           setStats({
             totalSurat,
+            totalSuratKeluar,
             totalDisposisi,
             suratBulanIni,
             disposisiPending
@@ -133,7 +139,7 @@ export default function DashboardPage() {
     <DashboardLayout>
       <div className="p-6 space-y-8">
         {/* Statistics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
           <div className="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden hover:shadow-xl transition-all duration-300">
             <div className="p-6">
               <div className="flex items-center justify-between">
@@ -147,6 +153,24 @@ export default function DashboardPage() {
                 </div>
                 <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center shadow-lg">
                   <FileText className="w-6 h-6 text-white" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden hover:shadow-xl transition-all duration-300">
+            <div className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-slate-600 mb-1">Total Surat Keluar</p>
+                  <p className="text-3xl font-bold text-slate-900">{stats.totalSuratKeluar}</p>
+                  <p className="text-xs text-blue-600 mt-1 flex items-center">
+                    <Send className="w-3 h-3 mr-1" />
+                    Terkirim
+                  </p>
+                </div>
+                <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-lg">
+                  <Send className="w-6 h-6 text-white" />
                 </div>
               </div>
             </div>
@@ -244,6 +268,19 @@ export default function DashboardPage() {
                   <div className="ml-4 flex-1">
                     <h4 className="font-semibold text-slate-900">Buat Disposisi</h4>
                     <p className="text-sm text-slate-600">Proses disposisi dokumen</p>
+                  </div>
+                </Link>
+
+                <Link
+                  href="/dashboard/surat-keluar/add"
+                  className="flex items-center p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl hover:from-green-100 hover:to-emerald-100 transition-all duration-200 group border border-green-200 hover:border-green-300"
+                >
+                  <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all">
+                    <Send className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="ml-4 flex-1">
+                    <h4 className="font-semibold text-slate-900">Tambah Surat Keluar</h4>
+                    <p className="text-sm text-slate-600">Buat surat keluar baru</p>
                   </div>
                 </Link>
 

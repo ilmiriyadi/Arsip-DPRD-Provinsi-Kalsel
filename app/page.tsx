@@ -61,7 +61,7 @@ export default function HomePage() {
             <span className="text-blue-600"> dengan Mudah</span>
           </h2>
           <p className="mt-6 max-w-2xl mx-auto text-xl text-gray-600">
-            Sistem manajemen arsip surat masuk dan disposisi yang membantu Anda 
+            Sistem manajemen arsip surat masuk, surat keluar, dan disposisi yang membantu Anda 
             mengorganisir, mencari, dan mengelola dokumen dengan efisien.
           </p>
           <div className="mt-8 flex justify-center space-x-4">
@@ -81,9 +81,9 @@ export default function HomePage() {
         </div>
 
         {/* Features */}
-        <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="mt-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div className="bg-white p-6 rounded-lg shadow-md">
-            <div className="text-blue-600 text-3xl mb-4">📄</div>
+            <div className="text-blue-600 text-3xl mb-4">�</div>
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
               Surat Masuk
             </h3>
@@ -93,7 +93,17 @@ export default function HomePage() {
           </div>
 
           <div className="bg-white p-6 rounded-lg shadow-md">
-            <div className="text-blue-600 text-3xl mb-4">📋</div>
+            <div className="text-green-600 text-3xl mb-4">📤</div>
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+              Surat Keluar
+            </h3>
+            <p className="text-gray-600">
+              Buat dan kelola surat keluar dengan template standar dan integrasi dengan surat masuk.
+            </p>
+          </div>
+
+          <div className="bg-white p-6 rounded-lg shadow-md">
+            <div className="text-purple-600 text-3xl mb-4">📋</div>
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
               Disposisi
             </h3>
@@ -103,7 +113,7 @@ export default function HomePage() {
           </div>
 
           <div className="bg-white p-6 rounded-lg shadow-md">
-            <div className="text-blue-600 text-3xl mb-4">🔍</div>
+            <div className="text-indigo-600 text-3xl mb-4">🔍</div>
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
               Filter & Pencarian
             </h3>
@@ -123,9 +133,9 @@ export default function HomePage() {
               <div className="text-green-600 text-4xl mb-4">👑</div>
               <h4 className="text-xl font-semibold text-gray-900 mb-4">Admin</h4>
               <ul className="text-gray-600 space-y-2">
-                <li>✓ Menambah, edit, dan hapus surat</li>
-                <li>✓ Membuat disposisi</li>
-                <li>✓ Manajemen user</li>
+                <li>✓ Menambah, edit, dan hapus surat masuk & keluar</li>
+                <li>✓ Membuat disposisi dan surat keluar</li>
+                <li>✓ Manajemen user dan pengaturan sistem</li>
                 <li>✓ Akses penuh ke semua fitur</li>
               </ul>
             </div>
@@ -133,9 +143,9 @@ export default function HomePage() {
               <div className="text-blue-600 text-4xl mb-4">👤</div>
               <h4 className="text-xl font-semibold text-gray-900 mb-4">Member</h4>
               <ul className="text-gray-600 space-y-2">
-                <li>✓ Melihat daftar surat masuk</li>
+                <li>✓ Melihat daftar surat masuk & keluar</li>
                 <li>✓ Melihat detail surat dan disposisi</li>
-                <li>✓ Menggunakan fitur pencarian</li>
+                <li>✓ Menggunakan fitur pencarian dan filter</li>
                 <li>✓ Download dokumen (jika tersedia)</li>
               </ul>
             </div>

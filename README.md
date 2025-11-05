@@ -1,6 +1,6 @@
-# 📂 Sistem Manajemen Arsip Surat Masuk DPRD Kalimantan Selatan
+# 📂 Sistem Manajemen Arsip Surat DPRD Kalimantan Selatan
 
-Sistem informasi manajemen arsip surat masuk dan disposisi yang dikhususkan untuk DPRD Provinsi Kalimantan Selatan. Aplikasi ini menyediakan platform digital untuk mengelola dokumen resmi dengan workflow yang terstruktur dan role-based access control.
+Sistem informasi manajemen arsip surat masuk, surat keluar, dan disposisi yang dikhususkan untuk DPRD Provinsi Kalimantan Selatan. Aplikasi ini menyediakan platform digital untuk mengelola dokumen resmi dengan workflow yang terstruktur dan role-based access control.
 
 ## 🌐 Live Demo
 **🔗 Akses Aplikasi: [https://arsipdprdkalsel.vercel.app/](https://arsipdprdkalsel.vercel.app/)**
@@ -21,7 +21,16 @@ Sistem informasi manajemen arsip surat masuk dan disposisi yang dikhususkan untu
 - **Validasi Unik**: Nomor surat dan no urut yang unique untuk mencegah duplikasi
 - **File Path Support**: Dukungan untuk menyimpan path file dokumen
 
-### 📋 Sistem Disposisi Terintegrasi
+### � Manajemen Surat Keluar
+- **CRUD Lengkap**: Create, Read, Update, Delete surat keluar (Admin only)
+- **Auto Numbering**: Sistem penomoran otomatis dengan noUrut yang unique
+- **Integrated Workflow**: Buat surat keluar langsung dari surat masuk dengan modal
+- **Template Standardization**: Form dengan pengolah standar (Ketua DPRD, Wakil Ketua 1-3, Sekwan)
+- **Conditional Icons**: Icon berubah otomatis berdasarkan status relationship
+- **Cross Reference**: Relasi dengan surat masuk untuk tracking yang akurat
+- **Professional Fields**: Klas surat, pengolah, perihal, dan tujuan yang lengkap
+
+### �📋 Sistem Disposisi Terintegrasi
 - **Smart Disposition Creation**: Buat disposisi langsung dari surat masuk atau manual
 - **Auto NoUrut Sync**: NoUrut disposisi otomatis sinkron dengan surat masuk terkait
 - **Target Selection**: Pilihan tujuan disposisi (Pimpinan DPRD, SEKWAN, RTA, Persidangan, Keuangan, Fraksi)
@@ -38,7 +47,8 @@ Sistem informasi manajemen arsip surat masuk dan disposisi yang dikhususkan untu
 - **Instant Results**: Hasil pencarian tampil secara real-time tanpa refresh
 
 ### 📊 Dashboard & Analytics
-- **Statistics Overview**: Statistik total surat masuk, disposisi, dan pending dispositions
+- **Comprehensive Statistics**: Statistik total surat masuk, surat keluar, disposisi, dan pending dispositions
+- **Multi-Metric Overview**: Track semua aspek workflow dokumen dalam satu dashboard
 - **Pending Calculator**: Otomatis hitung disposisi pending (surat masuk - disposisi selesai)
 - **User Management**: Admin dapat mengelola pengguna sistem
 - **Data Export**: Export disposisi ke Excel dengan format yang terstruktur
@@ -85,6 +95,13 @@ Sistem informasi manajemen arsip surat masuk dan disposisi yang dikhususkan untu
 - ✅ **Delete**: Hapus surat masuk (dengan konfirmasi)
 - ✅ **Search & Filter**: Akses penuh ke semua fitur pencarian
 
+#### Surat Keluar Management
+- ✅ **View**: Lihat semua daftar surat keluar dengan detail lengkap
+- ✅ **Create**: Buat surat keluar baru manual atau dari surat masuk
+- ✅ **Edit**: Edit semua field surat keluar existing
+- ✅ **Delete**: Hapus surat keluar (dengan konfirmasi)
+- ✅ **Integrated Workflow**: Buat surat keluar langsung dari surat masuk
+
 #### Disposisi Management  
 - ✅ **View**: Lihat semua disposisi dengan detail lengkap
 - ✅ **Create**: Buat disposisi baru manual atau copy dari surat masuk
@@ -100,6 +117,7 @@ Sistem informasi manajemen arsip surat masuk dan disposisi yang dikhususkan untu
 ### 👤 Member (MEMBER)
 #### Read-Only Access
 - ✅ **View Surat Masuk**: Lihat daftar dan detail surat masuk
+- ✅ **View Surat Keluar**: Lihat daftar dan detail surat keluar
 - ✅ **View Disposisi**: Lihat daftar dan detail disposisi
 - ✅ **Search & Filter**: Gunakan semua fitur pencarian dan filter
 - ✅ **Dashboard View**: Lihat statistik dasar (tanpa user management)
@@ -159,7 +177,15 @@ Sistem informasi manajemen arsip surat masuk dan disposisi yang dikhususkan untu
    - Register akun pertama (akan menjadi ADMIN)
    - Login dan mulai mengelola arsip surat
 
-## 🔧 Perubahan Terbaru & Fixes
+### 🔧 Perubahan Terbaru & Fixes
+
+### v1.2.0 - November 2025
+- ✅ **Surat Keluar Module**: Sistem CRUD lengkap untuk surat keluar
+- ✅ **Integrated Workflow**: Buat surat keluar langsung dari surat masuk dengan modal
+- ✅ **Conditional UI**: Icon berubah otomatis berdasarkan relationship status
+- ✅ **Dashboard Enhancement**: Tambah statistik surat keluar di dashboard
+- ✅ **Landing Page Update**: Update fitur showcase dengan surat keluar
+- ✅ **Cross-Reference System**: Relasi antara surat masuk dan surat keluar
 
 ### v1.1.0 - Oktober 2025
 - ✅ **Fix Path Alias**: Diperbaiki konfigurasi `@/*` di tsconfig.json untuk mengatasi module resolution error
@@ -251,16 +277,35 @@ npm run dev
 - updatedAt: DateTime (AUTO)
 ```
 
-### 🔗 Relationships
+### � Surat Keluar Table
+```sql
+- id: String (Primary Key, CUID)
+- noUrut: Int (UNIQUE, NOT NULL)
+- klas: String (NOT NULL)
+- pengolah: Enum (KETUA_DPRD | WAKIL_KETUA_1 | WAKIL_KETUA_2 | WAKIL_KETUA_3 | SEKWAN)
+- tanggalSurat: DateTime (NOT NULL)
+- perihalSurat: String (NOT NULL)
+- kirimKepada: String (NOT NULL)
+- suratMasukId: String (NULLABLE, Foreign Key -> Surat Masuk)
+- createdById: String (Foreign Key -> Users)
+- createdAt: DateTime (AUTO)
+- updatedAt: DateTime (AUTO)
+```
+
+### �🔗 Relationships
 - **Users → Surat Masuk**: One-to-Many (createdBy)
+- **Users → Surat Keluar**: One-to-Many (createdBy)
 - **Users → Disposisi**: One-to-Many (createdBy)  
 - **Surat Masuk → Disposisi**: One-to-Many (dispositions)
+- **Surat Masuk → Surat Keluar**: One-to-Many (outgoing letters)
 
 ### 📊 Business Rules
 1. **NoUrut Sync**: `disposisi.noUrut` harus sama dengan `surat_masuk.noUrut`
-2. **Unique Constraints**: `surat_masuk.noUrut` dan `surat_masuk.nomorSurat` harus unique
+2. **Unique Constraints**: `surat_masuk.noUrut`, `surat_masuk.nomorSurat`, dan `surat_keluar.noUrut` harus unique
 3. **Role Validation**: Hanya ADMIN yang dapat create/update/delete
 4. **Cascade Delete**: Hapus surat masuk akan hapus disposisi terkait
+5. **Optional Relationship**: Surat keluar dapat dibuat mandiri atau terhubung dengan surat masuk
+6. **Conditional UI**: Icon berubah berdasarkan existing relationships
 
 ## 🔌 API Endpoints
 
@@ -282,6 +327,15 @@ GET    /api/surat-masuk/[id]            - Get surat detail
 PUT    /api/surat-masuk/[id]            - Update surat (Admin only)
 DELETE /api/surat-masuk/[id]            - Delete surat (Admin only)
 POST   /api/surat-masuk/[id]/copy-disposisi - Copy to disposisi (Admin only)
+```
+
+### Surat Keluar Management
+```
+GET    /api/surat-keluar                - List dengan search & filter
+POST   /api/surat-keluar                - Create surat keluar (Admin only)
+GET    /api/surat-keluar/[id]           - Get surat keluar detail
+PUT    /api/surat-keluar/[id]           - Update surat keluar (Admin only)
+DELETE /api/surat-keluar/[id]           - Delete surat keluar (Admin only)
 ```
 
 ### Disposisi Management
@@ -345,6 +399,24 @@ GET    /api/disposisi/export            - Export semua disposisi ke Excel
    - Update informasi yang diperlukan
    - Konfirmasi perubahan
 
+#### Mengelola Surat Keluar
+1. **Buat Surat Keluar Manual**:
+   - Masuk ke halaman Surat Keluar → Tambah
+   - Isi No Urut (unique), Klas, Pengolah, Tanggal
+   - Tulis perihal dan tujuan surat keluar
+   - Simpan surat keluar
+
+2. **Buat Surat Keluar dari Surat Masuk** (Recommended):
+   - Di halaman Surat Masuk, klik tombol "Buat Surat Keluar" (icon Send)
+   - Form akan auto-fill berdasarkan surat masuk
+   - Edit informasi yang diperlukan
+   - Simpan dan surat keluar akan terhubung dengan surat masuk
+
+3. **Edit/Hapus Surat Keluar**:
+   - Klik ikon edit/delete di daftar surat keluar
+   - Update informasi yang diperlukan
+   - Konfirmasi perubahan
+
 #### Mengelola Disposisi  
 1. **Buat Disposisi Manual**:
    - Masuk ke halaman Disposisi → Tambah
@@ -375,10 +447,10 @@ GET    /api/disposisi/export            - Export semua disposisi ke Excel
    - Admin tidak bisa hapus diri sendiri
 
 ### 👤 Untuk Member
-1. **Lihat Data**: Akses read-only ke semua surat masuk dan disposisi
-2. **Pencarian**: Gunakan search box untuk find data
-3. **Filter**: Filter by date range atau month
-4. **Detail**: Klik item untuk lihat detail lengkap
+1. **Lihat Data**: Akses read-only ke semua surat masuk, surat keluar, dan disposisi
+2. **Pencarian**: Gunakan search box untuk find data across all modules
+3. **Filter**: Filter by date range atau month untuk semua jenis dokumen
+4. **Detail**: Klik item untuk lihat detail lengkap termasuk relationships
 
 ### 🔍 Fitur Pencarian (All Users)
 1. **Real-time Search**: Ketik di search box, hasil muncul otomatis
@@ -461,6 +533,9 @@ arsip-surat/
 │   │   │   ├── route.ts       # GET, POST disposisi
 │   │   │   └── [id]/          # Individual disposisi operations
 │   │   ├── register/          # User registration API
+│   │   ├── surat-keluar/      # Surat keluar API endpoints
+│   │   │   ├── route.ts       # GET, POST surat keluar
+│   │   │   └── [id]/          # Individual surat keluar operations
 │   │   ├── surat-masuk/       # Surat masuk API endpoints
 │   │   │   ├── route.ts       # GET, POST surat masuk
 │   │   │   └── [id]/          # Individual surat operations
@@ -477,6 +552,11 @@ arsip-surat/
 │   │   │   ├── add/          # Add new disposisi
 │   │   │   └── edit/[id]/    # Edit disposisi
 │   │   ├── settings/         # User settings
+│   │   ├── surat-keluar/     # Surat keluar management
+│   │   │   ├── page.tsx      # Surat keluar list
+│   │   │   ├── [id]/         # Surat keluar detail
+│   │   │   ├── add/          # Add new surat keluar
+│   │   │   └── edit/[id]/    # Edit surat keluar
 │   │   └── surat-masuk/      # Surat masuk management
 │   │       ├── page.tsx      # Surat masuk list
 │   │       ├── [id]/         # Surat detail
