@@ -59,6 +59,21 @@ const adminItems = [
   }
 ]
 
+const tamuNavigationItems = [
+  {
+    name: 'Dashboard',
+    href: '/tamu/dashboard',
+    icon: Home,
+    description: 'Ringkasan Surat Tamu'
+  },
+  {
+    name: 'Surat Tamu',
+    href: '/surat-tamu',
+    icon: FileText,
+    description: 'Kelola Surat Tamu'
+  }
+]
+
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const { data: session } = useSession()
   const pathname = usePathname()
@@ -72,6 +87,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     return pathname.startsWith(href)
   }
 
+  const isTamu = pathname?.startsWith('/tamu') || pathname?.startsWith('/surat-tamu')
+
   const handleSignOut = () => {
     signOut({ callbackUrl: '/login' })
   }
@@ -83,7 +100,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         <div className="flex flex-col flex-grow bg-white border-r border-slate-200 shadow-xl">
           {/* Logo/Brand */}
           <div className="flex items-center flex-shrink-0 px-6 py-6 bg-gradient-to-r from-blue-600 to-indigo-600">
-            <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-white bg-opacity-20 rounded-xl flex items-center justify-center p-1">
                 <Image
                   src="/logo-dprd.jpg"
@@ -95,8 +112,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               </div>
               <div>
                 <h1 className="text-white text-sm font-bold leading-tight">Sistem Manajemen Arsip</h1>
-                <p className="text-white text-xs font-semibold">Surat Masuk DPRD</p>
-                <p className="text-blue-100 text-xs">Kalimantan Selatan</p>
+                  <p className="text-white text-xs font-semibold">{isTamu ? 'Surat Tamu' : 'Surat Masuk DPRD'}</p>
+                  <p className="text-blue-100 text-xs">Kalimantan Selatan</p>
               </div>
             </div>
           </div>
@@ -109,7 +126,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 <p className="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">
                   Menu Utama
                 </p>
-                {navigationItems.map((item) => {
+                {(isTamu ? tamuNavigationItems : navigationItems).map((item) => {
                   const Icon = item.icon
                   const active = isActive(item.href)
                   return (
@@ -236,7 +253,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 </div>
                 <div>
                   <h1 className="text-white text-xs font-bold leading-tight">Sistem Manajemen Arsip</h1>
-                  <p className="text-white text-xs font-semibold">Surat Masuk</p>
+                  <p className="text-white text-xs font-semibold">{isTamu ? 'Surat Tamu' : 'Surat Masuk'}</p>
                   <p className="text-blue-100 text-xs">DPRD Kalimantan Selatan</p>
                 </div>
               </div>

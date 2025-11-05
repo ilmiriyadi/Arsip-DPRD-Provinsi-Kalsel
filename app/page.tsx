@@ -66,22 +66,22 @@ export default function HomePage() {
           </p>
           <div className="mt-8 flex justify-center space-x-4">
             <Link
-              href="/register"
+              href="/arsip/login"
               className="bg-blue-600 text-white px-8 py-3 rounded-md text-lg font-medium hover:bg-blue-700 transition duration-200"
             >
-              Mulai Sekarang (Arsip Surat)
+              Arsip Surat
             </Link>
             <Link
-              href="/surat-tamu"
+              href="/tamu/login"
               className="bg-green-600 text-white px-8 py-3 rounded-md text-lg font-medium hover:bg-green-700 transition duration-200"
             >
               Surat Tamu
             </Link>
             <Link
-              href="/login"
+              href="/register"
               className="bg-white text-blue-600 px-8 py-3 rounded-md text-lg font-medium border border-blue-600 hover:bg-blue-50 transition duration-200"
             >
-              Login
+              Daftar
             </Link>
           </div>
         </div>
