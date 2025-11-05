@@ -69,7 +69,13 @@ export default function HomePage() {
               href="/register"
               className="bg-blue-600 text-white px-8 py-3 rounded-md text-lg font-medium hover:bg-blue-700 transition duration-200"
             >
-              Mulai Sekarang
+              Mulai Sekarang (Arsip Surat)
+            </Link>
+            <Link
+              href="/surat-tamu"
+              className="bg-green-600 text-white px-8 py-3 rounded-md text-lg font-medium hover:bg-green-700 transition duration-200"
+            >
+              Surat Tamu
             </Link>
             <Link
               href="/login"
