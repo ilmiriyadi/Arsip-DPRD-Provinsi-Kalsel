@@ -19,6 +19,7 @@ export async function GET(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
     if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    if (session.user.role !== 'MEMBER') return NextResponse.json({ error: "Forbidden - Member only" }, { status: 403 })
 
     const { searchParams } = new URL(req.url)
     const page = parseInt(searchParams.get("page") || "1")
@@ -53,6 +54,7 @@ export async function POST(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
     if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    if (session.user.role !== 'MEMBER') return NextResponse.json({ error: "Forbidden - Member only" }, { status: 403 })
 
     const body = await req.json()
     const data = suratTamuSchema.parse(body)

@@ -13,24 +13,22 @@ export default withAuth(
       if (pathname.startsWith('/tamu/dashboard')) return NextResponse.redirect(new URL('/tamu/login', req.url))
     }
 
-    // Admin routes - hanya admin yang bisa akses
-    const adminRoutes = [
-      '/dashboard/admin',
-      '/dashboard/surat-masuk/add',
-      '/dashboard/surat-masuk/edit',
-      '/dashboard/disposisi/add',
-      '/dashboard/disposisi/edit',
-      // arsip variant
-      '/arsip/dashboard/admin',
-      '/arsip/dashboard/surat-masuk/add',
-      '/arsip/dashboard/surat-masuk/edit',
-      '/arsip/dashboard/disposisi/add',
-      '/arsip/dashboard/disposisi/edit',
-    ]
-
-    const isAdminRoute = adminRoutes.some(route => pathname.startsWith(route))
+    // Arsip routes - hanya bisa diakses ADMIN
+    const arsipRoutes = ['/dashboard', '/arsip/dashboard']
     
-    if (isAdminRoute && token?.role !== 'ADMIN') {
+    // Tamu routes - hanya bisa diakses MEMBER
+    const tamuRoutes = ['/tamu/dashboard', '/surat-tamu']
+
+    const isArsipRoute = arsipRoutes.some(route => pathname.startsWith(route))
+    const isTamuRoute = tamuRoutes.some(route => pathname.startsWith(route))
+    
+    // Redirect MEMBER dari halaman arsip ke tamu dashboard
+    if (isArsipRoute && token?.role !== 'ADMIN') {
+      return NextResponse.redirect(new URL('/tamu/dashboard', req.url))
+    }
+
+    // Redirect ADMIN dari halaman tamu ke arsip dashboard
+    if (isTamuRoute && token?.role !== 'MEMBER') {
       return NextResponse.redirect(new URL('/dashboard', req.url))
     }
 
@@ -68,7 +66,6 @@ export const config = {
       '/tamu/dashboard/:path*',
       '/login',
       '/arsip/login',
-      '/tamu/login',
-      '/register'
+      '/tamu/login'
   ]
 }

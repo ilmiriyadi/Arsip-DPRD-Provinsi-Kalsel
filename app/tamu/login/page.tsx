@@ -28,9 +28,25 @@ export default function TamuLoginPage() {
 
       if (result?.error) {
         setError('Email atau password salah')
-      } else {
-        router.push('/tamu/dashboard')
+        return
       }
+
+      // Check user role via API
+      const userCheck = await fetch('/api/auth/check-role')
+      const userData = await userCheck.json()
+      
+      if (userData.role !== 'MEMBER') {
+        setError('Akun tidak memiliki akses ke sistem tamu')
+        // Sign out the user since they don't have access
+        await signIn('credentials', {
+          email: '',
+          password: '',
+          redirect: false,
+        })
+        return
+      }
+      
+      router.push('/tamu/dashboard')
     } catch (error) {
       setError('Terjadi kesalahan sistem')
     } finally {
@@ -41,6 +57,14 @@ export default function TamuLoginPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center p-4">
       <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
+        <div className="flex justify-between items-center mb-8">
+          <Link 
+            href="/"
+            className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-gray-900"
+          >
+            ← Kembali ke Beranda
+          </Link>
+        </div>
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Surat Tamu - Login</h1>
           <p className="text-gray-600">Silakan login untuk mengelola Surat Tamu</p>
@@ -101,11 +125,7 @@ export default function TamuLoginPage() {
           </button>
         </form>
 
-        <div className="mt-6 text-center">
-          <p className="text-sm text-gray-600">Belum punya akun?{' '}
-            <Link href="/register" className="font-medium text-green-600 hover:text-green-500">Daftar di sini</Link>
-          </p>
-        </div>
+
       </div>
     </div>
   )

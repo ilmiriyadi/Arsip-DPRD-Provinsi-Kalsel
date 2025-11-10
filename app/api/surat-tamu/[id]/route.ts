@@ -22,6 +22,7 @@ export async function GET(
   try {
     const session = await getServerSession(authOptions)
     if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    if (session.user.role !== 'MEMBER') return NextResponse.json({ error: "Forbidden - Member only" }, { status: 403 })
 
     const { id } = await params
     const db: any = prisma
@@ -41,6 +42,7 @@ export async function PUT(
   try {
     const session = await getServerSession(authOptions)
     if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    if (session.user.role !== 'MEMBER') return NextResponse.json({ error: "Forbidden - Member only" }, { status: 403 })
     const { id } = await params
     const body = await req.json()
     const data = suratTamuSchema.partial().parse(body)
@@ -61,6 +63,7 @@ export async function DELETE(
   try {
     const session = await getServerSession(authOptions)
     if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    if (session.user.role !== 'MEMBER') return NextResponse.json({ error: "Forbidden - Member only" }, { status: 403 })
     const { id } = await params
     const db: any = prisma
     await db.suratTamu.delete({ where: { id } })

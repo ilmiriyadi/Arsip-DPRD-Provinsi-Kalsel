@@ -42,12 +42,6 @@ export default function HomePage() {
               >
                 Login
               </Link>
-              <Link
-                href="/register"
-                className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-200"
-              >
-                Daftar
-              </Link>
             </div>
           </div>
         </div>
@@ -71,17 +65,11 @@ export default function HomePage() {
             >
               Arsip Surat
             </Link>
-            <Link
+              <Link
               href="/tamu/login"
               className="bg-green-600 text-white px-8 py-3 rounded-md text-lg font-medium hover:bg-green-700 transition duration-200"
             >
               Surat Tamu
-            </Link>
-            <Link
-              href="/register"
-              className="bg-white text-blue-600 px-8 py-3 rounded-md text-lg font-medium border border-blue-600 hover:bg-blue-50 transition duration-200"
-            >
-              Daftar
             </Link>
           </div>
         </div>

@@ -25,8 +25,12 @@ export default function TamuDashboard() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (status === 'unauthenticated') router.push('/tamu/login')
-  }, [status, router])
+    if (status === 'unauthenticated') {
+      router.push('/tamu/login')
+    } else if (status === 'authenticated' && session?.user?.role !== 'MEMBER') {
+      router.push('/dashboard')
+    }
+  }, [status, session, router])
 
   useEffect(() => {
     const fetchData = async () => {

@@ -47,8 +47,12 @@ export default function SuratTamuPage() {
   const mounted = useRef(false)
 
   useEffect(() => {
-    if (status === 'unauthenticated') router.push('/login')
-  }, [status, router])
+    if (status === 'unauthenticated') {
+      router.push('/login')
+    } else if (status === 'authenticated' && session?.user?.role !== 'MEMBER') {
+      router.push('/dashboard')
+    }
+  }, [status, session, router])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -130,15 +134,13 @@ export default function SuratTamuPage() {
               </div>
             </div>
             <div className="flex space-x-3">
-              {session?.user?.role === 'ADMIN' && (
-                <Link
-                  href="/surat-tamu/add"
-                  className="inline-flex items-center px-5 py-2.5 border border-transparent rounded-xl shadow-lg text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 hover:shadow-xl"
-                >
-                  <Plus className="h-4 w-4 mr-2" />
-                  Tambah Surat
-                </Link>
-              )}
+              <Link
+                href="/surat-tamu/add"
+                className="inline-flex items-center px-5 py-2.5 border border-transparent rounded-xl shadow-lg text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 hover:shadow-xl"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Tambah Surat
+              </Link>
             </div>
           </div>
         </div>
@@ -250,12 +252,8 @@ export default function SuratTamuPage() {
                         <td className="px-6 py-5 whitespace-nowrap text-right">
                           <div className="flex justify-end space-x-1">
                             <Link href={`/surat-tamu/${it.id}`} className="inline-flex items-center justify-center w-8 h-8 bg-blue-100 text-blue-700 hover:bg-blue-200 rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md" title="Lihat Detail"><Eye className="h-4 w-4" /></Link>
-                            {session?.user?.role === 'ADMIN' && (
-                              <>
-                                <Link href={`/surat-tamu/edit/${it.id}`} className="inline-flex items-center justify-center w-8 h-8 bg-amber-100 text-amber-700 hover:bg-amber-200 rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md" title="Edit"><Edit className="h-4 w-4" /></Link>
-                                <button onClick={() => handleDelete(it.id)} className="inline-flex items-center justify-center w-8 h-8 bg-red-100 text-red-700 hover:bg-red-200 rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md" title="Hapus"><Trash2 className="h-4 w-4" /></button>
-                              </>
-                            )}
+                            <Link href={`/surat-tamu/edit/${it.id}`} className="inline-flex items-center justify-center w-8 h-8 bg-amber-100 text-amber-700 hover:bg-amber-200 rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md" title="Edit"><Edit className="h-4 w-4" /></Link>
+                            <button onClick={() => handleDelete(it.id)} className="inline-flex items-center justify-center w-8 h-8 bg-red-100 text-red-700 hover:bg-red-200 rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md" title="Hapus"><Trash2 className="h-4 w-4" /></button>
                           </div>
                         </td>
                       </tr>
