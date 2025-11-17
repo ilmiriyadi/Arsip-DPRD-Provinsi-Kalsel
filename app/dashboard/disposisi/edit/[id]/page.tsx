@@ -9,7 +9,7 @@ import { Save, X, ArrowLeft, FileText, Calendar, Building, MessageSquare } from 
 interface SuratMasuk {
   id: string
   noUrut: number
-  nomorSurat: string
+  nomorSurat: string | null
   perihal: string
   asalSurat: string
   tanggalSurat: string

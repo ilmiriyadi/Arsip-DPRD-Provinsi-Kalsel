@@ -33,7 +33,7 @@ interface SuratKeluar {
   }
   suratMasuk?: {
     id: string
-    nomorSurat: string
+    nomorSurat: string | null
     perihal: string
     asalSurat: string
   }

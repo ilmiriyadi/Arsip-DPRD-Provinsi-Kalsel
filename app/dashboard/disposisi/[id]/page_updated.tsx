@@ -36,7 +36,7 @@ interface Disposisi {
   suratMasuk: {
     id: string
     noUrut: number
-    nomorSurat: string
+    nomorSurat: string | null
     perihal: string
     asalSurat: string
     tanggalSurat: string

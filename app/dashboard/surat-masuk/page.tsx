@@ -22,7 +22,7 @@ import {
 interface SuratMasuk {
   id: string
   noUrut: number
-  nomorSurat: string
+  nomorSurat: string | null
   tanggalSurat: string
   tanggalDiteruskan: string
   asalSurat: string

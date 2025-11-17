@@ -22,14 +22,15 @@ interface SuratKeluar {
   }
   suratMasuk?: {
     id: string
-    nomorSurat: string
+    nomorSurat: string | null
     perihal: string
   }
 }
 
 interface SuratMasuk {
   id: string
-  nomorSurat: string
+  noUrut: number
+  nomorSurat: string | null
   perihal: string
   tanggalSurat: string
 }

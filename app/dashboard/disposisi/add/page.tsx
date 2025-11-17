@@ -9,7 +9,7 @@ import { Save, X, FileText, CheckCircle } from 'lucide-react'
 interface SuratMasuk {
   id: string
   noUrut: number
-  nomorSurat: string
+  nomorSurat: string | null
   perihal: string
   asalSurat: string
   tanggalSurat: string

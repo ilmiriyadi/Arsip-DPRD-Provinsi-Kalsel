@@ -8,7 +8,7 @@ import { Save, X, ArrowLeft } from 'lucide-react'
 
 interface SuratMasuk {
   id: string
-  nomorSurat: string
+  nomorSurat: string | null
   tanggalSurat: string
   tanggalDiteruskan: string
   asalSurat: string
