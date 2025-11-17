@@ -37,9 +37,18 @@ function AddDisposisiContent() {
   })
 
   const tujuanOptions = [
+    'Ketua DPRD',
+    'Wakil I',
+    'Wakil II',
+    'Wakil III',
+    'Ketua Komisi I',
+    'Ketua Komisi II',
+    'Ketua Komisi III',
+    'Ketua Komisi IV',
     'Bagian Persidangan dan Perundang-Undangan',
     'Bagian Fasilitasi Penganggaran dan Pengawasan',
-    'Bagian Umum dan Keuangan'
+    'Bagian Umum dan Keuangan',
+    'Staff'
   ]
 
   const subBagianOptions = {

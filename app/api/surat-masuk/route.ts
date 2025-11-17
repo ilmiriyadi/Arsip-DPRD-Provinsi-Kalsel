@@ -6,7 +6,7 @@ import { z } from "zod"
 
 const suratMasukSchema = z.object({
   noUrut: z.number().min(1, "No urut wajib diisi"),
-  nomorSurat: z.string().min(1, "Nomor surat wajib diisi"),
+  nomorSurat: z.string().optional(),
   tanggalSurat: z.string().datetime(),
   tanggalDiteruskan: z.string().datetime(),
   asalSurat: z.string().min(1, "Asal surat wajib diisi"),
@@ -35,11 +35,10 @@ export async function GET(req: NextRequest) {
     const where: Record<string, unknown> = {}
 
     if (search) {
-      where.OR = [
-        { nomorSurat: { contains: search } },
-        { asalSurat: { contains: search } },
-        { perihal: { contains: search } },
-      ]
+      const searchNumber = parseInt(search)
+      if (!isNaN(searchNumber)) {
+        where.noUrut = searchNumber
+      }
     }
 
     if (tanggal) {

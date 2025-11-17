@@ -137,7 +137,7 @@ export default function AddSuratMasukPage() {
                 
                 <div>
                   <label htmlFor="nomorSurat" className="block text-sm font-medium text-gray-900 mb-2">
-                    Nomor Surat <span className="text-red-500">*</span>
+                    Nomor Surat <span className="text-gray-500">(Opsional)</span>
                   </label>
                   <input
                     type="text"
@@ -145,7 +145,6 @@ export default function AddSuratMasukPage() {
                     name="nomorSurat"
                     value={formData.nomorSurat}
                     onChange={handleChange}
-                    required
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                     placeholder="Contoh: 001/SKM/X/2024"
                   />
