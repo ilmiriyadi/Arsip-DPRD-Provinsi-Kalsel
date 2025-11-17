@@ -497,7 +497,7 @@ export default function DisposisiPage() {
                           </td>
                           <td className="px-6 py-4">
                             <div className="max-w-xs">
-                              <div className="font-semibold text-gray-900 mb-1">{disposisi.suratMasuk.nomorSurat}</div>
+                              <div className="font-semibold text-gray-900 mb-1">{disposisi.suratMasuk.nomorSurat || '-'}</div>
                               <div className="text-slate-600 text-sm line-clamp-2" title={disposisi.suratMasuk.perihal}>
                                 {disposisi.suratMasuk.perihal}
                               </div>

@@ -319,7 +319,7 @@ export default function DashboardPage() {
                         {surat.noUrut}
                       </div>
                       <div className="ml-3 flex-1 min-w-0">
-                        <p className="font-medium text-slate-900 truncate">{surat.nomorSurat}</p>
+                        <p className="font-medium text-slate-900 truncate">{surat.nomorSurat || '-'}</p>
                         <p className="text-sm text-slate-600 truncate">{surat.asalSurat}</p>
                         <p className="text-xs text-slate-500">{formatDate(surat.tanggalSurat)}</p>
                       </div>

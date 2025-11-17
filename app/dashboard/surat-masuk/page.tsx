@@ -235,8 +235,8 @@ export default function SuratMasukPage() {
     { value: 'SEKWAN', label: 'Sekwan' }
   ]
 
-  const handleCopyToDisposisi = (suratId: string, nomorSurat: string) => {
-    setSelectedSurat({ id: suratId, nomorSurat })
+  const handleCopyToDisposisi = (suratId: string, nomorSurat: string | null) => {
+    setSelectedSurat({ id: suratId, nomorSurat: nomorSurat || '-' })
     setSelectedTujuan('')
     setSelectedSubBagian('')
     setKeteranganDisposisi('')
@@ -636,7 +636,7 @@ export default function SuratMasukPage() {
                         </td>
                         <td className="px-6 py-5 whitespace-nowrap">
                           <div className="text-sm font-semibold text-slate-900 group-hover:text-blue-700 transition-colors">
-                            {surat.nomorSurat}
+                            {surat.nomorSurat || '-'}
                           </div>
                         </td>
                         <td className="px-6 py-5 whitespace-nowrap">
@@ -848,7 +848,7 @@ export default function SuratMasukPage() {
                     Pilih Tujuan Disposisi
                   </h3>
                   <p className="text-blue-100 text-sm">
-                    Surat: <span className="font-medium">{selectedSurat?.nomorSurat}</span>
+                    Surat: <span className="font-medium">{selectedSurat?.nomorSurat || '-'}</span>
                   </p>
                 </div>
               </div>
@@ -963,7 +963,7 @@ export default function SuratMasukPage() {
                     Buat Surat Keluar
                   </h3>
                   <p className="text-green-100 text-sm">
-                    Dari: <span className="font-medium">{selectedSuratForKeluar.nomorSurat}</span>
+                    Dari: <span className="font-medium">{selectedSuratForKeluar.nomorSurat || '-'}</span>
                   </p>
                 </div>
               </div>

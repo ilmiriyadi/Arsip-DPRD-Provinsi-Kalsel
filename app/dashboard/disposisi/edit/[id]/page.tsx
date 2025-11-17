@@ -359,7 +359,7 @@ export default function EditDisposisiPage() {
                       <option value="">Pilih Surat Masuk</option>
                       {suratMasukList.map((surat) => (
                         <option key={surat.id} value={surat.id}>
-                          #{surat.noUrut} - {surat.nomorSurat} - {surat.perihal}
+                          #{surat.noUrut} - {surat.nomorSurat || '-'} - {surat.perihal}
                         </option>
                       ))}
                     </select>
@@ -502,7 +502,7 @@ export default function EditDisposisiPage() {
                       Nomor Surat
                     </label>
                     <div className="text-gray-900 font-medium">
-                      {disposisi.suratMasuk.nomorSurat}
+                      {disposisi.suratMasuk.nomorSurat || '-'}
                     </div>
                   </div>
                   <div>

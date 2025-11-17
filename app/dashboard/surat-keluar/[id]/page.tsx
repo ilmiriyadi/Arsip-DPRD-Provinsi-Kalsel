@@ -253,7 +253,7 @@ export default function SuratKeluarDetailPage() {
                       Nomor Surat
                     </label>
                     <div className="text-blue-600 font-medium">
-                      {suratKeluar.suratMasuk.nomorSurat}
+                      {suratKeluar.suratMasuk.nomorSurat || '-'}
                     </div>
                   </div>
                   <div>

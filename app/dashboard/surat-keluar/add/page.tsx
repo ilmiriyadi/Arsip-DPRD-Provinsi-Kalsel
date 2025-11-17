@@ -263,7 +263,7 @@ export default function AddSuratKeluarPage() {
                   <option value="">Pilih Surat Masuk (jika ada hubungannya)</option>
                   {suratMasukList.map(surat => (
                     <option key={surat.id} value={surat.id}>
-                      {surat.nomorSurat} - {surat.perihal}
+                      {surat.nomorSurat || `No Urut ${surat.noUrut}`} - {surat.perihal}
                     </option>
                   ))}
                 </select>

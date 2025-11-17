@@ -94,7 +94,7 @@ function AddDisposisiContent() {
           ...prev,
           suratMasukId: suratId,
           noUrut: surat.noUrut.toString(),
-          isiDisposisi: `Disposisi untuk surat nomor ${surat.nomorSurat} dengan perihal "${surat.perihal}" dari ${surat.asalSurat}.`
+          isiDisposisi: `Disposisi untuk surat ${surat.nomorSurat ? `nomor ${surat.nomorSurat}` : `no urut ${surat.noUrut}`} dengan perihal "${surat.perihal}" dari ${surat.asalSurat}.`
         }))
       }
     }
@@ -212,7 +212,7 @@ function AddDisposisiContent() {
               </p>
               {suratId && selectedSurat && (
                 <div className="mt-2 text-sm text-green-600">
-                  ✓ Terhubung dengan surat: {selectedSurat.nomorSurat}
+                  ✓ Terhubung dengan surat: {selectedSurat.nomorSurat || `No Urut ${selectedSurat.noUrut}`}
                 </div>
               )}
             </div>
@@ -252,7 +252,7 @@ function AddDisposisiContent() {
                   <option value="">Pilih surat masuk...</option>
                   {suratMasukList.map((surat) => (
                     <option key={surat.id} value={surat.id}>
-                      {surat.nomorSurat} - {surat.perihal}
+                      {surat.nomorSurat || `No Urut ${surat.noUrut}`} - {surat.perihal}
                     </option>
                   ))}
                 </select>
@@ -266,7 +266,7 @@ function AddDisposisiContent() {
                     <div>
                       <h4 className="text-sm font-medium text-blue-900">Detail Surat yang Dipilih</h4>
                       <div className="mt-2 space-y-1 text-sm text-blue-800">
-                        <p><span className="font-medium">Nomor:</span> {selectedSurat.nomorSurat}</p>
+                        <p><span className="font-medium">Nomor:</span> {selectedSurat.nomorSurat || '-'}</p>
                         <p><span className="font-medium">Perihal:</span> {selectedSurat.perihal}</p>
                         <p><span className="font-medium">Asal:</span> {selectedSurat.asalSurat}</p>
                         <p><span className="font-medium">Tanggal:</span> {formatDate(selectedSurat.tanggalSurat)}</p>

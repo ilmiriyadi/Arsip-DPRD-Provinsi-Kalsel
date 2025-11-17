@@ -346,7 +346,7 @@ export default function EditSuratKeluarPage({ params }: PageProps) {
                   <option value="">Pilih Surat Masuk (jika ada hubungannya)</option>
                   {suratMasukList.map(surat => (
                     <option key={surat.id} value={surat.id}>
-                      {surat.nomorSurat} - {surat.perihal}
+                      {surat.nomorSurat || `No Urut ${surat.noUrut}`} - {surat.perihal}
                     </option>
                   ))}
                 </select>
@@ -395,7 +395,7 @@ export default function EditSuratKeluarPage({ params }: PageProps) {
                   </p>
                   {surat.suratMasuk && (
                     <p className="text-sm text-gray-600 mt-1">
-                      Terkait surat masuk: <span className="font-medium">{surat.suratMasuk.nomorSurat}</span>
+                      Terkait surat masuk: <span className="font-medium">{surat.suratMasuk.nomorSurat || '-'}</span>
                     </p>
                   )}
                 </div>

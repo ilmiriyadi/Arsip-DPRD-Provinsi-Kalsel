@@ -217,7 +217,7 @@ export default function SuratMasukDetailPage({ params }: PageProps) {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-medium text-gray-700">Nomor Surat</label>
-                      <p className="mt-1 text-sm text-gray-900 font-semibold">{surat.nomorSurat}</p>
+                      <p className="mt-1 text-sm text-gray-900 font-semibold">{surat.nomorSurat || '-'}</p>
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700">Asal Surat</label>

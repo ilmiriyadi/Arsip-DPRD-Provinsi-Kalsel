@@ -60,8 +60,8 @@ export async function POST(
         nomorDisposisi: nomorDisposisi,
         tanggalDisposisi: disposisiDate,
         tujuanDisposisi: tujuanDisposisi.trim(),
-        isiDisposisi: `Disposisi untuk surat nomor ${surat.nomorSurat} dengan perihal "${surat.perihal}" dari ${surat.asalSurat}. Mohon untuk ditindaklanjuti sesuai dengan ketentuan yang berlaku.`,
-        keterangan: keterangan && keterangan.trim() ? keterangan.trim() : `Auto-generated dari surat masuk ${surat.nomorSurat} ke ${tujuanDisposisi.trim()}`,
+        isiDisposisi: `Disposisi untuk surat ${surat.nomorSurat ? `nomor ${surat.nomorSurat}` : `no urut ${surat.noUrut}`} dengan perihal "${surat.perihal}" dari ${surat.asalSurat}. Mohon untuk ditindaklanjuti sesuai dengan ketentuan yang berlaku.`,
+        keterangan: keterangan && keterangan.trim() ? keterangan.trim() : `Auto-generated dari surat masuk ${surat.nomorSurat || `no urut ${surat.noUrut}`} ke ${tujuanDisposisi.trim()}`,
         status: 'SELESAI',
         suratMasukId: id,
         createdById: session.user.id

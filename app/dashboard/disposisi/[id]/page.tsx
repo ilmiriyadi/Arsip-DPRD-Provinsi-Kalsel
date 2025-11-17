@@ -305,7 +305,7 @@ export default function DetailDisposisiPage() {
                     Nomor Surat
                   </label>
                   <div className="text-gray-900 font-medium">
-                    {disposisi.suratMasuk.nomorSurat}
+                    {disposisi.suratMasuk.nomorSurat || '-'}
                   </div>
                 </div>
                 <div>

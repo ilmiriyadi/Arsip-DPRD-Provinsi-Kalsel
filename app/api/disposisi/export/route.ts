@@ -73,7 +73,7 @@ export async function GET() {
 
       rows.push([
         disposisi.noUrut,
-        disposisi.suratMasuk.nomorSurat,
+        disposisi.suratMasuk.nomorSurat || '-',
         tanggalSurat,
         disposisi.suratMasuk.perihal,
         disposisi.suratMasuk.asalSurat,
