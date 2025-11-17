@@ -43,3 +43,11 @@ next-env.d.ts
 /src/generated/prisma
 
 .vercel
+
+# backups
+/backups/
+
+# backup scripts
+/scripts/backup-*.mjs
+/scripts/backup-*.ps1
+/scripts/backup-*.sh
