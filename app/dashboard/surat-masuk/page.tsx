@@ -405,6 +405,33 @@ export default function SuratMasukPage() {
               </div>
             </div>
             <div className="flex space-x-3">
+              <button
+                onClick={async () => {
+                  try {
+                    const response = await fetch('/api/surat-masuk/export')
+                    if (response.ok) {
+                      const blob = await response.blob()
+                      const url = window.URL.createObjectURL(blob)
+                      const a = document.createElement('a')
+                      a.href = url
+                      a.download = `Surat-Masuk-${new Date().toISOString().split('T')[0]}.xlsx`
+                      document.body.appendChild(a)
+                      a.click()
+                      window.URL.revokeObjectURL(url)
+                      document.body.removeChild(a)
+                    } else {
+                      alert('Gagal mengekspor data')
+                    }
+                  } catch (error) {
+                    console.error('Error exporting:', error)
+                    alert('Terjadi kesalahan saat mengekspor data')
+                  }
+                }}
+                className="inline-flex items-center px-5 py-2.5 border border-transparent rounded-xl shadow-lg text-sm font-medium text-white bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 transition-all duration-200 hover:shadow-xl"
+              >
+                <FileText className="h-4 w-4 mr-2" />
+                Export Excel
+              </button>
               {session.user.role === 'ADMIN' && (
                 <Link
                   href="/dashboard/surat-masuk/add"
