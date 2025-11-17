@@ -39,7 +39,7 @@ export async function GET(req: NextRequest) {
 
     const db: any = prisma
     const [data, total] = await Promise.all([
-      db.suratTamu.findMany({ where, orderBy: { noUrut: 'asc' }, skip, take: limit, include: { createdBy: { select: { id: true, name: true, email: true } } } }),
+      db.suratTamu.findMany({ where, orderBy: { noUrut: 'desc' }, skip, take: limit, include: { createdBy: { select: { id: true, name: true, email: true } } } }),
       db.suratTamu.count({ where })
     ])
 

@@ -89,7 +89,7 @@ export async function GET(req: NextRequest) {
             }
           }
         },
-        orderBy: { noUrut: "asc" },
+        orderBy: { noUrut: "desc" },
         skip,
         take: limit,
       }),
