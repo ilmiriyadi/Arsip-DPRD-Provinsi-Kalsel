@@ -38,20 +38,26 @@ function AddDisposisiContent() {
 
   const tujuanOptions = [
     'Ketua DPRD',
-    'Wakil I',
-    'Wakil II',
-    'Wakil III',
-    'Ketua Komisi I',
-    'Ketua Komisi II',
-    'Ketua Komisi III',
-    'Ketua Komisi IV',
+    'Wakil',
+    'Ketua Komisi',
     'Bagian Persidangan dan Perundang-Undangan',
     'Bagian Fasilitasi Penganggaran dan Pengawasan',
     'Bagian Umum dan Keuangan',
     'Staff'
   ]
 
-  const subBagianOptions = {
+  const subBagianOptions: Record<string, string[]> = {
+    'Wakil': [
+      'Wakil I',
+      'Wakil II',
+      'Wakil III'
+    ],
+    'Ketua Komisi': [
+      'Ketua Komisi I',
+      'Ketua Komisi II',
+      'Ketua Komisi III',
+      'Ketua Komisi IV'
+    ],
     'Bagian Persidangan dan Perundang-Undangan': [
       'Sub Bagian Kajian Perundang-Undangan',
       'Sub Bagian Persidangan dan Risalah',
