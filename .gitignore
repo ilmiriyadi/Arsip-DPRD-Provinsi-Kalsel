@@ -51,3 +51,6 @@ next-env.d.ts
 /scripts/backup-*.mjs
 /scripts/backup-*.ps1
 /scripts/backup-*.sh
+
+# scripts folder
+/scripts/
