@@ -5,12 +5,12 @@ import { prisma } from "@/lib/prisma"
 import { z } from "zod"
 
 const suratMasukSchema = z.object({
-  nomorSurat: z.string().min(1, "Nomor surat wajib diisi"),
+  nomorSurat: z.string().optional().transform(val => val && val.trim() !== '' ? val : undefined),
   tanggalSurat: z.string().datetime(),
   tanggalDiteruskan: z.string().datetime(),
   asalSurat: z.string().min(1, "Asal surat wajib diisi"),
   perihal: z.string().min(1, "Perihal wajib diisi"),
-  keterangan: z.string().optional(),
+  keterangan: z.string().optional().transform(val => val && val.trim() !== '' ? val : undefined),
   filePath: z.string().optional(),
 })
 
@@ -85,6 +85,7 @@ export async function PUT(
       where: { id },
       data: {
         ...data,
+        nomorSurat: data.nomorSurat || null,
         tanggalSurat: new Date(data.tanggalSurat),
         tanggalDiteruskan: new Date(data.tanggalDiteruskan),
       },

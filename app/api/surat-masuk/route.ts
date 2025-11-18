@@ -6,12 +6,12 @@ import { z } from "zod"
 
 const suratMasukSchema = z.object({
   noUrut: z.number().min(1, "No urut wajib diisi"),
-  nomorSurat: z.string().optional(),
+  nomorSurat: z.string().optional().transform(val => val && val.trim() !== '' ? val : undefined),
   tanggalSurat: z.string().datetime(),
   tanggalDiteruskan: z.string().datetime(),
   asalSurat: z.string().min(1, "Asal surat wajib diisi"),
   perihal: z.string().min(1, "Perihal wajib diisi"),
-  keterangan: z.string().optional(),
+  keterangan: z.string().optional().transform(val => val && val.trim() !== '' ? val : undefined),
   filePath: z.string().optional(),
 })
 
@@ -144,6 +144,7 @@ export async function POST(req: NextRequest) {
     const suratMasuk = await prisma.suratMasuk.create({
       data: {
         ...data,
+        nomorSurat: data.nomorSurat || null,
         tanggalSurat: new Date(data.tanggalSurat),
         tanggalDiteruskan: new Date(data.tanggalDiteruskan),
         createdById: session.user.id,
