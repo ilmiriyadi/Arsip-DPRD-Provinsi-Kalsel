@@ -69,7 +69,7 @@ export default function EditSuratMasukPage({ params }: PageProps) {
         
         // Pre-fill form with existing data
         setFormData({
-          nomorSurat: data.nomorSurat,
+          nomorSurat: data.nomorSurat || '',
           tanggalSurat: new Date(data.tanggalSurat).toISOString().split('T')[0],
           tanggalDiteruskan: new Date(data.tanggalDiteruskan).toISOString().split('T')[0],
           asalSurat: data.asalSurat,
@@ -207,7 +207,7 @@ export default function EditSuratMasukPage({ params }: PageProps) {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label htmlFor="nomorSurat" className="block text-sm font-medium text-gray-900 mb-2">
-                    Nomor Surat <span className="text-red-500">*</span>
+                    Nomor Surat <span className="text-gray-500">(Opsional)</span>
                   </label>
                   <input
                     type="text"
@@ -215,7 +215,6 @@ export default function EditSuratMasukPage({ params }: PageProps) {
                     name="nomorSurat"
                     value={formData.nomorSurat}
                     onChange={handleChange}
-                    required
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                     placeholder="Contoh: SM/001/X/2024"
                   />
