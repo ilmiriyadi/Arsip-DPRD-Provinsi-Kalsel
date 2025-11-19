@@ -267,7 +267,10 @@ export default function SuratMasukPage() {
       return
     }
 
-    if (!selectedSubBagian.trim()) {
+    // Cek apakah tujuan ini memerlukan sub bagian
+    const needsSubBagian = subBagianOptions[selectedTujuan as keyof typeof subBagianOptions]
+    
+    if (needsSubBagian && !selectedSubBagian.trim()) {
       alert('Silakan pilih sub bagian')
       return
     }
@@ -277,7 +280,10 @@ export default function SuratMasukPage() {
       return
     }
 
-    const finalTujuan = `${selectedTujuan} - ${selectedSubBagian}`
+    // Set finalTujuan berdasarkan apakah ada sub bagian atau tidak
+    const finalTujuan = needsSubBagian 
+      ? `${selectedTujuan} - ${selectedSubBagian}`
+      : selectedTujuan
 
     try {
       const response = await fetch(`/api/surat-masuk/${selectedSurat.id}/copy-disposisi`, {
