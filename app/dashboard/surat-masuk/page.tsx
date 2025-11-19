@@ -269,21 +269,13 @@ export default function SuratMasukPage() {
       return
     }
 
-    // Cek apakah tujuan ini memerlukan sub bagian
-    const needsSubBagian = subBagianOptions[selectedTujuan as keyof typeof subBagianOptions]
-    
-    if (needsSubBagian && !selectedSubBagian.trim()) {
-      alert('Silakan pilih sub bagian')
-      return
-    }
-
     if (!tanggalDisposisi.trim()) {
       alert('Silakan pilih tanggal disposisi')
       return
     }
 
-    // Set finalTujuan berdasarkan apakah ada sub bagian atau tidak
-    const finalTujuan = needsSubBagian 
+    // Set finalTujuan: jika ada sub bagian dipilih gunakan format "Bagian - Sub Bagian", jika tidak gunakan nama bagian saja
+    const finalTujuan = selectedSubBagian 
       ? `${selectedTujuan} - ${selectedSubBagian}`
       : selectedTujuan
 

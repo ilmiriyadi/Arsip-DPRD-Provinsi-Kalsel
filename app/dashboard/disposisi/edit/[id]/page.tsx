@@ -385,12 +385,8 @@ export default function EditDisposisiPage() {
                         const value = e.target.value
                         setSelectedBagian(value)
                         setSelectedSubBagian('')
-                        // Set tujuanDisposisi langsung jika tidak punya sub bagian
-                        if (!subBagianOptions[value as keyof typeof subBagianOptions]) {
-                          setFormData(prev => ({ ...prev, tujuanDisposisi: value }))
-                        } else {
-                          setFormData(prev => ({ ...prev, tujuanDisposisi: '' }))
-                        }
+                        // Set tujuanDisposisi langsung dengan nama bagian utama
+                        setFormData(prev => ({ ...prev, tujuanDisposisi: value }))
                       }}
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
@@ -406,22 +402,30 @@ export default function EditDisposisiPage() {
                     <div>
                       <label htmlFor="subBagianTujuan" className="block text-sm font-medium text-gray-900 mb-2">
                         <Building className="inline h-4 w-4 mr-1" />
-                        Sub Bagian <span className="text-red-500">*</span>
+                        Sub Bagian <span className="text-gray-500">(Opsional)</span>
                       </label>
                       <select
                         id="subBagianTujuan"
                         value={selectedSubBagian}
                         onChange={(e) => {
                           setSelectedSubBagian(e.target.value)
-                          setFormData(prev => ({ 
-                            ...prev, 
-                            tujuanDisposisi: `${selectedBagian} - ${e.target.value}` 
-                          }))
+                          // Jika memilih sub bagian, update tujuanDisposisi dengan format "Bagian - Sub Bagian"
+                          // Jika tidak/kosong, gunakan nama bagian utama saja
+                          if (e.target.value) {
+                            setFormData(prev => ({ 
+                              ...prev, 
+                              tujuanDisposisi: `${selectedBagian} - ${e.target.value}` 
+                            }))
+                          } else {
+                            setFormData(prev => ({ 
+                              ...prev, 
+                              tujuanDisposisi: selectedBagian 
+                            }))
+                          }
                         }}
-                        required
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                       >
-                        <option value="">Pilih sub bagian...</option>
+                        <option value="">Pilih sub bagian (atau kosongkan)...</option>
                         {subBagianOptions[selectedBagian as keyof typeof subBagianOptions]?.map((subOption) => (
                           <option key={subOption} value={subOption}>{subOption}</option>
                         ))}
