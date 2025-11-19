@@ -330,7 +330,7 @@ function AddDisposisiContent() {
                   </select>
                 </div>
 
-                {selectedBagian && (
+                {selectedBagian && subBagianOptions[selectedBagian as keyof typeof subBagianOptions] && (
                   <div>
                     <label htmlFor="subBagianTujuan" className="block text-sm font-medium text-gray-900 mb-2">
                       Sub Bagian <span className="text-red-500">*</span>

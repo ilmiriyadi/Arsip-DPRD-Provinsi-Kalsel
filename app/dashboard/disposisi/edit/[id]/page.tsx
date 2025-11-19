@@ -394,7 +394,7 @@ export default function EditDisposisiPage() {
                     </select>
                   </div>
 
-                  {selectedBagian && (
+                  {selectedBagian && subBagianOptions[selectedBagian as keyof typeof subBagianOptions] && (
                     <div>
                       <label htmlFor="subBagianTujuan" className="block text-sm font-medium text-gray-900 mb-2">
                         <Building className="inline h-4 w-4 mr-1" />
