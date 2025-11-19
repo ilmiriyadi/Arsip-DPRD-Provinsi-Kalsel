@@ -198,6 +198,8 @@ export default function SuratMasukPage() {
     'Ketua DPRD',
     'Wakil',
     'Ketua Komisi',
+    'Anggota Dewan',
+    'SEKWAN',
     'Bagian Persidangan dan Perundang-Undangan',
     'Bagian Fasilitasi Penganggaran dan Pengawasan',
     'Bagian Umum dan Keuangan',
