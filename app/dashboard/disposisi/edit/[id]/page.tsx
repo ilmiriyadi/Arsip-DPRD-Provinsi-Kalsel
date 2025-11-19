@@ -380,9 +380,15 @@ export default function EditDisposisiPage() {
                       id="bagianTujuan"
                       value={selectedBagian}
                       onChange={(e) => {
-                        setSelectedBagian(e.target.value)
+                        const value = e.target.value
+                        setSelectedBagian(value)
                         setSelectedSubBagian('')
-                        setFormData(prev => ({ ...prev, tujuanDisposisi: '' }))
+                        // Set tujuanDisposisi langsung jika tidak punya sub bagian
+                        if (!subBagianOptions[value as keyof typeof subBagianOptions]) {
+                          setFormData(prev => ({ ...prev, tujuanDisposisi: value }))
+                        } else {
+                          setFormData(prev => ({ ...prev, tujuanDisposisi: '' }))
+                        }
                       }}
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
