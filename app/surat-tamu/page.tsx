@@ -6,6 +6,7 @@ import { useEffect, useState, useRef } from "react"
 import DashboardLayout from '@/components/layout/DashboardLayout'
 import Link from 'next/link'
 import { FileText, Plus, Search, Eye, Edit, Trash2, Filter, ChevronLeft, ChevronRight } from 'lucide-react'
+import { csrfFetch } from '@/lib/csrfFetch'
 
 // debounce helper
 function useDebouncedValue<T>(value: T, delay = 300) {

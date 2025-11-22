@@ -128,20 +128,7 @@ export async function PUT(
       { error: "Terjadi kesalahan server" },
       { status: 500 }
     )
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        return NextResponse.json(
-          { error: error.issues[0].message },
-          { status: 400 }
-        )
-      }
-
-      console.error("Error updating user:", error)
-      return NextResponse.json(
-        { error: "Terjadi kesalahan server" },
-        { status: 500 }
-      )
-    }
+  }
   })
 }
 
@@ -191,25 +178,4 @@ export async function DELETE(
       )
     }
   })
-}
-
-    if (!user) {
-      return NextResponse.json(
-        { error: "User tidak ditemukan" },
-        { status: 404 }
-      )
-    }
-
-    await prisma.user.delete({
-      where: { id }
-    })
-
-    return NextResponse.json({ message: "User berhasil dihapus" })
-  } catch (error) {
-    console.error("Error deleting user:", error)
-    return NextResponse.json(
-      { error: "Terjadi kesalahan server" },
-      { status: 500 }
-    )
-  }
 }

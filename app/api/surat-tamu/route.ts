@@ -73,5 +73,4 @@ export async function POST(req: NextRequest) {
     console.error("Error creating surat tamu:", error)
     return NextResponse.json({ error: "Server error" }, { status: 500 })
   }
-  })
 }
