@@ -1,23 +1,78 @@
 # 📂 Sistem Manajemen Arsip Surat DPRD Kalimantan Selatan
 
-Sistem informasi manajemen arsip surat masuk, surat keluar, dan disposisi yang dikhususkan untuk DPRD Provinsi Kalimantan Selatan. Aplikasi ini menyediakan platform digital untuk mengelola dokumen resmi dengan workflow yang terstruktur dan role-based access control.
+[![Next.js](https://img.shields.io/badge/Next.js-15.5.4-black)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
+[![Prisma](https://img.shields.io/badge/Prisma-6.17.0-2D3748)](https://www.prisma.io/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.0-38B2AC)](https://tailwindcss.com/)
+[![Security](https://img.shields.io/badge/Security-100%2F100-success)](SECURITY-AUDIT.md)
+
+Sistem informasi manajemen arsip surat masuk, surat keluar, dan disposisi yang dikhususkan untuk DPRD Provinsi Kalimantan Selatan. Aplikasi ini menyediakan platform digital untuk mengelola dokumen resmi dengan workflow yang terstruktur dan **enterprise-grade security**.
 
 ## 🌐 Live Demo
 **🔗 Akses Aplikasi: [https://arsipdprdkalsel.vercel.app/](https://arsipdprdkalsel.vercel.app/)**
 
 > **Catatan**: Silakan daftar akun baru untuk mencoba aplikasi. Akun pertama yang mendaftar akan otomatis menjadi Administrator.
 
-## ✨ Fitur Utama
+## 🎯 Fitur Utama
 
-### 🔐 Sistem Autentikasi & Keamanan
-- **Login/Register Aman**: Autentikasi dengan NextAuth.js dan bcrypt encryption
-- **Role-based Access Control**: Admin (full access) dan Member (read-only)
-- **Session Management**: Pengelolaan sesi yang aman dengan automatic logout
-- **Protected Routes**: Route protection berdasarkan role pengguna
+### 🔐 Keamanan Enterprise (Security Score: 100/100)
+
+#### CSRF Protection ✅
+- **Double Submit Cookie Pattern** untuk semua API routes
+- **23 frontend files** fully migrated dengan `csrfFetch` utility
+- **43 protected operations** across all modules
+- Auto token refresh & retry mechanism
+- 100% TypeScript safe implementation
+
+#### Rate Limiting ✅
+- **Login Protection**: 5 attempts per 15 minutes
+- **API Protection**: 100 requests per 15 minutes
+- Prevents brute force attacks
+- IP-based tracking
+
+#### Password Policy ✅
+- Minimum 8 characters
+- Must contain: uppercase, lowercase, numbers, special chars
+- bcrypt hashing with 12 rounds
+- Secure password storage
+
+#### Security Headers ✅
+- X-Frame-Options: DENY (clickjacking protection)
+- X-Content-Type-Options: nosniff
+- X-XSS-Protection: 1; mode=block
+- Strict-Transport-Security (HSTS)
+- Content-Security-Policy configured
+
+#### Audit Logging System ✅
+- Comprehensive activity tracking
+- Authentication events (login, failed login, logout)
+- User management logs (create, update, delete)
+- Data modifications (surat masuk, keluar, disposisi)
+- IP address & user agent tracking
+- Admin dashboard for log monitoring
+- Filter by action, entity, date range
+
+#### Additional Security
+- ✅ Session security with HttpOnly, Secure, SameSite cookies
+- ✅ Input validation with Zod schemas
+- ✅ SQL injection prevention via Prisma ORM
+- ✅ XSS protection with React & Next.js
+- ✅ HTTPS enforcement in production
+- ✅ Environment variable protection
+- ✅ No dependency vulnerabilities (0 found)
+
+📄 **Detailed Security Report**: [SECURITY-AUDIT.md](SECURITY-AUDIT.md)  
+📄 **CSRF Implementation Guide**: [CSRF-PROTECTION-GUIDE.md](CSRF-PROTECTION-GUIDE.md)
+
+### 📊 Performance Monitoring ✅
+- **Vercel Speed Insights** integration
+- Real-time Core Web Vitals tracking
+- Performance analytics dashboard
+- LCP, FID, CLS, TTFB, FCP metrics
 
 ### 📄 Manajemen Surat Masuk
-- **CRUD Lengkap**: Create, Read, Update, Delete surat masuk (Admin only)
-- **Detail Komprehensif**: No Urut, Nomor Surat, Tanggal, Asal Surat, Perihal, Keterangan
+- **CRUD Lengkap**: Create, Read, Update, Delete (Admin only)
+- **Detail Komprehensif**: No Urut, Nomor Surat, Tanggal, Asal Surat, Perihal
 - **Validasi Unik**: Nomor surat dan no urut yang unique untuk mencegah duplikasi
 - **File Path Support**: Dukungan untuk menyimpan path file dokumen
 
