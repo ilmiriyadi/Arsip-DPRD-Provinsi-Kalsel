@@ -186,8 +186,6 @@ export default function AuditLogsPage() {
                 <div className="w-12 h-12 bg-red-200 rounded-xl flex items-center justify-center">
                   <AlertTriangle className="w-6 h-6 text-red-600" />
                 </div>
-                  </svg>
-                </div>
               </div>
             </div>
             
