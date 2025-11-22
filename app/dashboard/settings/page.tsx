@@ -83,7 +83,7 @@ export default function SettingsPage() {
         const errorData = await response.json()
         setError(errorData.error || 'Failed to fetch users')
       }
-    } catch (error) {
+    } catch {
       setError('Gagal memuat data pengguna')
     } finally {
       setLoading(false)
@@ -107,7 +107,7 @@ export default function SettingsPage() {
         const data = await response.json()
         setError(data.error || 'Gagal menambahkan pengguna')
       }
-    } catch (error) {
+    } catch {
       setError('Terjadi kesalahan saat menambahkan pengguna')
     }
   }
@@ -137,7 +137,7 @@ export default function SettingsPage() {
         const data = await response.json()
         setError(data.error || 'Gagal mengupdate pengguna')
       }
-    } catch (error) {
+    } catch {
       setError('Terjadi kesalahan saat mengupdate pengguna')
     }
   }
@@ -328,7 +328,7 @@ export default function SettingsPage() {
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-slate-100">
-                            {users.map((user, index) => (
+                            {users.map((user) => (
                               <tr key={user.id} className="group hover:bg-gradient-to-r hover:from-slate-50 hover:to-blue-50 transition-all duration-200">
                                 <td className="px-6 py-4">
                                   <div className="flex items-center space-x-3">

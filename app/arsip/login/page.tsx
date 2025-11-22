@@ -47,7 +47,7 @@ export default function ArsipLoginPage() {
       }
       
       router.push('/arsip/dashboard')
-    } catch (error) {
+    } catch {
       setError('Terjadi kesalahan sistem')
     } finally {
       setLoading(false)

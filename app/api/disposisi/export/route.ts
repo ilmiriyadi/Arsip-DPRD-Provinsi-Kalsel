@@ -2,7 +2,7 @@ import { NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
-import * as XLSX from 'xlsx'
+import ExcelJS from 'exceljs'
 
 // GET - Export all disposisi to Excel with 3 blank rows between different surat
 export async function GET() {
@@ -85,29 +85,29 @@ export async function GET() {
     }
 
     // Create workbook and worksheet
-    const workbook = XLSX.utils.book_new()
-    const worksheet = XLSX.utils.aoa_to_sheet(rows)
+    const workbook = new ExcelJS.Workbook()
+    const worksheet = workbook.addWorksheet('Disposisi')
 
-    // Set column widths sesuai dengan format yang diinginkan
-    const columnWidths = [
-      { wch: 8 },   // Nomor
-      { wch: 20 },  // Nomor Surat
-      { wch: 18 },  // Hari/Tanggal
-      { wch: 50 },  // Hal (lebih lebar untuk perihal panjang)
-      { wch: 20 },  // Asal Surat
-      { wch: 15 },  // Disposisi Surat
-      { wch: 18 }   // Tanggal Disposisi
+    // Add rows
+    worksheet.addRows(rows)
+
+    // Set column widths
+    worksheet.columns = [
+      { width: 8 },   // Nomor
+      { width: 20 },  // Nomor Surat
+      { width: 18 },  // Hari/Tanggal
+      { width: 50 },  // Hal (lebih lebar untuk perihal panjang)
+      { width: 20 },  // Asal Surat
+      { width: 15 },  // Disposisi Surat
+      { width: 18 }   // Tanggal Disposisi
     ]
-    worksheet['!cols'] = columnWidths
 
-    // Add worksheet to workbook
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Disposisi')
+    // Style header row
+    worksheet.getRow(1).font = { bold: true }
+    worksheet.getRow(1).alignment = { horizontal: 'center', vertical: 'middle' }
 
     // Generate Excel buffer
-    const excelBuffer = XLSX.write(workbook, { 
-      type: 'buffer', 
-      bookType: 'xlsx' 
-    })
+    const excelBuffer = await workbook.xlsx.writeBuffer()
 
     // Create filename with current date
     const currentDate = new Date().toLocaleDateString('id-ID').replace(/\//g, '-')
@@ -119,7 +119,7 @@ export async function GET() {
       headers: {
         'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         'Content-Disposition': `attachment; filename="${filename}"`,
-        'Content-Length': excelBuffer.length.toString()
+        'Content-Length': Buffer.byteLength(excelBuffer).toString()
       }
     })
 

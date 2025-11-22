@@ -47,7 +47,7 @@ export default function TamuLoginPage() {
       }
       
       router.push('/tamu/dashboard')
-    } catch (error) {
+    } catch {
       setError('Terjadi kesalahan sistem')
     } finally {
       setLoading(false)

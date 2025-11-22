@@ -9,13 +9,11 @@ import {
   FileText,
   SendHorizontal,
   Home,
-  Users,
   Settings,
   LogOut,
   Menu,
   X,
   ChevronDown,
-  Shield,
   Send
 } from 'lucide-react'
 

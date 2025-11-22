@@ -2,7 +2,7 @@ import { NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
-import * as XLSX from 'xlsx'
+import ExcelJS from 'exceljs'
 
 // GET - Export all surat masuk to Excel
 export async function GET() {
@@ -99,29 +99,32 @@ export async function GET() {
     }
 
     // Create workbook and worksheet
-    const workbook = XLSX.utils.book_new()
-    const worksheet = XLSX.utils.aoa_to_sheet(rows)
+    const workbook = new ExcelJS.Workbook()
+    const worksheet = workbook.addWorksheet('Surat Masuk')
+
+    // Add rows
+    worksheet.addRows(rows)
 
     // Set column widths
-    const columnWidths = [
-      { wch: 10 },  // No Urut
-      { wch: 20 },  // Nomor Surat
-      { wch: 15 },  // Tanggal Surat
-      { wch: 18 },  // Tanggal Diteruskan
-      { wch: 30 },  // Asal Surat
-      { wch: 50 },  // Perihal
-      { wch: 30 },  // Keterangan
-      { wch: 15 },  // Jumlah Disposisi
-      { wch: 20 },  // Dibuat Oleh
-      { wch: 18 }   // Tanggal Dibuat
+    worksheet.columns = [
+      { width: 10 },  // No Urut
+      { width: 20 },  // Nomor Surat
+      { width: 15 },  // Tanggal Surat
+      { width: 18 },  // Tanggal Diteruskan
+      { width: 30 },  // Asal Surat
+      { width: 50 },  // Perihal
+      { width: 30 },  // Keterangan
+      { width: 15 },  // Jumlah Disposisi
+      { width: 20 },  // Dibuat Oleh
+      { width: 18 }   // Tanggal Dibuat
     ]
-    worksheet['!cols'] = columnWidths
 
-    // Add worksheet to workbook
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Surat Masuk')
+    // Style header row
+    worksheet.getRow(1).font = { bold: true }
+    worksheet.getRow(1).alignment = { horizontal: 'center', vertical: 'middle' }
 
     // Generate buffer
-    const excelBuffer = XLSX.write(workbook, { type: 'buffer', bookType: 'xlsx' })
+    const excelBuffer = await workbook.xlsx.writeBuffer()
 
     // Create filename with timestamp
     const timestamp = new Date().toISOString().split('T')[0]

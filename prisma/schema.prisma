@@ -114,3 +114,22 @@ model SuratTamu {
 
   @@map("surat_tamu")
 }
+
+// Audit Log untuk tracking security events dan perubahan data
+model AuditLog {
+  id          String   @id @default(cuid())
+  userId      String?  // null jika failed login (user belum teridentifikasi)
+  action      String   // LOGIN, LOGOUT, CREATE, UPDATE, DELETE, FAILED_LOGIN
+  entity      String?  // User, SuratMasuk, Disposisi, dll
+  entityId    String?  // ID dari entity yang diubah
+  ipAddress   String?
+  userAgent   String?
+  details     String?  // JSON string untuk detail tambahan
+  success     Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+  @@index([action])
+  @@index([createdAt])
+  @@map("audit_logs")
+}

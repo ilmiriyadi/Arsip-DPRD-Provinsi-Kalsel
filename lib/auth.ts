@@ -2,6 +2,8 @@ import { NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import bcrypt from "bcryptjs"
 import { prisma } from "./prisma"
+import { loginRateLimiter } from "./rateLimit"
+import { logAudit } from "./auditLog"
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -16,6 +18,25 @@ export const authOptions: NextAuthOptions = {
           return null
         }
 
+        // Rate limiting check
+        const rateLimitResult = loginRateLimiter(credentials.email)
+        if (!rateLimitResult.allowed) {
+          // Log failed login due to rate limit
+          await logAudit({
+            action: 'FAILED_LOGIN',
+            entity: 'System',
+            details: { 
+              email: credentials.email,
+              reason: 'rate_limit_exceeded'
+            },
+            success: false
+          })
+          
+          throw new Error(
+            `Terlalu banyak percobaan login. Coba lagi dalam ${rateLimitResult.retryAfter} detik.`
+          )
+        }
+
         const user = await prisma.user.findUnique({
           where: {
             email: credentials.email
@@ -23,6 +44,16 @@ export const authOptions: NextAuthOptions = {
         })
 
         if (!user) {
+          // Log failed login - user not found
+          await logAudit({
+            action: 'FAILED_LOGIN',
+            entity: 'User',
+            details: { 
+              email: credentials.email,
+              reason: 'user_not_found'
+            },
+            success: false
+          })
           return null
         }
 
@@ -32,8 +63,30 @@ export const authOptions: NextAuthOptions = {
         )
 
         if (!isPasswordValid) {
+          // Log failed login - invalid password
+          await logAudit({
+            userId: user.id,
+            action: 'FAILED_LOGIN',
+            entity: 'User',
+            details: { 
+              email: credentials.email,
+              reason: 'invalid_password'
+            },
+            success: false
+          })
           return null
         }
+
+        // Log successful login
+        await logAudit({
+          userId: user.id,
+          action: 'LOGIN',
+          entity: 'User',
+          details: { 
+            email: credentials.email
+          },
+          success: true
+        })
 
         return {
           id: user.id,

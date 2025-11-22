@@ -4,6 +4,8 @@ import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import bcrypt from "bcryptjs"
 import { z } from "zod"
+import { validatePassword } from "@/lib/passwordPolicy"
+import { logAudit, getIpAddress, getUserAgent } from "@/lib/auditLog"
 
 const userSchema = z.object({
   name: z.string().min(2, "Nama minimal 2 karakter"),
@@ -94,6 +96,18 @@ export async function POST(req: NextRequest) {
     const body = await req.json()
     const data = userSchema.parse(body)
 
+    // Validate password policy
+    const passwordValidation = validatePassword(data.password!)
+    if (!passwordValidation.isValid) {
+      return NextResponse.json(
+        { 
+          error: "Password tidak memenuhi persyaratan keamanan",
+          details: passwordValidation.errors 
+        },
+        { status: 400 }
+      )
+    }
+
     // Check if user already exists
     const existingUser = await prisma.user.findUnique({
       where: { email: data.email }
@@ -123,6 +137,20 @@ export async function POST(req: NextRequest) {
         role: true,
         createdAt: true,
         updatedAt: true,
+      }
+    })
+
+    // Log user creation
+    await logAudit({
+      userId: session.user.id,
+      action: 'CREATE',
+      entity: 'User',
+      entityId: user.id,
+      ipAddress: getIpAddress(req),
+      userAgent: getUserAgent(req),
+      details: {
+        createdUserEmail: user.email,
+        createdUserRole: user.role
       }
     })
 

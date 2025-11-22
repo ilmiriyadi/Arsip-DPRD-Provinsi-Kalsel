@@ -658,7 +658,7 @@ export default function SuratMasukPage() {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-slate-100">
-                    {suratList.map((surat, index) => (
+                    {suratList.map((surat) => (
                       <tr key={surat.id} className="hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all duration-200 group">
                         <td className="px-6 py-5 whitespace-nowrap">
                           <div className="flex items-center">

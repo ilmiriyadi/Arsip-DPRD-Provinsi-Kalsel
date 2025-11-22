@@ -6,7 +6,7 @@ import { useEffect, useState } from "react"
 import DashboardLayout from '@/components/layout/DashboardLayout'
 
 export default function AddSuratTamu() {
-  const { data: session, status } = useSession()
+  const { status } = useSession()
   const router = useRouter()
   const [form, setForm] = useState({ noUrut: '', nama: '', keperluan: '', asalSurat: '', tujuanSurat: '', nomorTelpon: '', tanggal: '' })
   const [loading, setLoading] = useState(false)
