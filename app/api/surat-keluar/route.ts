@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { withCsrfProtection } from '@/lib/csrf'
 import { z } from 'zod'
 
 // Zod schema untuk validasi
@@ -87,8 +88,9 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST /api/surat-keluar - Create new surat keluar
+// POST /api/surat-keluar - Create surat keluar
 export async function POST(request: NextRequest) {
+  return withCsrfProtection(request, async (req) => {
   try {
     const session = await getServerSession(authOptions)
     
@@ -170,4 +172,5 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     )
   }
+  })
 }

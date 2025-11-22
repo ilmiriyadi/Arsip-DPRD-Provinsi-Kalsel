@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { withCsrfProtection } from '@/lib/csrf'
 
 // Define enum manually since it might not be exported yet
 enum PengolahSurat {
@@ -68,6 +69,7 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  return withCsrfProtection(request, async (req) => {
   const { id } = await params
   try {
     const session = await getServerSession(authOptions)
@@ -159,6 +161,7 @@ export async function PUT(
       { status: 500 }
     )
   }
+  })
 }
 
 // DELETE /api/surat-keluar/[id] - Delete surat keluar
@@ -166,6 +169,7 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  return withCsrfProtection(request, async (req) => {
   const { id } = await params
   try {
     const session = await getServerSession(authOptions)
@@ -199,4 +203,5 @@ export async function DELETE(
       { status: 500 }
     )
   }
+  })
 }

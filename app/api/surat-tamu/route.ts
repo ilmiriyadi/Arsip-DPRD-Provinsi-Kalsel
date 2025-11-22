@@ -4,6 +4,7 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import { z } from "zod"
+import { withCsrfProtection } from "@/lib/csrf"
 
 const suratTamuSchema = z.object({
   noUrut: z.number().min(1),
@@ -72,4 +73,5 @@ export async function POST(req: NextRequest) {
     console.error("Error creating surat tamu:", error)
     return NextResponse.json({ error: "Server error" }, { status: 500 })
   }
+  })
 }

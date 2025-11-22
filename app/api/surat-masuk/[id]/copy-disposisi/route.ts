@@ -2,20 +2,22 @@ import { NextRequest, NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
+import { withCsrfProtection } from "@/lib/csrf"
 
 // POST - Copy surat masuk to disposisi
 export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  try {
-    const session = await getServerSession(authOptions)
-    if (!session || session.user.role !== "ADMIN") {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 })
-    }
+  return withCsrfProtection(req, async (request) => {
+    try {
+      const session = await getServerSession(authOptions)
+      if (!session || session.user.role !== "ADMIN") {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+      }
 
-    const { id } = await params
-    const body = await req.json()
+      const { id } = await params
+      const body = await request.json()
     const { tujuanDisposisi, tanggalDisposisi, keterangan } = body
 
     // Validate tujuan disposisi
@@ -96,4 +98,5 @@ export async function POST(
       { status: 500 }
     )
   }
+  })
 }

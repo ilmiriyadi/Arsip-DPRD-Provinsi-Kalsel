@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import { z } from "zod"
+import { withCsrfProtection } from "@/lib/csrf"
 
 const disposisiSchema = z.object({
   noUrut: z.number().min(1, "No urut wajib diisi"),
@@ -61,14 +62,15 @@ export async function PUT(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  try {
-    const session = await getServerSession(authOptions)
-    if (!session || session.user.role !== "ADMIN") {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 })
-    }
+  return withCsrfProtection(req, async (request) => {
+    try {
+      const session = await getServerSession(authOptions)
+      if (!session || session.user.role !== "ADMIN") {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+      }
 
-    const { id } = await params
-    const body = await req.json()
+      const { id } = await params
+      const body = await request.json()
     const data = disposisiSchema.parse(body)
 
     // Cek apakah surat masuk yang dipilih ada dan ambil noUrut-nya
@@ -131,29 +133,32 @@ export async function PUT(
       { status: 500 }
     )
   }
+  })
 }
 
 export async function DELETE(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  try {
-    const session = await getServerSession(authOptions)
-    if (!session || session.user.role !== "ADMIN") {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+  return withCsrfProtection(req, async (request) => {
+    try {
+      const session = await getServerSession(authOptions)
+      if (!session || session.user.role !== "ADMIN") {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+      }
+
+      const { id } = await params
+      await prisma.disposisi.delete({
+        where: { id }
+      })
+
+      return NextResponse.json({ message: "Disposisi berhasil dihapus" })
+    } catch (error) {
+      console.error("Error deleting disposisi:", error)
+      return NextResponse.json(
+        { error: "Terjadi kesalahan server" },
+        { status: 500 }
+      )
     }
-
-    const { id } = await params
-    await prisma.disposisi.delete({
-      where: { id }
-    })
-
-    return NextResponse.json({ message: "Disposisi berhasil dihapus" })
-  } catch (error) {
-    console.error("Error deleting disposisi:", error)
-    return NextResponse.json(
-      { error: "Terjadi kesalahan server" },
-      { status: 500 }
-    )
-  }
+  })
 }

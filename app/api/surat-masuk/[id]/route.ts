@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import { z } from "zod"
+import { withCsrfProtection } from "@/lib/csrf"
 
 const suratMasukSchema = z.object({
   nomorSurat: z.string().optional().transform(val => val && val.trim() !== '' ? val : undefined),
@@ -71,14 +72,15 @@ export async function PUT(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  try {
-    const session = await getServerSession(authOptions)
-    if (!session || session.user.role !== "ADMIN") {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 })
-    }
+  return withCsrfProtection(req, async (request) => {
+    try {
+      const session = await getServerSession(authOptions)
+      if (!session || session.user.role !== "ADMIN") {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+      }
 
-    const { id } = await params
-    const body = await req.json()
+      const { id } = await params
+      const body = await request.json()
     const data = suratMasukSchema.parse(body)
 
     const updatedSurat = await prisma.suratMasuk.update({
@@ -123,19 +125,21 @@ export async function PUT(
       { status: 500 }
     )
   }
+  })
 }
 
 export async function DELETE(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  try {
-    const session = await getServerSession(authOptions)
-    if (!session || session.user.role !== "ADMIN") {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 })
-    }
+  return withCsrfProtection(req, async (request) => {
+    try {
+      const session = await getServerSession(authOptions)
+      if (!session || session.user.role !== "ADMIN") {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+      }
 
-    const { id } = await params
+      const { id } = await params
     await prisma.suratMasuk.delete({
       where: { id }
     })
@@ -148,4 +152,5 @@ export async function DELETE(
       { status: 500 }
     )
   }
+  })
 }
