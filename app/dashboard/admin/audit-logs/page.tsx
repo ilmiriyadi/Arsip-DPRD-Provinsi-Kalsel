@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import DashboardLayout from "@/components/layout/DashboardLayout"
@@ -26,20 +26,7 @@ export default function AuditLogsPage() {
   const [filter, setFilter] = useState<"all" | "failed-logins">("all")
   const [days, setDays] = useState(7)
 
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/login")
-    }
-    if (session?.user.role !== "ADMIN") {
-      router.push("/dashboard")
-    }
-  }, [session, status, router])
-
-  useEffect(() => {
-    fetchLogs()
-  }, [filter, days])
-
-  const fetchLogs = async () => {
+  const fetchLogs = useCallback(async () => {
     try {
       setLoading(true)
       const params = new URLSearchParams({
@@ -57,7 +44,20 @@ export default function AuditLogsPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [filter, days])
+
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/login")
+    }
+    if (session?.user.role !== "ADMIN") {
+      router.push("/dashboard")
+    }
+  }, [session, status, router])
+
+  useEffect(() => {
+    fetchLogs()
+  }, [fetchLogs])
 
   const getActionBadgeColor = (action: string) => {
     switch (action) {
@@ -121,7 +121,7 @@ export default function AuditLogsPage() {
               <label className="block text-sm font-medium mb-2">Filter</label>
               <select
                 value={filter}
-                onChange={(e) => setFilter(e.target.value as any)}
+                onChange={(e) => setFilter(e.target.value as "all" | "failed-logins")}
                 className="px-4 py-2 border rounded-lg"
               >
                 <option value="all">Semua Activity</option>
