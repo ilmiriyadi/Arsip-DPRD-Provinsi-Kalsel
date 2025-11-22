@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import bcrypt from "bcryptjs"
 import { z } from "zod"
+import { withCsrfProtection } from "@/lib/csrf"
 
 const updateUserSchema = z.object({
   name: z.string().min(2, "Nama minimal 2 karakter").optional(),
@@ -64,14 +65,15 @@ export async function PUT(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  try {
-    const session = await getServerSession(authOptions)
-    if (!session || session.user.role !== "ADMIN") {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 })
-    }
+  return withCsrfProtection(req, async (request) => {
+    try {
+      const session = await getServerSession(authOptions)
+      if (!session || session.user.role !== "ADMIN") {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+      }
 
-    const { id } = await params
-    const body = await req.json()
+      const { id } = await params
+      const body = await request.json()
     const data = updateUserSchema.parse(body)
 
     // Check if email already exists (excluding current user)
@@ -126,7 +128,21 @@ export async function PUT(
       { error: "Terjadi kesalahan server" },
       { status: 500 }
     )
-  }
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return NextResponse.json(
+          { error: error.issues[0].message },
+          { status: 400 }
+        )
+      }
+
+      console.error("Error updating user:", error)
+      return NextResponse.json(
+        { error: "Terjadi kesalahan server" },
+        { status: 500 }
+      )
+    }
+  })
 }
 
 // DELETE - Delete user
@@ -134,25 +150,48 @@ export async function DELETE(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  try {
-    const session = await getServerSession(authOptions)
-    if (!session || session.user.role !== "ADMIN") {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 })
-    }
+  return withCsrfProtection(req, async (request) => {
+    try {
+      const session = await getServerSession(authOptions)
+      if (!session || session.user.role !== "ADMIN") {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+      }
 
-    const { id } = await params
-    // Prevent deleting own account
-    if (session.user.id === id) {
+      const { id } = await params
+      // Prevent deleting own account
+      if (session.user.id === id) {
+        return NextResponse.json(
+          { error: "Tidak dapat menghapus akun sendiri" },
+          { status: 400 }
+        )
+      }
+
+      // Check if user exists
+      const user = await prisma.user.findUnique({
+        where: { id }
+      })
+
+      if (!user) {
+        return NextResponse.json(
+          { error: "User tidak ditemukan" },
+          { status: 404 }
+        )
+      }
+
+      await prisma.user.delete({
+        where: { id }
+      })
+
+      return NextResponse.json({ message: "User berhasil dihapus" })
+    } catch (error) {
+      console.error("Error deleting user:", error)
       return NextResponse.json(
-        { error: "Tidak dapat menghapus akun sendiri" },
-        { status: 400 }
+        { error: "Terjadi kesalahan server" },
+        { status: 500 }
       )
     }
-
-    // Check if user exists
-    const user = await prisma.user.findUnique({
-      where: { id }
-    })
+  })
+}
 
     if (!user) {
       return NextResponse.json(

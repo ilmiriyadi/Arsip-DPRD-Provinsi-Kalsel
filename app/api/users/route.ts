@@ -6,6 +6,7 @@ import bcrypt from "bcryptjs"
 import { z } from "zod"
 import { validatePassword } from "@/lib/passwordPolicy"
 import { logAudit, getIpAddress, getUserAgent } from "@/lib/auditLog"
+import { withCsrfProtection } from "@/lib/csrf"
 
 const userSchema = z.object({
   name: z.string().min(2, "Nama minimal 2 karakter"),
@@ -87,86 +88,88 @@ export async function GET(req: NextRequest) {
 
 // POST - Tambah user baru (Admin only)
 export async function POST(req: NextRequest) {
-  try {
-    const session = await getServerSession(authOptions)
-    if (!session || session.user.role !== "ADMIN") {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 })
-    }
+  return withCsrfProtection(req, async (request) => {
+    try {
+      const session = await getServerSession(authOptions)
+      if (!session || session.user.role !== "ADMIN") {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+      }
 
-    const body = await req.json()
-    const data = userSchema.parse(body)
+      const body = await request.json()
+      const data = userSchema.parse(body)
 
-    // Validate password policy
-    const passwordValidation = validatePassword(data.password!)
-    if (!passwordValidation.isValid) {
-      return NextResponse.json(
-        { 
-          error: "Password tidak memenuhi persyaratan keamanan",
-          details: passwordValidation.errors 
+      // Validate password policy
+      const passwordValidation = validatePassword(data.password!)
+      if (!passwordValidation.isValid) {
+        return NextResponse.json(
+          { 
+            error: "Password tidak memenuhi persyaratan keamanan",
+            details: passwordValidation.errors 
+          },
+          { status: 400 }
+        )
+      }
+
+      // Check if user already exists
+      const existingUser = await prisma.user.findUnique({
+        where: { email: data.email }
+      })
+
+      if (existingUser) {
+        return NextResponse.json(
+          { error: "User dengan email ini sudah terdaftar" },
+          { status: 400 }
+        )
+      }
+
+      // Hash password
+      const hashedPassword = await bcrypt.hash(data.password!, 12)
+
+      const user = await prisma.user.create({
+        data: {
+          name: data.name,
+          email: data.email,
+          password: hashedPassword,
+          role: data.role,
         },
-        { status: 400 }
-      )
-    }
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          role: true,
+          createdAt: true,
+          updatedAt: true,
+        }
+      })
 
-    // Check if user already exists
-    const existingUser = await prisma.user.findUnique({
-      where: { email: data.email }
-    })
+      // Log user creation
+      await logAudit({
+        userId: session.user.id,
+        action: 'CREATE',
+        entity: 'User',
+        entityId: user.id,
+        ipAddress: getIpAddress(request),
+        userAgent: getUserAgent(request),
+        details: {
+          createdUserEmail: user.email,
+          createdUserRole: user.role
+        }
+      })
 
-    if (existingUser) {
-      return NextResponse.json(
-        { error: "User dengan email ini sudah terdaftar" },
-        { status: 400 }
-      )
-    }
-
-    // Hash password
-    const hashedPassword = await bcrypt.hash(data.password!, 12)
-
-    const user = await prisma.user.create({
-      data: {
-        name: data.name,
-        email: data.email,
-        password: hashedPassword,
-        role: data.role,
-      },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        role: true,
-        createdAt: true,
-        updatedAt: true,
+      return NextResponse.json(user, { status: 201 })
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return NextResponse.json(
+          { error: error.issues[0].message },
+          { status: 400 }
+        )
       }
-    })
 
-    // Log user creation
-    await logAudit({
-      userId: session.user.id,
-      action: 'CREATE',
-      entity: 'User',
-      entityId: user.id,
-      ipAddress: getIpAddress(req),
-      userAgent: getUserAgent(req),
-      details: {
-        createdUserEmail: user.email,
-        createdUserRole: user.role
-      }
-    })
-
-    return NextResponse.json(user, { status: 201 })
-  } catch (error) {
-    if (error instanceof z.ZodError) {
+      console.error("Error creating user:", error)
       return NextResponse.json(
-        { error: error.issues[0].message },
-        { status: 400 }
+        { error: "Terjadi kesalahan server" },
+        { status: 500 }
       )
     }
-
-    console.error("Error creating user:", error)
-    return NextResponse.json(
-      { error: "Terjadi kesalahan server" },
-      { status: 500 }
-    )
-  }
+  })
 }
