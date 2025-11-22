@@ -3,6 +3,7 @@
 import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import DashboardLayout from '@/components/layout/DashboardLayout'
+import { csrfFetch } from '@/lib/csrfFetch'
 
 export default function EditSuratTamu() {
   const { id } = useParams() as { id: string }
@@ -15,7 +16,7 @@ export default function EditSuratTamu() {
     const fetchItem = async () => {
       try {
         setLoading(true)
-        const res = await fetch(`/api/surat-tamu/${id}`)
+        const res = await csrfFetch(`/api/surat-tamu/${id}`)
         if (res.ok) {
           const data = await res.json()
           setForm({
@@ -55,7 +56,7 @@ export default function EditSuratTamu() {
         nomorTelpon: form.nomorTelpon || undefined,
         tanggal: new Date(form.tanggal).toISOString(),
       }
-      const res = await fetch(`/api/surat-tamu/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+      const res = await csrfFetch(`/api/surat-tamu/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
       if (res.ok) {
         router.push(`/surat-tamu/${id}`)
       } else {

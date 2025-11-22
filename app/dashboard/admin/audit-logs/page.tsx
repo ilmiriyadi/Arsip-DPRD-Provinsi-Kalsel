@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from "react"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import DashboardLayout from "@/components/layout/DashboardLayout"
+import { csrfFetch } from "@/lib/csrfFetch"
 
 interface AuditLog {
   id: string
@@ -35,7 +36,7 @@ export default function AuditLogsPage() {
         limit: "100"
       })
       
-      const response = await fetch(`/api/audit-logs?${params}`)
+      const response = await csrfFetch(`/api/audit-logs?${params}`)
       const data = await response.json()
       
       setLogs(data.logs || [])

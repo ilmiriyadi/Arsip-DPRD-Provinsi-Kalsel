@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Save, X } from 'lucide-react'
+import { csrfFetch } from '@/lib/csrfFetch'
 
 export default function AddSuratMasukPage() {
   const { data: session, status } = useSession()
@@ -42,7 +43,7 @@ export default function AddSuratMasukPage() {
     setError('')
 
     try {
-      const response = await fetch('/api/surat-masuk', {
+      const response = await csrfFetch('/api/surat-masuk', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

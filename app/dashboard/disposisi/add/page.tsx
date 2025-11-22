@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState, Suspense } from 'react'
 import Link from 'next/link'
 import { Save, X, FileText, CheckCircle } from 'lucide-react'
+import { csrfFetch } from '@/lib/csrfFetch'
 
 interface SuratMasuk {
   id: string
@@ -110,7 +111,7 @@ function AddDisposisiContent() {
 
   const fetchSuratMasuk = async () => {
     try {
-      const response = await fetch('/api/surat-masuk?limit=100')
+      const response = await csrfFetch('/api/surat-masuk?limit=100')
       if (response.ok) {
         const data = await response.json()
         setSuratMasukList(data.suratMasuk || [])
@@ -157,7 +158,7 @@ function AddDisposisiContent() {
     }
 
     try {
-      const response = await fetch('/api/disposisi', {
+      const response = await csrfFetch('/api/disposisi', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

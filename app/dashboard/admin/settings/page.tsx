@@ -4,6 +4,7 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { csrfFetch } from '@/lib/csrfFetch'
 import { 
   Database,
   User,
@@ -106,7 +107,7 @@ export default function SettingsPage() {
         updateData.password = profileData.newPassword
       }
 
-      const response = await fetch(`/api/users/${session?.user.id}`, {
+      const response = await csrfFetch(`/api/users/${session?.user.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

@@ -4,6 +4,7 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import DashboardLayout from '@/components/layout/DashboardLayout'
+import { csrfFetch } from '@/lib/csrfFetch'
 import { 
   Settings, 
   Users, 
@@ -75,7 +76,7 @@ export default function SettingsPage() {
   const fetchUsers = async () => {
     try {
       setLoading(true)
-      const response = await fetch(`/api/users?search=${searchTerm}`)
+      const response = await csrfFetch(`/api/users?search=${searchTerm}`)
       if (response.ok) {
         const data = await response.json()
         setUsers(data.users)
@@ -93,7 +94,7 @@ export default function SettingsPage() {
   const handleAddUser = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      const response = await fetch('/api/users', {
+      const response = await csrfFetch('/api/users', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
@@ -117,7 +118,7 @@ export default function SettingsPage() {
     if (!selectedUser) return
 
     try {
-      const response = await fetch(`/api/users/${selectedUser.id}`, {
+      const response = await csrfFetch(`/api/users/${selectedUser.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -146,7 +147,7 @@ export default function SettingsPage() {
     if (!userToDelete) return
 
     try {
-      const response = await fetch(`/api/users/${userToDelete}`, {
+      const response = await csrfFetch(`/api/users/${userToDelete}`, {
         method: 'DELETE'
       })
 

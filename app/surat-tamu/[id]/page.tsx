@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import DashboardLayout from '@/components/layout/DashboardLayout'
+import { csrfFetch } from '@/lib/csrfFetch'
 
 type SuratTamu = {
   id: string
@@ -25,7 +26,7 @@ export default function SuratTamuDetail() {
     const fetchItem = async () => {
       try {
         setLoading(true)
-        const res = await fetch(`/api/surat-tamu/${id}`)
+        const res = await csrfFetch(`/api/surat-tamu/${id}`)
         if (res.ok) {
           const data = await res.json()
           setItem(data)
@@ -45,7 +46,7 @@ export default function SuratTamuDetail() {
   const handleDelete = async () => {
     if (!confirm('Hapus surat tamu ini?')) return
     try {
-      const res = await fetch(`/api/surat-tamu/${id}`, { method: 'DELETE' })
+      const res = await csrfFetch(`/api/surat-tamu/${id}`, { method: 'DELETE' })
       if (res.ok) router.push('/surat-tamu')
       else {
         const data = await res.json()

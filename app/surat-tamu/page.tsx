@@ -62,7 +62,7 @@ export default function SuratTamuPage() {
         url.searchParams.set('limit', String(pagination.limit))
         url.searchParams.set('page', String(pagination.page))
         if (debouncedQuery) url.searchParams.set('search', debouncedQuery)
-        const res = await fetch(url.toString())
+        const res = await csrfFetch(url.toString())
         if (res.ok) {
           const data = await res.json()
           setItems(data.suratTamu || [])
@@ -93,7 +93,7 @@ export default function SuratTamuPage() {
   const handleDelete = async (id: string) => {
     if (!confirm('Hapus surat tamu ini?')) return
     try {
-      const res = await fetch(`/api/surat-tamu/${id}`, { method: 'DELETE' })
+      const res = await csrfFetch(`/api/surat-tamu/${id}`, { method: 'DELETE' })
       if (res.ok) {
         setItems((s) => s.filter((it) => it.id !== id))
       } else {

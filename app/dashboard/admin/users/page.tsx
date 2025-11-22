@@ -4,6 +4,7 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { csrfFetch } from '@/lib/csrfFetch'
 import { 
   Users, 
   Plus, 
@@ -78,7 +79,7 @@ export default function ManajemenUserPage() {
       if (searchTerm) params.append('search', searchTerm)
       if (roleFilter) params.append('role', roleFilter)
 
-      const response = await fetch(`/api/users?${params}`)
+      const response = await csrfFetch(`/api/users?${params}`)
       
       if (response.ok) {
         const data = await response.json()
@@ -101,7 +102,7 @@ export default function ManajemenUserPage() {
     }
 
     try {
-      const response = await fetch(`/api/users/${id}`, {
+      const response = await csrfFetch(`/api/users/${id}`, {
         method: 'DELETE',
       })
 

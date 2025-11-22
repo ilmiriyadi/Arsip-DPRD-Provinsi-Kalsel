@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Save, X, ArrowLeft, FileText, Calendar, Building, MessageSquare } from 'lucide-react'
+import { csrfFetch } from '@/lib/csrfFetch'
 
 interface SuratMasuk {
   id: string
@@ -113,7 +114,7 @@ export default function EditDisposisiPage() {
   const fetchDisposisi = async () => {
     try {
       setFetchLoading(true)
-      const response = await fetch(`/api/disposisi/${id}`)
+      const response = await csrfFetch(`/api/disposisi/${id}`)
       
       if (response.ok) {
         const data = await response.json()
@@ -152,7 +153,7 @@ export default function EditDisposisiPage() {
 
   const fetchSuratMasuk = async () => {
     try {
-      const response = await fetch('/api/surat-masuk?limit=100')
+      const response = await csrfFetch('/api/surat-masuk?limit=100')
       if (response.ok) {
         const data = await response.json()
         setSuratMasukList(data.suratMasuk || [])
@@ -200,7 +201,7 @@ export default function EditDisposisiPage() {
     }
 
     try {
-      const response = await fetch(`/api/disposisi/${id}`, {
+      const response = await csrfFetch(`/api/disposisi/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

@@ -4,6 +4,7 @@ import { useSession } from 'next-auth/react'
 import { useRouter, useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { csrfFetch } from '@/lib/csrfFetch'
 import { 
   ClipboardList, 
   ArrowLeft, 
@@ -67,7 +68,7 @@ export default function DetailDisposisiPage() {
   const fetchDisposisi = async () => {
     try {
       setLoading(true)
-      const response = await fetch(`/api/disposisi/${id}`)
+      const response = await csrfFetch(`/api/disposisi/${id}`)
       
       if (response.ok) {
         const data = await response.json()
@@ -91,7 +92,7 @@ export default function DetailDisposisiPage() {
     }
 
     try {
-      const response = await fetch(`/api/disposisi/${id}`, {
+      const response = await csrfFetch(`/api/disposisi/${id}`, {
         method: 'DELETE',
       })
 

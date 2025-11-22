@@ -4,6 +4,7 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState, use } from 'react'
 import Link from 'next/link'
+import { csrfFetch } from '@/lib/csrfFetch'
 import { 
   ArrowLeft, 
   FileText, 
@@ -74,7 +75,7 @@ export default function SuratMasukDetailPage({ params }: PageProps) {
   const fetchSuratDetail = async () => {
     try {
       setLoading(true)
-      const response = await fetch(`/api/surat-masuk/${resolvedParams.id}`)
+      const response = await csrfFetch(`/api/surat-masuk/${resolvedParams.id}`)
       
       if (response.ok) {
         const data = await response.json()

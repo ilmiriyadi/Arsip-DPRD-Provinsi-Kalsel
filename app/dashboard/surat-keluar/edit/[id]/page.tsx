@@ -6,6 +6,7 @@ import { useEffect, useState, use } from 'react'
 import Link from 'next/link'
 import DashboardLayout from '@/components/layout/DashboardLayout'
 import { Save, X, ArrowLeft } from 'lucide-react'
+import { csrfFetch } from '@/lib/csrfFetch'
 
 interface SuratKeluar {
   id: string
@@ -85,7 +86,7 @@ export default function EditSuratKeluarPage({ params }: PageProps) {
   const fetchSuratData = async () => {
     try {
       setFetchLoading(true)
-      const response = await fetch(`/api/surat-keluar/${resolvedParams.id}`)
+      const response = await csrfFetch(`/api/surat-keluar/${resolvedParams.id}`)
       
       if (response.ok) {
         const data = await response.json()
@@ -116,7 +117,7 @@ export default function EditSuratKeluarPage({ params }: PageProps) {
 
   const fetchSuratMasuk = async () => {
     try {
-      const response = await fetch('/api/surat-masuk?limit=100')
+      const response = await csrfFetch('/api/surat-masuk?limit=100')
       if (response.ok) {
         const data = await response.json()
         setSuratMasukList(data.suratMasuk || [])
@@ -161,7 +162,7 @@ export default function EditSuratKeluarPage({ params }: PageProps) {
     setError('')
 
     try {
-      const response = await fetch(`/api/surat-keluar/${resolvedParams.id}`, {
+      const response = await csrfFetch(`/api/surat-keluar/${resolvedParams.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

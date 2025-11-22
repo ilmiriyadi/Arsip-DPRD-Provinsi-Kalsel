@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import DashboardLayout from '@/components/layout/DashboardLayout'
+import { csrfFetch } from '@/lib/csrfFetch'
 import { 
   FileText, 
   Plus, 
@@ -123,7 +124,7 @@ export default function SuratMasukPage() {
       if (dateFilter) params.append('tanggal', dateFilter)
       if (monthFilter) params.append('bulan', monthFilter)
 
-      const response = await fetch(`/api/surat-masuk?${params}`)
+      const response = await csrfFetch(`/api/surat-masuk?${params}`)
       
       if (response.ok) {
         const data = await response.json()
@@ -146,7 +147,7 @@ export default function SuratMasukPage() {
     }
 
     try {
-      const response = await fetch(`/api/surat-masuk/${id}`, {
+      const response = await csrfFetch(`/api/surat-masuk/${id}`, {
         method: 'DELETE',
       })
 
@@ -280,7 +281,7 @@ export default function SuratMasukPage() {
       : selectedTujuan
 
     try {
-      const response = await fetch(`/api/surat-masuk/${selectedSurat.id}/copy-disposisi`, {
+      const response = await csrfFetch(`/api/surat-masuk/${selectedSurat.id}/copy-disposisi`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -328,7 +329,7 @@ export default function SuratMasukPage() {
     }
 
     try {
-      const response = await fetch('/api/surat-keluar', {
+      const response = await csrfFetch('/api/surat-keluar', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -408,7 +409,7 @@ export default function SuratMasukPage() {
               <button
                 onClick={async () => {
                   try {
-                    const response = await fetch('/api/surat-masuk/export')
+                    const response = await csrfFetch('/api/surat-masuk/export')
                     if (response.ok) {
                       const blob = await response.blob()
                       const url = window.URL.createObjectURL(blob)

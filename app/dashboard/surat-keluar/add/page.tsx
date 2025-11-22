@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import DashboardLayout from '@/components/layout/DashboardLayout'
 import { Save, X } from 'lucide-react'
+import { csrfFetch } from '@/lib/csrfFetch'
 
 interface SuratMasuk {
   id: string
@@ -55,7 +56,7 @@ export default function AddSuratKeluarPage() {
 
   const fetchSuratMasuk = async () => {
     try {
-      const response = await fetch('/api/surat-masuk?limit=100')
+      const response = await csrfFetch('/api/surat-masuk?limit=100')
       if (response.ok) {
         const data = await response.json()
         setSuratMasukList(data.suratMasuk || [])
@@ -104,7 +105,7 @@ export default function AddSuratKeluarPage() {
     setError('')
 
     try {
-      const response = await fetch('/api/surat-keluar', {
+      const response = await csrfFetch('/api/surat-keluar', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

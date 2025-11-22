@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import DashboardLayout from '@/components/layout/DashboardLayout'
+import { csrfFetch } from '@/lib/csrfFetch'
 import { 
   FileOutput, 
   Plus, 
@@ -109,7 +110,7 @@ export default function SuratKeluarPage() {
       if (dateFilter) params.append('tanggal', dateFilter)
       if (monthFilter) params.append('bulan', monthFilter)
 
-      const response = await fetch(`/api/surat-keluar?${params}`)
+      const response = await csrfFetch(`/api/surat-keluar?${params}`)
       
       if (response.ok) {
         const data = await response.json()
@@ -136,7 +137,7 @@ export default function SuratKeluarPage() {
     }
 
     try {
-      const response = await fetch(`/api/surat-keluar/${id}`, {
+      const response = await csrfFetch(`/api/surat-keluar/${id}`, {
         method: 'DELETE',
       })
 

@@ -30,7 +30,7 @@ export default function AddSuratTamu() {
         nomorTelpon: form.nomorTelpon || undefined,
         tanggal: new Date(form.tanggal).toISOString(),
       }
-      const res = await fetch('/api/surat-tamu', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+      const res = await csrfFetch('/api/surat-tamu', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
       if (res.ok) {
         router.push('/surat-tamu')
       } else {

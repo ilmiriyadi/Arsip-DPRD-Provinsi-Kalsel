@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import DashboardLayout from '@/components/layout/DashboardLayout'
+import { csrfFetch } from '@/lib/csrfFetch'
 import { 
   ClipboardList, 
   Plus, 
@@ -111,7 +112,7 @@ export default function DisposisiPage() {
       if (monthFilter) params.append('bulan', monthFilter)
 
 
-      const response = await fetch(`/api/disposisi?${params}`)
+      const response = await csrfFetch(`/api/disposisi?${params}`)
       
       if (response.ok) {
         const data = await response.json()
@@ -134,7 +135,7 @@ export default function DisposisiPage() {
     }
 
     try {
-      const response = await fetch(`/api/disposisi/${id}`, {
+      const response = await csrfFetch(`/api/disposisi/${id}`, {
         method: 'DELETE',
       })
 
@@ -153,7 +154,7 @@ export default function DisposisiPage() {
   const handleExportExcel = async () => {
     try {
       setIsExporting(true)
-      const response = await fetch('/api/disposisi/export')
+      const response = await csrfFetch('/api/disposisi/export')
       
       if (!response.ok) {
         throw new Error('Gagal mengexport data')

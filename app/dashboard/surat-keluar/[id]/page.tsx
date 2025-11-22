@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import DashboardLayout from '@/components/layout/DashboardLayout'
+import { csrfFetch } from '@/lib/csrfFetch'
 import {
   ArrowLeft,
   Edit,
@@ -70,7 +71,7 @@ export default function SuratKeluarDetailPage() {
   const fetchSuratKeluarDetail = async () => {
     try {
       setLoading(true)
-      const response = await fetch(`/api/surat-keluar/${params.id}`)
+      const response = await csrfFetch(`/api/surat-keluar/${params.id}`)
       
       if (response.ok) {
         const data = await response.json()

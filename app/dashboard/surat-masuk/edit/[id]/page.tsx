@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState, use } from 'react'
 import Link from 'next/link'
 import { Save, X, ArrowLeft } from 'lucide-react'
+import { csrfFetch } from '@/lib/csrfFetch'
 
 interface SuratMasuk {
   id: string
@@ -61,7 +62,7 @@ export default function EditSuratMasukPage({ params }: PageProps) {
   const fetchSuratData = async () => {
     try {
       setFetchLoading(true)
-      const response = await fetch(`/api/surat-masuk/${resolvedParams.id}`)
+      const response = await csrfFetch(`/api/surat-masuk/${resolvedParams.id}`)
       
       if (response.ok) {
         const data = await response.json()
@@ -104,7 +105,7 @@ export default function EditSuratMasukPage({ params }: PageProps) {
     setError('')
 
     try {
-      const response = await fetch(`/api/surat-masuk/${resolvedParams.id}`, {
+      const response = await csrfFetch(`/api/surat-masuk/${resolvedParams.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
