@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma"
 import bcrypt from "bcryptjs"
 import { z } from "zod"
 import { validatePassword } from "@/lib/passwordPolicy"
-// import { logAudit, getIpAddress, getUserAgent } from "@/lib/auditLog" // Temporarily disabled until migration runs
+import { logAudit, getIpAddress, getUserAgent } from "@/lib/auditLog"
 
 const userSchema = z.object({
   name: z.string().min(2, "Nama minimal 2 karakter"),
@@ -140,8 +140,19 @@ export async function POST(req: NextRequest) {
       }
     })
 
-    // TODO: Log user creation (after migration)
-    // await logAudit({ userId: session.user.id, action: 'CREATE', entity: 'User', entityId: user.id, ... })
+    // Log user creation
+    await logAudit({
+      userId: session.user.id,
+      action: 'CREATE',
+      entity: 'User',
+      entityId: user.id,
+      ipAddress: getIpAddress(req),
+      userAgent: getUserAgent(req),
+      details: {
+        createdUserEmail: user.email,
+        createdUserRole: user.role
+      }
+    })
 
     return NextResponse.json(user, { status: 201 })
   } catch (error) {

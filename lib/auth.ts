@@ -3,7 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials"
 import bcrypt from "bcryptjs"
 import { prisma } from "./prisma"
 import { loginRateLimiter } from "./rateLimit"
-// import { logAudit } from "./auditLog" // Temporarily disabled until migration runs
+import { logAudit } from "./auditLog"
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -21,8 +21,16 @@ export const authOptions: NextAuthOptions = {
         // Rate limiting check
         const rateLimitResult = loginRateLimiter(credentials.email)
         if (!rateLimitResult.allowed) {
-          // TODO: Log failed login due to rate limit (after migration)
-          // await logAudit({ action: 'FAILED_LOGIN', entity: 'System', ... })
+          // Log failed login due to rate limit
+          await logAudit({
+            action: 'FAILED_LOGIN',
+            entity: 'System',
+            details: { 
+              email: credentials.email,
+              reason: 'rate_limit_exceeded'
+            },
+            success: false
+          })
           
           throw new Error(
             `Terlalu banyak percobaan login. Coba lagi dalam ${rateLimitResult.retryAfter} detik.`
@@ -36,8 +44,16 @@ export const authOptions: NextAuthOptions = {
         })
 
         if (!user) {
-          // TODO: Log failed login - user not found (after migration)
-          // await logAudit({ action: 'FAILED_LOGIN', entity: 'User', ... })
+          // Log failed login - user not found
+          await logAudit({
+            action: 'FAILED_LOGIN',
+            entity: 'User',
+            details: { 
+              email: credentials.email,
+              reason: 'user_not_found'
+            },
+            success: false
+          })
           return null
         }
 
@@ -47,13 +63,30 @@ export const authOptions: NextAuthOptions = {
         )
 
         if (!isPasswordValid) {
-          // TODO: Log failed login - invalid password (after migration)
-          // await logAudit({ userId: user.id, action: 'FAILED_LOGIN', ... })
+          // Log failed login - invalid password
+          await logAudit({
+            userId: user.id,
+            action: 'FAILED_LOGIN',
+            entity: 'User',
+            details: { 
+              email: credentials.email,
+              reason: 'invalid_password'
+            },
+            success: false
+          })
           return null
         }
 
-        // TODO: Log successful login (after migration)
-        // await logAudit({ userId: user.id, action: 'LOGIN', ... })
+        // Log successful login
+        await logAudit({
+          userId: user.id,
+          action: 'LOGIN',
+          entity: 'User',
+          details: { 
+            email: credentials.email
+          },
+          success: true
+        })
 
         return {
           id: user.id,
