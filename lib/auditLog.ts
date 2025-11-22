@@ -25,7 +25,7 @@ interface AuditLogParams {
   entityId?: string
   ipAddress?: string
   userAgent?: string
-  details?: Record<string, any>
+  details?: Record<string, unknown>
   success?: boolean
 }
 
@@ -107,7 +107,15 @@ export async function getAuditLogs({
   limit?: number
   page?: number
 }) {
-  const where: any = {}
+  const where: {
+    userId?: string
+    action?: string
+    entity?: string
+    createdAt?: {
+      gte?: Date
+      lte?: Date
+    }
+  } = {}
   
   if (userId) where.userId = userId
   if (action) where.action = action
