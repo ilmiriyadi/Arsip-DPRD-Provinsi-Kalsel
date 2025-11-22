@@ -104,103 +104,232 @@ export default function AuditLogsPage() {
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Audit Logs</h1>
-          <button
-            onClick={fetchLogs}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-          >
-            Refresh
-          </button>
+        {/* Header */}
+        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl shadow-xl p-8">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <div className="w-14 h-14 bg-white bg-opacity-20 rounded-xl flex items-center justify-center backdrop-blur-sm">
+                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold text-white">Audit Logs</h1>
+                <p className="text-blue-100 mt-1">Monitor aktivitas dan keamanan sistem</p>
+              </div>
+            </div>
+            <button
+              onClick={fetchLogs}
+              className="px-6 py-3 bg-white bg-opacity-20 backdrop-blur-sm text-white rounded-xl hover:bg-opacity-30 transition-all duration-200 font-medium flex items-center space-x-2 border border-white border-opacity-20"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              <span>Refresh</span>
+            </button>
+          </div>
         </div>
 
         {/* Filters */}
-        <div className="bg-white p-4 rounded-lg shadow space-y-4">
-          <div className="flex gap-4">
-            <div>
-              <label className="block text-sm font-medium mb-2">Filter</label>
+        <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6">
+          <div className="flex flex-wrap gap-4">
+            <div className="flex-1 min-w-[200px]">
+              <label className="block text-sm font-semibold text-slate-700 mb-2">Filter Aktivitas</label>
               <select
                 value={filter}
                 onChange={(e) => setFilter(e.target.value as "all" | "failed-logins")}
-                className="px-4 py-2 border rounded-lg"
+                className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white"
               >
-                <option value="all">Semua Activity</option>
-                <option value="failed-logins">Failed Logins</option>
+                <option value="all">📋 Semua Aktivitas</option>
+                <option value="failed-logins">🚫 Failed Logins</option>
               </select>
             </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">Periode</label>
+            <div className="flex-1 min-w-[200px]">
+              <label className="block text-sm font-semibold text-slate-700 mb-2">Periode Waktu</label>
               <select
                 value={days}
                 onChange={(e) => setDays(parseInt(e.target.value))}
-                className="px-4 py-2 border rounded-lg"
+                className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white"
               >
-                <option value="1">24 Jam</option>
-                <option value="7">7 Hari</option>
-                <option value="30">30 Hari</option>
-                <option value="90">90 Hari</option>
+                <option value="1">📅 24 Jam Terakhir</option>
+                <option value="7">📅 7 Hari Terakhir</option>
+                <option value="30">📅 30 Hari Terakhir</option>
+                <option value="90">📅 90 Hari Terakhir</option>
               </select>
             </div>
           </div>
         </div>
 
+        {/* Summary Stats */}
+        {logs.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-2xl shadow-lg border border-slate-200 p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="text-sm font-semibold text-slate-600 uppercase tracking-wide">Total Events</div>
+                  <div className="text-3xl font-bold text-slate-900 mt-2">{logs.length}</div>
+                </div>
+                <div className="w-12 h-12 bg-slate-200 rounded-xl flex items-center justify-center">
+                  <svg className="w-6 h-6 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-gradient-to-br from-red-50 to-red-100 rounded-2xl shadow-lg border border-red-200 p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="text-sm font-semibold text-red-600 uppercase tracking-wide">Failed Logins</div>
+                  <div className="text-3xl font-bold text-red-700 mt-2">
+                    {logs.filter((l) => l.action === "FAILED_LOGIN").length}
+                  </div>
+                </div>
+                <div className="w-12 h-12 bg-red-200 rounded-xl flex items-center justify-center">
+                  <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-2xl shadow-lg border border-green-200 p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="text-sm font-semibold text-green-600 uppercase tracking-wide">Successful Logins</div>
+                  <div className="text-3xl font-bold text-green-700 mt-2">
+                    {logs.filter((l) => l.action === "LOGIN").length}
+                  </div>
+                </div>
+                <div className="w-12 h-12 bg-green-200 rounded-xl flex items-center justify-center">
+                  <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl shadow-lg border border-blue-200 p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="text-sm font-semibold text-blue-600 uppercase tracking-wide">Data Changes</div>
+                  <div className="text-3xl font-bold text-blue-700 mt-2">
+                    {logs.filter((l) => ["CREATE", "UPDATE", "DELETE"].includes(l.action)).length}
+                  </div>
+                </div>
+                <div className="w-12 h-12 bg-blue-200 rounded-xl flex items-center justify-center">
+                  <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Logs Table */}
-        <div className="bg-white rounded-lg shadow overflow-hidden">
+        <div className="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50">
+            <table className="min-w-full divide-y divide-slate-200">
+              <thead className="bg-gradient-to-r from-slate-50 to-blue-50">
                 <tr>
-                  <th className="px-4 py-3 text-left text-sm font-semibold">Waktu</th>
-                  <th className="px-4 py-3 text-left text-sm font-semibold">Action</th>
-                  <th className="px-4 py-3 text-left text-sm font-semibold">Entity</th>
-                  <th className="px-4 py-3 text-left text-sm font-semibold">IP Address</th>
-                  <th className="px-4 py-3 text-left text-sm font-semibold">Details</th>
-                  <th className="px-4 py-3 text-left text-sm font-semibold">Status</th>
+                  <th className="px-6 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider border-b border-slate-200">
+                    ⏰ Waktu
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider border-b border-slate-200">
+                    🎯 Action
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider border-b border-slate-200">
+                    📦 Entity
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider border-b border-slate-200">
+                    🌐 IP Address
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider border-b border-slate-200">
+                    📋 Details
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider border-b border-slate-200">
+                    ✅ Status
+                  </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="bg-white divide-y divide-slate-100">
                 {logs.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="px-4 py-8 text-center text-gray-500">
-                      Tidak ada log ditemukan
+                    <td colSpan={6} className="px-6 py-12 text-center">
+                      <div className="flex flex-col items-center justify-center space-y-3">
+                        <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center">
+                          <svg className="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                          </svg>
+                        </div>
+                        <div className="text-slate-500 font-medium">Tidak ada log ditemukan</div>
+                        <div className="text-sm text-slate-400">Coba ubah filter atau periode waktu</div>
+                      </div>
                     </td>
                   </tr>
                 ) : (
                   logs.map((log) => {
                     const details = parseDetails(log.details)
                     return (
-                      <tr key={log.id} className="hover:bg-gray-50">
-                        <td className="px-4 py-3 text-sm">
-                          {new Date(log.createdAt).toLocaleString("id-ID")}
+                      <tr key={log.id} className="hover:bg-gradient-to-r hover:from-slate-50 hover:to-blue-50 transition-all duration-200 group">
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-slate-900 font-medium">
+                            {new Date(log.createdAt).toLocaleString("id-ID", {
+                              day: '2-digit',
+                              month: 'short',
+                              year: 'numeric',
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            })}
+                          </div>
                         </td>
-                        <td className="px-4 py-3">
-                          <span className={`px-2 py-1 text-xs font-medium rounded ${getActionBadgeColor(log.action)}`}>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className={`inline-flex items-center px-3 py-1 text-xs font-bold rounded-full ${getActionBadgeColor(log.action)}`}>
                             {log.action}
                           </span>
                         </td>
-                        <td className="px-4 py-3 text-sm">{log.entity || "-"}</td>
-                        <td className="px-4 py-3 text-sm font-mono text-xs">
-                          {log.ipAddress || "-"}
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-slate-700 font-medium">{log.entity || "-"}</div>
                         </td>
-                        <td className="px-4 py-3 text-sm max-w-xs truncate">
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-xs font-mono text-slate-600 bg-slate-50 px-3 py-1 rounded-lg inline-block">
+                            {log.ipAddress || "-"}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
                           {details ? (
-                            <details className="cursor-pointer">
-                              <summary className="text-blue-600 hover:underline">
-                                View details
+                            <details className="cursor-pointer group">
+                              <summary className="text-blue-600 hover:text-blue-800 font-medium text-sm hover:underline inline-flex items-center space-x-1">
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                                <span>View details</span>
                               </summary>
-                              <pre className="mt-2 text-xs bg-gray-50 p-2 rounded overflow-x-auto">
-                                {JSON.stringify(details, null, 2)}
+                              <pre className="mt-3 text-xs bg-slate-900 text-green-400 p-4 rounded-xl overflow-x-auto font-mono shadow-inner border border-slate-700">
+{JSON.stringify(details, null, 2)}
                               </pre>
                             </details>
                           ) : (
-                            "-"
+                            <span className="text-slate-400 text-sm">-</span>
                           )}
                         </td>
-                        <td className="px-4 py-3">
+                        <td className="px-6 py-4 whitespace-nowrap">
                           {log.success ? (
-                            <span className="text-green-600 text-xs">✓ Success</span>
+                            <div className="inline-flex items-center space-x-1 text-green-600 bg-green-50 px-3 py-1 rounded-full">
+                              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                              </svg>
+                              <span className="text-xs font-bold">Success</span>
+                            </div>
                           ) : (
-                            <span className="text-red-600 text-xs">✗ Failed</span>
+                            <div className="inline-flex items-center space-x-1 text-red-600 bg-red-50 px-3 py-1 rounded-full">
+                              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                              </svg>
+                              <span className="text-xs font-bold">Failed</span>
+                            </div>
                           )}
                         </td>
                       </tr>
@@ -211,34 +340,6 @@ export default function AuditLogsPage() {
             </table>
           </div>
         </div>
-
-        {/* Summary Stats */}
-        {logs.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="bg-white p-4 rounded-lg shadow">
-              <div className="text-sm text-gray-500">Total Events</div>
-              <div className="text-2xl font-bold">{logs.length}</div>
-            </div>
-            <div className="bg-white p-4 rounded-lg shadow">
-              <div className="text-sm text-gray-500">Failed Logins</div>
-              <div className="text-2xl font-bold text-red-600">
-                {logs.filter((l) => l.action === "FAILED_LOGIN").length}
-              </div>
-            </div>
-            <div className="bg-white p-4 rounded-lg shadow">
-              <div className="text-sm text-gray-500">Successful Logins</div>
-              <div className="text-2xl font-bold text-green-600">
-                {logs.filter((l) => l.action === "LOGIN").length}
-              </div>
-            </div>
-            <div className="bg-white p-4 rounded-lg shadow">
-              <div className="text-sm text-gray-500">Data Changes</div>
-              <div className="text-2xl font-bold text-blue-600">
-                {logs.filter((l) => ["CREATE", "UPDATE", "DELETE"].includes(l.action)).length}
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </DashboardLayout>
   )

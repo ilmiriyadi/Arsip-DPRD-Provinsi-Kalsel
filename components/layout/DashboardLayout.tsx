@@ -14,7 +14,9 @@ import {
   Menu,
   X,
   ChevronDown,
-  Send
+  Send,
+  Shield,
+  Users
 } from 'lucide-react'
 
 interface DashboardLayoutProps {
@@ -50,10 +52,16 @@ const navigationItems = [
 
 const adminItems = [
   {
-    name: 'Kelola Pengguna',
+    name: 'Audit Logs',
+    href: '/dashboard/admin/audit-logs',
+    icon: Shield,
+    description: 'Security & Activity Logs'
+  },
+  {
+    name: 'Pengaturan',
     href: '/dashboard/settings',
     icon: Settings,
-    description: 'Kelola Pengguna'
+    description: 'Kelola Pengguna & Akun'
   }
 ]
 
