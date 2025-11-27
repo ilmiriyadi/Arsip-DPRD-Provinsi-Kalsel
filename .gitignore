@@ -112,9 +112,44 @@ config.local.js
 # build artifacts
 .turbo
 .cache
+
+# Database files (sensitive)
+/prisma/*.db
+/prisma/*.db-journal
+/prisma/migrations/*.sql
+
+# Backup files (may contain sensitive data)
+/backups/
+*.backup
+*.bak
+*.old
+backup-*.mjs
+backup-*.ps1
+backup-*.sh
+
+# Scripts that may contain sensitive operations
 /scripts/backup-*.mjs
 /scripts/backup-*.ps1
 /scripts/backup-*.sh
+/scripts/delete-*.mjs
+/scripts/delete-*.js
 
-# scripts folder
-/scripts/
+# API routes documentation
+api-routes.csv
+
+# Security test files
+test-security.*
+*-security.*
+
+# Migration documentation
+POST-MIGRATION-STEPS.md
+MIGRATION-*.md
+
+# Any exported data
+*.xlsx
+*.csv
+*.json
+!package.json
+!package-lock.json
+!tsconfig.json
+!vercel.json
