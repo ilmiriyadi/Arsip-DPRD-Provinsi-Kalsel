@@ -28,6 +28,7 @@ export async function GET(req: NextRequest) {
     const page = parseInt(searchParams.get("page") || "1")
     const limit = parseInt(searchParams.get("limit") || "10")
     const search = searchParams.get("search") || ""
+    const searchField = searchParams.get("searchField") || "noUrut"
     const tanggal = searchParams.get("tanggal")
     const bulan = searchParams.get("bulan")
 
@@ -36,9 +37,31 @@ export async function GET(req: NextRequest) {
     const where: Record<string, unknown> = {}
 
     if (search) {
-      const searchNumber = parseInt(search)
-      if (!isNaN(searchNumber)) {
-        where.noUrut = searchNumber
+      switch(searchField) {
+        case 'noUrut':
+          const searchNumber = parseInt(search)
+          if (!isNaN(searchNumber)) {
+            where.noUrut = searchNumber
+          }
+          break
+        case 'nomorSurat':
+          where.nomorSurat = {
+            contains: search,
+            mode: 'insensitive'
+          }
+          break
+        case 'asalSurat':
+          where.asalSurat = {
+            contains: search,
+            mode: 'insensitive'
+          }
+          break
+        case 'perihal':
+          where.perihal = {
+            contains: search,
+            mode: 'insensitive'
+          }
+          break
       }
     }
 

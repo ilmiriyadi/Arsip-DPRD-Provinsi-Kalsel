@@ -2,7 +2,7 @@
 
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import Link from 'next/link'
 import DashboardLayout from '@/components/layout/DashboardLayout'
 import { csrfFetch } from '@/lib/csrfFetch'
@@ -17,7 +17,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Copy,
-  Send
+  Send,
+  ChevronDown
 } from 'lucide-react'
 
 interface SuratMasuk {
@@ -54,6 +55,8 @@ interface Pagination {
   totalPages: number
 }
 
+type SearchField = 'noUrut' | 'nomorSurat' | 'asalSurat' | 'perihal'
+
 export default function SuratMasukPage() {
   const { data: session, status } = useSession()
   const router = useRouter()
@@ -67,6 +70,7 @@ export default function SuratMasukPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [searchTerm, setSearchTerm] = useState('')
+  const [searchField, setSearchField] = useState<SearchField>('noUrut')
   const [dateFilter, setDateFilter] = useState('')
   const [monthFilter, setMonthFilter] = useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
@@ -106,13 +110,7 @@ export default function SuratMasukPage() {
     return () => clearTimeout(timer)
   }, [searchTerm, debouncedSearchTerm])
 
-  useEffect(() => {
-    if (session) {
-      fetchSuratMasuk()
-    }
-  }, [session, pagination.page, debouncedSearchTerm, dateFilter, monthFilter])
-
-  const fetchSuratMasuk = async () => {
+  const fetchSuratMasuk = useCallback(async () => {
     try {
       setLoading(true)
       const params = new URLSearchParams({
@@ -120,7 +118,10 @@ export default function SuratMasukPage() {
         limit: pagination.limit.toString(),
       })
 
-      if (debouncedSearchTerm) params.append('search', debouncedSearchTerm)
+      if (debouncedSearchTerm) {
+        params.append('search', debouncedSearchTerm)
+        params.append('searchField', searchField)
+      }
       if (dateFilter) params.append('tanggal', dateFilter)
       if (monthFilter) params.append('bulan', monthFilter)
 
@@ -139,7 +140,13 @@ export default function SuratMasukPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [pagination.page, pagination.limit, debouncedSearchTerm, searchField, dateFilter, monthFilter])
+
+  useEffect(() => {
+    if (session) {
+      fetchSuratMasuk()
+    }
+  }, [session, fetchSuratMasuk])
 
   const handleDelete = async (id: string) => {
     if (!confirm('Apakah Anda yakin ingin menghapus surat ini?')) {
@@ -467,24 +474,50 @@ export default function SuratMasukPage() {
                   <label className="block text-sm font-semibold text-slate-700 mb-3">
                     🔍 Pencarian Real-time
                   </label>
-                  <div className="relative group">
-                    <Search className={`absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 transition-colors duration-200 ${loading && searchTerm ? 'animate-spin text-blue-500' : 'text-slate-400 group-focus-within:text-blue-500'}`} />
-                    <input
-                      type="text"
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="w-full pl-12 pr-12 py-3.5 border border-slate-300 rounded-xl bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-slate-700 placeholder-slate-400 shadow-sm hover:shadow-md"
-                      placeholder="Ketik untuk mencari nomor surat, asal, atau perihal..."
-                    />
-                    {searchTerm && (
-                      <button
-                        onClick={handleClearSearch}
-                        className="absolute right-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400 hover:text-red-500 transition-colors duration-200 bg-slate-100 hover:bg-red-50 rounded-full p-1"
-                        title="Hapus pencarian"
+                  <div className="flex gap-3">
+                    {/* Dropdown Filter */}
+                    <div className="relative">
+                      <select
+                        value={searchField}
+                        onChange={(e) => {
+                          setSearchField(e.target.value as SearchField)
+                          setSearchTerm('') // Reset search saat ganti field
+                        }}
+                        className="h-full px-4 py-3.5 border border-slate-300 rounded-xl bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-slate-700 shadow-sm hover:shadow-md appearance-none pr-10 cursor-pointer font-medium"
                       >
-                        ✕
-                      </button>
-                    )}
+                        <option value="noUrut">No Urut</option>
+                        <option value="nomorSurat">No Surat</option>
+                        <option value="asalSurat">Asal Surat</option>
+                        <option value="perihal">Perihal</option>
+                      </select>
+                      <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
+                    </div>
+                    
+                    {/* Search Input */}
+                    <div className="relative group flex-1">
+                      <Search className={`absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 transition-colors duration-200 ${loading && searchTerm ? 'animate-spin text-blue-500' : 'text-slate-400 group-focus-within:text-blue-500'}`} />
+                      <input
+                        type={searchField === 'noUrut' ? 'number' : 'text'}
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="w-full pl-12 pr-12 py-3.5 border border-slate-300 rounded-xl bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-slate-700 placeholder-slate-400 shadow-sm hover:shadow-md"
+                        placeholder={
+                          searchField === 'noUrut' ? 'Ketik nomor urut surat...' :
+                          searchField === 'nomorSurat' ? 'Ketik nomor surat...' :
+                          searchField === 'asalSurat' ? 'Ketik asal surat...' :
+                          'Ketik perihal surat...'
+                        }
+                      />
+                      {searchTerm && (
+                        <button
+                          onClick={handleClearSearch}
+                          className="absolute right-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400 hover:text-red-500 transition-colors duration-200 bg-slate-100 hover:bg-red-50 rounded-full p-1"
+                          title="Hapus pencarian"
+                        >
+                          ✕
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
                 
