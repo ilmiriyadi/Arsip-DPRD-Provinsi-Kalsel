@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import DashboardLayout from "@/components/layout/DashboardLayout"
 import { csrfFetch } from "@/lib/csrfFetch"
-import { Shield, Activity, AlertTriangle, CheckCircle, XCircle } from "lucide-react"
+import { Shield, Activity, AlertTriangle, CheckCircle } from "lucide-react"
 
 interface AuditLog {
   id: string
@@ -107,54 +107,52 @@ export default function AuditLogsPage() {
     <DashboardLayout>
       <div className="space-y-6">
         {/* Header */}
-        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl shadow-xl p-8">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <div className="w-14 h-14 bg-white bg-opacity-20 rounded-xl flex items-center justify-center backdrop-blur-sm">
-                <Shield className="w-8 h-8 text-white" />
-              </div>
-              <div>
-                <h1 className="text-3xl font-bold text-white">Audit Logs</h1>
-                <p className="text-blue-100 mt-1">Monitor aktivitas dan keamanan sistem</p>
-              </div>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+              <Shield className="w-6 h-6 text-white" />
             </div>
-            <button
-              onClick={fetchLogs}
-              className="px-6 py-3 bg-white bg-opacity-20 backdrop-blur-sm text-white rounded-xl hover:bg-opacity-30 transition-all duration-200 font-medium flex items-center space-x-2 border border-white border-opacity-20"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-              </svg>
-              <span>Refresh</span>
-            </button>
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">Audit Logs</h1>
+              <p className="text-sm text-gray-500 mt-0.5">Monitor aktivitas dan keamanan sistem</p>
+            </div>
           </div>
+          <button
+            onClick={fetchLogs}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            <span>Refresh</span>
+          </button>
         </div>
 
         {/* Filters */}
-        <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
           <div className="flex flex-wrap gap-4">
             <div className="flex-1 min-w-[200px]">
-              <label className="block text-sm font-semibold text-slate-700 mb-2">Filter Aktivitas</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Filter Aktivitas</label>
               <select
                 value={filter}
                 onChange={(e) => setFilter(e.target.value as "all" | "failed-logins")}
-                className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
               >
-                <option value="all">📋 Semua Aktivitas</option>
-                <option value="failed-logins">🚫 Failed Logins</option>
+                <option value="all">Semua Aktivitas</option>
+                <option value="failed-logins">Failed Logins</option>
               </select>
             </div>
             <div className="flex-1 min-w-[200px]">
-              <label className="block text-sm font-semibold text-slate-700 mb-2">Periode Waktu</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Periode Waktu</label>
               <select
                 value={days}
                 onChange={(e) => setDays(parseInt(e.target.value))}
-                className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
               >
-                <option value="1">📅 24 Jam Terakhir</option>
-                <option value="7">📅 7 Hari Terakhir</option>
-                <option value="30">📅 30 Hari Terakhir</option>
-                <option value="90">📅 90 Hari Terakhir</option>
+                <option value="1">24 Jam Terakhir</option>
+                <option value="7">7 Hari Terakhir</option>
+                <option value="30">30 Hari Terakhir</option>
+                <option value="90">90 Hari Terakhir</option>
               </select>
             </div>
           </div>
@@ -162,57 +160,57 @@ export default function AuditLogsPage() {
 
         {/* Summary Stats */}
         {logs.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-2xl shadow-lg border border-slate-200 p-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="text-sm font-semibold text-slate-600 uppercase tracking-wide">Total Events</div>
-                  <div className="text-3xl font-bold text-slate-900 mt-2">{logs.length}</div>
+                  <p className="text-sm font-medium text-gray-600">Total Events</p>
+                  <p className="text-2xl font-bold text-gray-900 mt-1">{logs.length}</p>
                 </div>
-                <div className="w-12 h-12 bg-slate-200 rounded-xl flex items-center justify-center">
-                  <Activity className="w-6 h-6 text-slate-600" />
+                <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                  <Activity className="w-5 h-5 text-gray-600" />
                 </div>
               </div>
             </div>
             
-            <div className="bg-gradient-to-br from-red-50 to-red-100 rounded-2xl shadow-lg border border-red-200 p-6">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="text-sm font-semibold text-red-600 uppercase tracking-wide">Failed Logins</div>
-                  <div className="text-3xl font-bold text-red-700 mt-2">
+                  <p className="text-sm font-medium text-gray-600">Failed Logins</p>
+                  <p className="text-2xl font-bold text-red-600 mt-1">
                     {logs.filter((l) => l.action === "FAILED_LOGIN").length}
-                  </div>
+                  </p>
                 </div>
-                <div className="w-12 h-12 bg-red-200 rounded-xl flex items-center justify-center">
-                  <AlertTriangle className="w-6 h-6 text-red-600" />
+                <div className="w-10 h-10 bg-red-50 rounded-lg flex items-center justify-center">
+                  <AlertTriangle className="w-5 h-5 text-red-600" />
                 </div>
               </div>
             </div>
             
-            <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-2xl shadow-lg border border-green-200 p-6">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="text-sm font-semibold text-green-600 uppercase tracking-wide">Successful Logins</div>
-                  <div className="text-3xl font-bold text-green-700 mt-2">
+                  <p className="text-sm font-medium text-gray-600">Successful Logins</p>
+                  <p className="text-2xl font-bold text-green-600 mt-1">
                     {logs.filter((l) => l.action === "LOGIN").length}
-                  </div>
+                  </p>
                 </div>
-                <div className="w-12 h-12 bg-green-200 rounded-xl flex items-center justify-center">
-                  <CheckCircle className="w-6 h-6 text-green-600" />
+                <div className="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center">
+                  <CheckCircle className="w-5 h-5 text-green-600" />
                 </div>
               </div>
             </div>
             
-            <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl shadow-lg border border-blue-200 p-6">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="text-sm font-semibold text-blue-600 uppercase tracking-wide">Data Changes</div>
-                  <div className="text-3xl font-bold text-blue-700 mt-2">
+                  <p className="text-sm font-medium text-gray-600">Data Changes</p>
+                  <p className="text-2xl font-bold text-blue-600 mt-1">
                     {logs.filter((l) => ["CREATE", "UPDATE", "DELETE"].includes(l.action)).length}
-                  </div>
+                  </p>
                 </div>
-                <div className="w-12 h-12 bg-blue-200 rounded-xl flex items-center justify-center">
-                  <Activity className="w-6 h-6 text-blue-600" />
+                <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
+                  <Activity className="w-5 h-5 text-blue-600" />
                 </div>
               </div>
             </div>
@@ -220,43 +218,41 @@ export default function AuditLogsPage() {
         )}
 
         {/* Logs Table */}
-        <div className="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-slate-200">
-              <thead className="bg-gradient-to-r from-slate-50 to-blue-50">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider border-b border-slate-200">
-                    ⏰ Waktu
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                    Waktu
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider border-b border-slate-200">
-                    🎯 Action
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                    Action
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider border-b border-slate-200">
-                    📦 Entity
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                    Entity
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider border-b border-slate-200">
-                    🌐 IP Address
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                    IP Address
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider border-b border-slate-200">
-                    📋 Details
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                    Details
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider border-b border-slate-200">
-                    ✅ Status
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                    Status
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-slate-100">
+              <tbody className="bg-white divide-y divide-gray-200">
                 {logs.length === 0 ? (
                   <tr>
                     <td colSpan={6} className="px-6 py-12 text-center">
-                      <div className="flex flex-col items-center justify-center space-y-3">
-                        <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center">
-                          <svg className="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
-                          </svg>
+                      <div className="flex flex-col items-center justify-center space-y-2">
+                        <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+                          <Shield className="w-6 h-6 text-gray-400" />
                         </div>
-                        <div className="text-slate-500 font-medium">Tidak ada log ditemukan</div>
-                        <div className="text-sm text-slate-400">Coba ubah filter atau periode waktu</div>
+                        <p className="text-gray-500 font-medium">Tidak ada log ditemukan</p>
+                        <p className="text-sm text-gray-400">Coba ubah filter atau periode waktu</p>
                       </div>
                     </td>
                   </tr>
@@ -264,9 +260,9 @@ export default function AuditLogsPage() {
                   logs.map((log) => {
                     const details = parseDetails(log.details)
                     return (
-                      <tr key={log.id} className="hover:bg-gradient-to-r hover:from-slate-50 hover:to-blue-50 transition-all duration-200 group">
+                      <tr key={log.id} className="hover:bg-gray-50 transition-colors">
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-slate-900 font-medium">
+                          <div className="text-sm text-gray-900">
                             {new Date(log.createdAt).toLocaleString("id-ID", {
                               day: '2-digit',
                               month: 'short',
@@ -277,51 +273,47 @@ export default function AuditLogsPage() {
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`inline-flex items-center px-3 py-1 text-xs font-bold rounded-full ${getActionBadgeColor(log.action)}`}>
+                          <span className={`inline-flex items-center px-2.5 py-0.5 text-xs font-medium rounded-full ${getActionBadgeColor(log.action)}`}>
                             {log.action}
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-slate-700 font-medium">{log.entity || "-"}</div>
+                          <div className="text-sm text-gray-900">{log.entity || "-"}</div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-xs font-mono text-slate-600 bg-slate-50 px-3 py-1 rounded-lg inline-block">
+                          <div className="text-xs font-mono text-gray-600 bg-gray-50 px-2 py-1 rounded inline-block">
                             {log.ipAddress || "-"}
                           </div>
                         </td>
                         <td className="px-6 py-4">
                           {details ? (
-                            <details className="cursor-pointer group">
-                              <summary className="text-blue-600 hover:text-blue-800 font-medium text-sm hover:underline inline-flex items-center space-x-1">
+                            <details className="cursor-pointer">
+                              <summary className="text-blue-600 hover:text-blue-800 text-sm hover:underline inline-flex items-center space-x-1">
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                 </svg>
-                                <span>View details</span>
+                                <span>View</span>
                               </summary>
-                              <pre className="mt-3 text-xs bg-slate-900 text-green-400 p-4 rounded-xl overflow-x-auto font-mono shadow-inner border border-slate-700">
+                              <pre className="mt-2 text-xs bg-gray-900 text-green-400 p-3 rounded-lg overflow-x-auto font-mono">
 {JSON.stringify(details, null, 2)}
                               </pre>
                             </details>
                           ) : (
-                            <span className="text-slate-400 text-sm">-</span>
+                            <span className="text-gray-400 text-sm">-</span>
                           )}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           {log.success ? (
-                            <div className="inline-flex items-center space-x-1 text-green-600 bg-green-50 px-3 py-1 rounded-full">
-                              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                              </svg>
-                              <span className="text-xs font-bold">Success</span>
-                            </div>
+                            <span className="inline-flex items-center px-2.5 py-0.5 text-xs font-medium rounded-full bg-green-100 text-green-800">
+                              <CheckCircle className="w-3 h-3 mr-1" />
+                              Success
+                            </span>
                           ) : (
-                            <div className="inline-flex items-center space-x-1 text-red-600 bg-red-50 px-3 py-1 rounded-full">
-                              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                              </svg>
-                              <span className="text-xs font-bold">Failed</span>
-                            </div>
+                            <span className="inline-flex items-center px-2.5 py-0.5 text-xs font-medium rounded-full bg-red-100 text-red-800">
+                              <AlertTriangle className="w-3 h-3 mr-1" />
+                              Failed
+                            </span>
                           )}
                         </td>
                       </tr>
