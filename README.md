@@ -96,7 +96,10 @@ Sistem informasi manajemen arsip surat masuk, surat keluar, dan disposisi yang d
 
 ### 🔍 Pencarian & Filter Canggih
 - **Real-time Search**: Pencarian instant dengan 300ms debouncing
-- **Multi-field Search**: Cari berdasarkan nomor surat, asal surat, atau perihal
+- **Dynamic Search Filter**: Dropdown dengan 4 opsi pencarian (No Urut, No Surat, Asal Surat, Perihal)
+- **Smart Input Type**: Input otomatis berubah type (number untuk No Urut, text untuk lainnya)
+- **Dynamic Placeholder**: Placeholder berubah sesuai filter yang dipilih
+- **Multi-field Search**: Cari berdasarkan field yang Anda pilih dengan akurat
 - **Date Range Filter**: Filter berdasarkan tanggal specific atau rentang tanggal
 - **Month Filter**: Filter data per bulan dengan dropdown selection
 - **Instant Results**: Hasil pencarian tampil secara real-time tanpa refresh
