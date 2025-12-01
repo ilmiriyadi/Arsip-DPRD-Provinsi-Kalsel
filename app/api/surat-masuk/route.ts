@@ -90,7 +90,18 @@ export async function GET(req: NextRequest) {
     const [suratMasuk, total] = await Promise.all([
       prisma.suratMasuk.findMany({
         where,
-        include: {
+        select: {
+          id: true,
+          noUrut: true,
+          nomorSurat: true,
+          tanggalSurat: true,
+          tanggalDiteruskan: true,
+          asalSurat: true,
+          perihal: true,
+          keterangan: true,
+          filePath: true,
+          createdAt: true,
+          updatedAt: true,
           createdBy: {
             select: {
               id: true,
@@ -98,17 +109,10 @@ export async function GET(req: NextRequest) {
               email: true,
             }
           },
-          disposisi: {
+          _count: {
             select: {
-              id: true,
-              noUrut: true,
-              status: true,
-            }
-          },
-          suratKeluar: {
-            select: {
-              id: true,
-              noUrut: true,
+              disposisi: true,
+              suratKeluar: true,
             }
           }
         },

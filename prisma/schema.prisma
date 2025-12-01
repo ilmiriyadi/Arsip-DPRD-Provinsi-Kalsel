@@ -40,6 +40,10 @@ model SuratMasuk {
   suratKeluar       SuratKeluar[]
   createdBy         User          @relation(fields: [createdById], references: [id])
 
+  @@index([tanggalSurat(sort: Desc)])
+  @@index([asalSurat])
+  @@index([createdById])
+  @@index([createdAt(sort: Desc)])
   @@map("surat_masuk")
 }
 
@@ -59,6 +63,11 @@ model Disposisi {
   createdBy        User            @relation(fields: [createdById], references: [id])
   suratMasuk       SuratMasuk      @relation(fields: [suratMasukId], references: [id], onDelete: Cascade)
 
+  @@index([tanggalDisposisi(sort: Desc)])
+  @@index([status])
+  @@index([suratMasukId])
+  @@index([createdById])
+  @@index([createdAt(sort: Desc)])
   @@map("disposisi")
 }
 
@@ -77,6 +86,11 @@ model SuratKeluar {
   createdBy    User          @relation(fields: [createdById], references: [id])
   suratMasuk   SuratMasuk?   @relation(fields: [suratMasukId], references: [id])
 
+  @@index([tanggalSurat(sort: Desc)])
+  @@index([pengolah])
+  @@index([suratMasukId])
+  @@index([createdById])
+  @@index([createdAt(sort: Desc)])
   @@map("surat_keluar")
 }
 
@@ -112,6 +126,9 @@ model SuratTamu {
   createdById String
   createdBy   User     @relation(fields: [createdById], references: [id])
 
+  @@index([tanggal(sort: Desc)])
+  @@index([nama])
+  @@index([createdById])
   @@map("surat_tamu")
 }
 

@@ -37,15 +37,10 @@ interface SuratMasuk {
     name: string
     email: string
   }
-  disposisi: {
-    id: string
-    noUrut: number
-    status: 'SELESAI'
-  }[]
-  suratKeluar: {
-    id: string
-    noUrut: number
-  }[]
+  _count?: {
+    disposisi: number
+    suratKeluar: number
+  }
 }
 
 interface Pagination {
@@ -183,8 +178,10 @@ export default function SuratMasukPage() {
     })
   }
 
-  const getDisposisiStatus = (disposisi: SuratMasuk['disposisi']) => {
-    if (!disposisi || disposisi.length === 0) {
+  const getDisposisiStatus = (surat: SuratMasuk) => {
+    const disposisiCount = surat._count?.disposisi || 0
+    
+    if (disposisiCount === 0) {
       return { 
         status: 'BELUM_ADA',
         text: 'Belum Disposisi',
@@ -195,10 +192,9 @@ export default function SuratMasukPage() {
 
     return {
       status: 'SELESAI',
-      text: 'Sudah Disposisi',
+      text: `${disposisiCount} Disposisi`,
       color: 'bg-green-100 text-green-800',
       icon: '✅',
-      count: disposisi.length
     }
   }
 
@@ -734,7 +730,7 @@ export default function SuratMasukPage() {
                         </td>
                         <td className="px-6 py-5 whitespace-nowrap">
                           {(() => {
-                            const disposisiStatus = getDisposisiStatus(surat.disposisi)
+                            const disposisiStatus = getDisposisiStatus(surat)
                             return (
                               <div className="flex flex-col space-y-1">
                                 <span className={`inline-flex items-center px-3 py-1.5 text-xs font-semibold rounded-full shadow-sm ${
@@ -745,11 +741,6 @@ export default function SuratMasukPage() {
                                   <span className="mr-1.5">{disposisiStatus.icon}</span>
                                   {disposisiStatus.text}
                                 </span>
-                                {disposisiStatus.count && disposisiStatus.count > 0 && (
-                                  <span className="text-xs text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200 w-fit">
-                                    {disposisiStatus.count} dokumen
-                                  </span>
-                                )}
                               </div>
                             )
                           })()}
@@ -773,7 +764,7 @@ export default function SuratMasukPage() {
                             </Link>
                             {session.user.role === 'ADMIN' && (
                               <>
-                                {surat.disposisi.length === 0 ? (
+                                {(surat._count?.disposisi || 0) === 0 ? (
                                   <button
                                     onClick={() => handleCopyToDisposisi(surat.id, surat.nomorSurat)}
                                     className="inline-flex items-center justify-center w-8 h-8 bg-emerald-100 text-emerald-700 hover:bg-emerald-200 rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md"
@@ -790,7 +781,7 @@ export default function SuratMasukPage() {
                                     <Plus className="h-4 w-4" />
                                   </Link>
                                 )}
-                                {surat.suratKeluar.length === 0 ? (
+                                {(surat._count?.suratKeluar || 0) === 0 ? (
                                   <button
                                     onClick={() => handleCreateSuratKeluar(surat)}
                                     className="inline-flex items-center justify-center w-8 h-8 bg-green-100 text-green-700 hover:bg-green-200 rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md"

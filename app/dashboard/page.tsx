@@ -59,43 +59,18 @@ export default function DashboardPage() {
   }, [status, router])
 
   useEffect(() => {
-    // Fetch dashboard data
+    // Fetch dashboard data menggunakan dedicated stats API
     const fetchDashboardData = async () => {
       try {
         setLoading(true)
-        const [suratRes, disposisiRes, suratKeluarRes] = await Promise.all([
-          fetch('/api/surat-masuk?limit=5'),
-          fetch('/api/disposisi'),
-          fetch('/api/surat-keluar')
-        ])
+        // Single optimized API call instead of 3 separate calls
+        const response = await fetch('/api/dashboard/stats')
         
-        if (suratRes.ok && disposisiRes.ok && suratKeluarRes.ok) {
-          const suratData = await suratRes.json()
-          const disposisiData = await disposisiRes.json()
-          const suratKeluarData = await suratKeluarRes.json()
+        if (response.ok) {
+          const data = await response.json()
           
-          const currentMonth = new Date().getMonth()
-          const currentYear = new Date().getFullYear()
-          
-          const suratBulanIni = (suratData as SuratMasukResponse).suratMasuk?.filter((surat: SuratMasuk) => {
-            const suratDate = new Date(surat.tanggalSurat)
-            return suratDate.getMonth() === currentMonth && suratDate.getFullYear() === currentYear
-          }).length || 0
-          
-          const totalSurat = suratData.pagination?.total || 0
-          const totalSuratKeluar = suratKeluarData.pagination?.total || 0
-          const totalDisposisi = disposisiData.pagination?.total || 0
-          const disposisiPending = Math.max(0, totalSurat - totalDisposisi)
-          
-          setStats({
-            totalSurat,
-            totalSuratKeluar,
-            totalDisposisi,
-            suratBulanIni,
-            disposisiPending
-          })
-          
-          setRecentSurats(suratData.suratMasuk?.slice(0, 5) || [])
+          setStats(data.stats)
+          setRecentSurats(data.recentSurats || [])
         }
       } catch (error) {
         console.error('Error fetching dashboard data:', error)

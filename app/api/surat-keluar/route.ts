@@ -45,7 +45,16 @@ export async function GET(request: NextRequest) {
     const [suratKeluar, total] = await Promise.all([
       prisma.suratKeluar.findMany({
         where,
-        include: {
+        select: {
+          id: true,
+          noUrut: true,
+          klas: true,
+          pengolah: true,
+          tanggalSurat: true,
+          perihalSurat: true,
+          kirimKepada: true,
+          createdAt: true,
+          updatedAt: true,
           createdBy: {
             select: {
               id: true,
@@ -56,6 +65,7 @@ export async function GET(request: NextRequest) {
           suratMasuk: {
             select: {
               id: true,
+              noUrut: true,
               nomorSurat: true,
               perihal: true
             }

@@ -58,7 +58,17 @@ export async function GET(req: NextRequest) {
     const [disposisi, total] = await Promise.all([
       prisma.disposisi.findMany({
         where,
-        include: {
+        select: {
+          id: true,
+          nomorDisposisi: true,
+          noUrut: true,
+          tanggalDisposisi: true,
+          tujuanDisposisi: true,
+          isiDisposisi: true,
+          keterangan: true,
+          status: true,
+          createdAt: true,
+          updatedAt: true,
           createdBy: {
             select: {
               id: true,
@@ -69,8 +79,10 @@ export async function GET(req: NextRequest) {
           suratMasuk: {
             select: {
               id: true,
+              noUrut: true,
               nomorSurat: true,
               perihal: true,
+              asalSurat: true,
             }
           }
         },
