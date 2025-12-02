@@ -48,6 +48,15 @@ lerna-debug.log*
 .vercel
 .vercel.json
 
+# backups & temp files
+backups/
+*.zip
+*.ps1
+*.csv
+
+# sensitive files
+SECURITY-AUDIT-REPORT.md
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

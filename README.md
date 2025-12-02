@@ -4,7 +4,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
 [![Prisma](https://img.shields.io/badge/Prisma-6.17.0-2D3748)](https://www.prisma.io/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.0-38B2AC)](https://tailwindcss.com/)
-[![Security](https://img.shields.io/badge/Security-100%2F100-success)](SECURITY-AUDIT.md)
+[![Security](https://img.shields.io/badge/Security-Grade_A-success)](https://securityheaders.com)
 
 Sistem informasi manajemen arsip surat masuk, surat keluar, dan disposisi yang dikhususkan untuk DPRD Provinsi Kalimantan Selatan. Aplikasi ini menyediakan platform digital untuk mengelola dokumen resmi dengan workflow yang terstruktur dan **enterprise-grade security**.
 
@@ -13,37 +13,70 @@ Sistem informasi manajemen arsip surat masuk, surat keluar, dan disposisi yang d
 
 > **Catatan**: Silakan daftar akun baru untuk mencoba aplikasi. Akun pertama yang mendaftar akan otomatis menjadi Administrator.
 
-## 🎯 Fitur Utama
+---
 
-### 🔐 Keamanan Enterprise (Security Score: 100/100)
+## 🎨 Design System: Borneo Civic Blueprint
 
-#### CSRF Protection ✅
+Aplikasi ini mengimplementasikan **Borneo Civic Blueprint**, design system khusus untuk aplikasi pemerintahan Kalimantan Selatan dengan identitas visual yang kuat dan profesional.
+
+### 🎨 Color Palette
+- **Merah Banjar** (#B82025) - Primary color untuk header, tombol utama, dan elemen penting
+- **Hitam Legislasi** (#1A1A1A) - Background dan text untuk kontras maksimal
+- **Abu Arsip** (#E3E3E3) - Background subtle dan borders
+- **Emas Etika** (#C8A348) - Accent untuk highlight dan status khusus
+
+### 🔤 Typography
+- **Merriweather** (Serif) - Untuk headings dan judul yang formal
+- **Inter** (Sans-serif) - Untuk body text yang modern dan readable
+
+### ✨ UI/UX Features
+- **Professional Branding**: Logo DPRD Kalsel dengan styling konsisten
+- **Responsive Design**: Optimal di desktop, tablet, dan mobile devices
+- **High Contrast**: Text hitam (#1A1A1A) pada background putih untuk readability
+- **Consistent Spacing**: Menggunakan Tailwind spacing scale
+- **Accessible Forms**: Input fields dengan proper labels dan validation
+- **Modern Components**: Cards, modals, dan tables dengan design cohesive
+
+---
+
+## 🔒 Security Features (Grade A)
+
+### Security Headers ✅
+```
+✅ Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+✅ Content-Security-Policy: frame-ancestors 'none' + comprehensive rules
+✅ X-Content-Type-Options: nosniff
+✅ X-Frame-Options: DENY
+✅ Referrer-Policy: strict-origin-when-cross-origin
+✅ Permissions-Policy: camera=(), microphone=(), geolocation=()
+✅ Access-Control-Allow-Origin: https://arsipdprdkalsel.vercel.app
+```
+
+**Verified by**:
+- ✅ SecurityHeaders.com Grade A
+- ✅ Nikto Security Scanner
+- ✅ Production deployment on Vercel with HTTPS/TLS
+
+### CSRF Protection ✅
 - **Double Submit Cookie Pattern** untuk semua API routes
 - **23 frontend files** fully migrated dengan `csrfFetch` utility
 - **43 protected operations** across all modules
 - Auto token refresh & retry mechanism
 - 100% TypeScript safe implementation
 
-#### Rate Limiting ✅
+### Rate Limiting ✅
 - **Login Protection**: 5 attempts per 15 minutes
 - **API Protection**: 100 requests per 15 minutes
 - Prevents brute force attacks
-- IP-based tracking
+- IP-based tracking with in-memory store
 
-#### Password Policy ✅
+### Password Policy ✅
 - Minimum 8 characters
 - Must contain: uppercase, lowercase, numbers, special chars
 - bcrypt hashing with 12 rounds
-- Secure password storage
+- Secure password storage in database
 
-#### Security Headers ✅
-- X-Frame-Options: DENY (clickjacking protection)
-- X-Content-Type-Options: nosniff
-- X-XSS-Protection: 1; mode=block
-- Strict-Transport-Security (HSTS)
-- Content-Security-Policy configured
-
-#### Audit Logging System ✅
+### Audit Logging System ✅
 - Comprehensive activity tracking
 - Authentication events (login, failed login, logout)
 - User management logs (create, update, delete)
@@ -52,31 +85,27 @@ Sistem informasi manajemen arsip surat masuk, surat keluar, dan disposisi yang d
 - Admin dashboard for log monitoring
 - Filter by action, entity, date range
 
-#### Additional Security
+### Additional Security Layers
 - ✅ Session security with HttpOnly, Secure, SameSite cookies
 - ✅ Input validation with Zod schemas
 - ✅ SQL injection prevention via Prisma ORM
 - ✅ XSS protection with React & Next.js
-- ✅ HTTPS enforcement in production
-- ✅ Environment variable protection
-- ✅ No dependency vulnerabilities (0 found)
+- ✅ HTTPS enforcement in production (Vercel SSL)
+- ✅ Environment variable protection (.env.local)
+- ✅ No dependency vulnerabilities (npm audit clean)
 
-📄 **Detailed Security Report**: [SECURITY-AUDIT.md](SECURITY-AUDIT.md)  
-📄 **CSRF Implementation Guide**: [CSRF-PROTECTION-GUIDE.md](CSRF-PROTECTION-GUIDE.md)
+---
 
-### 📊 Performance Monitoring ✅
-- **Vercel Speed Insights** integration
-- Real-time Core Web Vitals tracking
-- Performance analytics dashboard
-- LCP, FID, CLS, TTFB, FCP metrics
+## 🎯 Fitur Utama
 
 ### 📄 Manajemen Surat Masuk
 - **CRUD Lengkap**: Create, Read, Update, Delete (Admin only)
 - **Detail Komprehensif**: No Urut, Nomor Surat, Tanggal, Asal Surat, Perihal
 - **Validasi Unik**: Nomor surat dan no urut yang unique untuk mencegah duplikasi
 - **File Path Support**: Dukungan untuk menyimpan path file dokumen
+- **Excel Export**: Export data surat masuk ke format Excel
 
-### � Manajemen Surat Keluar
+### 📤 Manajemen Surat Keluar
 - **CRUD Lengkap**: Create, Read, Update, Delete surat keluar (Admin only)
 - **Auto Numbering**: Sistem penomoran otomatis dengan noUrut yang unique
 - **Integrated Workflow**: Buat surat keluar langsung dari surat masuk dengan modal
@@ -85,7 +114,7 @@ Sistem informasi manajemen arsip surat masuk, surat keluar, dan disposisi yang d
 - **Cross Reference**: Relasi dengan surat masuk untuk tracking yang akurat
 - **Professional Fields**: Klas surat, pengolah, perihal, dan tujuan yang lengkap
 
-### �📋 Sistem Disposisi Terintegrasi
+### 📋 Sistem Disposisi Terintegrasi
 - **Smart Disposition Creation**: Buat disposisi langsung dari surat masuk atau manual
 - **Auto NoUrut Sync**: NoUrut disposisi otomatis sinkron dengan surat masuk terkait
 - **Target Selection**: Pilihan tujuan disposisi (Pimpinan DPRD, SEKWAN, RTA, Persidangan, Keuangan, Fraksi)
@@ -109,15 +138,16 @@ Sistem informasi manajemen arsip surat masuk, surat keluar, dan disposisi yang d
 - **Multi-Metric Overview**: Track semua aspek workflow dokumen dalam satu dashboard
 - **Pending Calculator**: Otomatis hitung disposisi pending (surat masuk - disposisi selesai)
 - **User Management**: Admin dapat mengelola pengguna sistem
+- **Audit Logs Viewer**: Monitor semua aktivitas sistem dengan filter lengkap
 - **Data Export**: Export disposisi ke Excel dengan format yang terstruktur
-- **Clean Interface**: Dashboard dengan DPRD Kalimantan Selatan branding
 
-### 🎨 User Experience
-- **Professional Design**: UI dengan branding resmi DPRD Kalimantan Selatan
-- **Responsive Layout**: Optimal di desktop, tablet, dan mobile
-- **Consistent Navigation**: Persistent sidebar untuk navigasi yang mudah
-- **Improved Readability**: Input text dengan contrast tinggi (text-gray-900)
-- **Loading States**: Proper loading indicators dan error handling
+### 📊 Performance Monitoring
+- **Vercel Speed Insights** integration
+- Real-time Core Web Vitals tracking
+- Performance analytics dashboard
+- LCP, FID, CLS, TTFB, FCP metrics
+
+---
 
 ## 🛠️ Teknologi & Stack
 
