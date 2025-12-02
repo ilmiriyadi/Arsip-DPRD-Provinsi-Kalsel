@@ -1,30 +1,35 @@
 import { withAuth } from "next-auth/middleware"
 import { NextResponse } from "next/server"
+import type { NextRequest } from "next/server"
+
+// Security headers yang akan diterapkan ke semua response
+const securityHeaders = [
+  { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
+  { key: 'X-Content-Type-Options', value: 'nosniff' },
+  { key: 'X-Frame-Options', value: 'DENY' },
+  { key: 'X-XSS-Protection', value: '1; mode=block' },
+  { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+  { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=(), interest-cohort=(), payment=(), usb=()' },
+  { key: 'Content-Security-Policy', value: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://vercel.live; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://*.neon.tech https://vercel.live; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests" },
+]
 
 export default withAuth(
   function middleware(req) {
     const token = req.nextauth.token
     const { pathname } = req.nextUrl
 
-    // Clone response untuk menambahkan security headers
-    const response = NextResponse.next()
-
-    // Security Headers - Apply to ALL responses
-    response.headers.set('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload')
-    response.headers.set('X-Content-Type-Options', 'nosniff')
-    response.headers.set('X-Frame-Options', 'DENY')
-    response.headers.set('X-XSS-Protection', '1; mode=block')
-    response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
-    response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), interest-cohort=(), payment=(), usb=()')
-    response.headers.set('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://vercel.live; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://*.neon.tech https://vercel.live; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests")
-    
-    // Remove wildcard CORS
-    response.headers.delete('Access-Control-Allow-Origin')
-    
     // Redirect ke login jika tidak ada token
     if (!token) {
-      if (pathname.startsWith('/arsip/dashboard') || pathname.startsWith('/arsip/surat') || pathname.startsWith('/arsip/disposisi') || pathname.startsWith('/arsip/settings') || pathname.startsWith('/arsip/admin')) return NextResponse.redirect(new URL('/arsip/login', req.url))
-      if (pathname.startsWith('/tamu/dashboard')) return NextResponse.redirect(new URL('/tamu/login', req.url))
+      if (pathname.startsWith('/arsip/dashboard') || pathname.startsWith('/arsip/surat') || pathname.startsWith('/arsip/disposisi') || pathname.startsWith('/arsip/settings') || pathname.startsWith('/arsip/admin')) {
+        const response = NextResponse.redirect(new URL('/arsip/login', req.url))
+        securityHeaders.forEach(({ key, value }) => response.headers.set(key, value))
+        return response
+      }
+      if (pathname.startsWith('/tamu/dashboard')) {
+        const response = NextResponse.redirect(new URL('/tamu/login', req.url))
+        securityHeaders.forEach(({ key, value }) => response.headers.set(key, value))
+        return response
+      }
     }
 
     // Arsip routes - hanya bisa diakses ADMIN
@@ -38,24 +43,22 @@ export default withAuth(
     
     // Redirect MEMBER dari halaman arsip ke tamu dashboard
     if (isArsipRoute && token?.role !== 'ADMIN') {
-      const redirectResponse = NextResponse.redirect(new URL('/tamu/dashboard', req.url))
-      // Apply security headers to redirect
-      redirectResponse.headers.set('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload')
-      redirectResponse.headers.set('X-Content-Type-Options', 'nosniff')
-      redirectResponse.headers.set('X-Frame-Options', 'DENY')
-      return redirectResponse
+      const response = NextResponse.redirect(new URL('/tamu/dashboard', req.url))
+      securityHeaders.forEach(({ key, value }) => response.headers.set(key, value))
+      return response
     }
 
     // Redirect ADMIN dari halaman tamu ke arsip dashboard
     if (isTamuRoute && token?.role !== 'MEMBER') {
-      const redirectResponse = NextResponse.redirect(new URL('/arsip/dashboard', req.url))
-      // Apply security headers to redirect
-      redirectResponse.headers.set('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload')
-      redirectResponse.headers.set('X-Content-Type-Options', 'nosniff')
-      redirectResponse.headers.set('X-Frame-Options', 'DENY')
-      return redirectResponse
+      const response = NextResponse.redirect(new URL('/arsip/dashboard', req.url))
+      securityHeaders.forEach(({ key, value }) => response.headers.set(key, value))
+      return response
     }
 
+    // Apply security headers ke normal response
+    const response = NextResponse.next()
+    securityHeaders.forEach(({ key, value }) => response.headers.set(key, value))
+    
     return response
   },
   {
