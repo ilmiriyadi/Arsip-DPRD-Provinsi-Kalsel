@@ -221,7 +221,7 @@ export default function DashboardPage() {
               </div>
               <div className="space-y-4">
                 <Link
-                  href="/arsip/surat-masuk/add"
+                  href="/dashboard/surat-masuk/add"
                   className="flex items-center p-4 bg-white border-2 border-[#E3E3E3] rounded-lg hover:border-[#B82025] civic-transition group"
                   style={{ fontFamily: 'Inter, sans-serif' }}
                 >
@@ -235,7 +235,7 @@ export default function DashboardPage() {
                 </Link>
 
                 <Link
-                  href="/arsip/disposisi/add"
+                  href="/dashboard/disposisi/add"
                   className="flex items-center p-4 bg-white border-2 border-[#E3E3E3] rounded-lg hover:border-[#1A1A1A] civic-transition group"
                   style={{ fontFamily: 'Inter, sans-serif' }}
                 >
@@ -249,7 +249,7 @@ export default function DashboardPage() {
                 </Link>
 
                 <Link
-                  href="/arsip/surat-keluar/add"
+                  href="/dashboard/surat-keluar/add"
                   className="flex items-center p-4 bg-white border-2 border-[#E3E3E3] rounded-lg hover:border-[#B82025] civic-transition group"
                   style={{ fontFamily: 'Inter, sans-serif' }}
                 >
@@ -263,7 +263,7 @@ export default function DashboardPage() {
                 </Link>
 
                 <Link
-                  href="/arsip/surat-masuk"
+                  href="/dashboard/surat-masuk"
                   className="flex items-center p-4 bg-white border-2 border-[#E3E3E3] rounded-lg hover:border-[#1A1A1A] civic-transition group"
                   style={{ fontFamily: 'Inter, sans-serif' }}
                 >
@@ -303,7 +303,7 @@ export default function DashboardPage() {
                         <p className="text-xs text-[#737373] mt-1">{formatDate(surat.tanggalSurat)}</p>
                       </div>
                       <Link
-                        href={`/arsip/surat-masuk/${surat.id}`}
+                        href={`/dashboard/surat-masuk/${surat.id}`}
                         className="p-2 text-[#737373] hover:text-[#B82025] civic-transition"
                       >
                         <Eye className="w-5 h-5" />
@@ -311,7 +311,7 @@ export default function DashboardPage() {
                     </div>
                   ))}
                   <Link
-                    href="/arsip/surat-masuk"
+                    href="/dashboard/surat-masuk"
                     className="block text-center text-sm text-[#B82025] hover:text-[#1A1A1A] font-semibold py-3 civic-transition"
                     style={{ fontFamily: 'Inter, sans-serif' }}
                   >
@@ -332,4 +332,5 @@ export default function DashboardPage() {
     </DashboardLayout>
   )
 }
+
 

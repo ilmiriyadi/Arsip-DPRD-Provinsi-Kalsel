@@ -87,7 +87,7 @@ export default function SuratMasukPage() {
 
   useEffect(() => {
     if (status === 'unauthenticated') {
-      router.push('/login')
+      router.push('/arsip/login')
     }
   }, [status, router])
 
@@ -1131,4 +1131,5 @@ export default function SuratMasukPage() {
     </DashboardLayout>
   )
 }
+
 

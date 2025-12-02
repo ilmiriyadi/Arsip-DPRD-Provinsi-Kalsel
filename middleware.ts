@@ -8,13 +8,12 @@ export default withAuth(
 
     // Redirect ke login jika tidak ada token
     if (!token) {
-      if (pathname.startsWith('/dashboard')) return NextResponse.redirect(new URL('/login', req.url))
-      if (pathname.startsWith('/arsip/dashboard')) return NextResponse.redirect(new URL('/arsip/login', req.url))
+      if (pathname.startsWith('/arsip/dashboard') || pathname.startsWith('/arsip/surat') || pathname.startsWith('/arsip/disposisi') || pathname.startsWith('/arsip/settings') || pathname.startsWith('/arsip/admin')) return NextResponse.redirect(new URL('/arsip/login', req.url))
       if (pathname.startsWith('/tamu/dashboard')) return NextResponse.redirect(new URL('/tamu/login', req.url))
     }
 
     // Arsip routes - hanya bisa diakses ADMIN
-    const arsipRoutes = ['/dashboard', '/arsip/dashboard']
+    const arsipRoutes = ['/arsip/dashboard', '/arsip/surat-masuk', '/arsip/surat-keluar', '/arsip/disposisi', '/arsip/settings', '/arsip/admin']
     
     // Tamu routes - hanya bisa diakses MEMBER
     const tamuRoutes = ['/tamu/dashboard', '/surat-tamu']
@@ -29,7 +28,7 @@ export default withAuth(
 
     // Redirect ADMIN dari halaman tamu ke arsip dashboard
     if (isTamuRoute && token?.role !== 'MEMBER') {
-      return NextResponse.redirect(new URL('/dashboard', req.url))
+      return NextResponse.redirect(new URL('/arsip/dashboard', req.url))
     }
 
     return NextResponse.next()
@@ -40,11 +39,11 @@ export default withAuth(
         const { pathname } = req.nextUrl
         
   // Halaman publik
-  const publicPaths = ['/login', '/register', '/', '/arsip/login', '/tamu/login']
+  const publicPaths = ['/register', '/', '/arsip/login', '/tamu/login']
         if (publicPaths.includes(pathname)) return true
         
         // Dashboard memerlukan authentication
-        if (pathname.startsWith('/dashboard') || pathname.startsWith('/arsip/dashboard')) {
+        if (pathname.startsWith('/arsip/dashboard') || pathname.startsWith('/arsip/surat') || pathname.startsWith('/arsip/disposisi') || pathname.startsWith('/arsip/settings') || pathname.startsWith('/arsip/admin')) {
           return !!token
         }
 
@@ -61,10 +60,14 @@ export default withAuth(
 
 export const config = {
   matcher: [
-      '/dashboard/:path*',
       '/arsip/dashboard/:path*',
+      '/arsip/surat-masuk/:path*',
+      '/arsip/surat-keluar/:path*',
+      '/arsip/disposisi/:path*',
+      '/arsip/settings/:path*',
+      '/arsip/admin/:path*',
       '/tamu/dashboard/:path*',
-      '/login',
+      '/surat-tamu/:path*',
       '/arsip/login',
       '/tamu/login'
   ]

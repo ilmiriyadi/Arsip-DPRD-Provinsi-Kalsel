@@ -55,61 +55,62 @@ export default function TamuLoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
+    <div className="min-h-screen bg-[#F7F7F7] flex items-center justify-center p-4">
+      <div className="max-w-md w-full civic-card civic-transition">
         <div className="flex justify-between items-center mb-8">
           <Link 
             href="/"
-            className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-gray-900"
+            className="inline-flex items-center px-4 py-2 text-sm font-semibold text-[#737373] bg-white border-2 border-[#E3E3E3] rounded-lg hover:border-[#B82025] civic-transition"
+            style={{ fontFamily: 'Inter, sans-serif' }}
           >
             ← Kembali ke Beranda
           </Link>
         </div>
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Surat Tamu - Login</h1>
-          <p className="text-gray-600">Silakan login untuk mengelola Surat Tamu</p>
+          <h1 className="text-3xl font-bold text-[#1A1A1A] mb-3" style={{ fontFamily: 'Merriweather, serif' }}>Surat Tamu</h1>
+          <p className="text-[#737373]" style={{ fontFamily: 'Inter, sans-serif' }}>Silakan login untuk mengelola Surat Tamu</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md text-sm">
+            <div className="bg-red-50 border-l-4 border-[#B82025] text-[#B82025] px-4 py-3 rounded-md text-sm" style={{ fontFamily: 'Inter, sans-serif' }}>
               {error}
             </div>
           )}
 
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+            <label htmlFor="email" className="block text-sm font-semibold text-[#1A1A1A] mb-2" style={{ fontFamily: 'Inter, sans-serif' }}>Email</label>
             <div className="relative">
-              <Mail className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
               <input
                 id="email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="civic-input w-full px-4 py-3"
                 placeholder="masukkan@email.com"
+                style={{ fontFamily: 'Inter, sans-serif' }}
               />
             </div>
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">Password</label>
+            <label htmlFor="password" className="block text-sm font-semibold text-[#1A1A1A] mb-2" style={{ fontFamily: 'Inter, sans-serif' }}>Password</label>
             <div className="relative">
-              <Lock className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
               <input
                 id="password"
                 type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="civic-input w-full px-4 pr-12 py-3"
                 placeholder="Masukkan password"
+                style={{ fontFamily: 'Inter, sans-serif' }}
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-3 h-5 w-5 text-gray-400 hover:text-gray-600"
+                className="absolute right-3 top-3 h-5 w-5 text-[#737373] hover:text-[#1A1A1A] civic-transition"
               >
                 {showPassword ? <EyeOff /> : <Eye />}
               </button>
@@ -119,7 +120,8 @@ export default function TamuLoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-green-600 text-white py-3 px-4 rounded-md hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition duration-200"
+            className="civic-btn-primary w-full py-3 px-4 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+            style={{ fontFamily: 'Inter, sans-serif' }}
           >
             {loading ? 'Mengautentikasi...' : 'Login'}
           </button>

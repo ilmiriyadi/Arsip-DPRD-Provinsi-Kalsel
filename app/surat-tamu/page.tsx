@@ -49,9 +49,9 @@ export default function SuratTamuPage() {
 
   useEffect(() => {
     if (status === 'unauthenticated') {
-      router.push('/login')
+      router.push('/tamu/login')
     } else if (status === 'authenticated' && session?.user?.role !== 'MEMBER') {
-      router.push('/dashboard')
+      router.push('/arsip/dashboard')
     }
   }, [status, session, router])
 

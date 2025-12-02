@@ -28,7 +28,7 @@ export default function TamuDashboard() {
     if (status === 'unauthenticated') {
       router.push('/tamu/login')
     } else if (status === 'authenticated' && session?.user?.role !== 'MEMBER') {
-      router.push('/dashboard')
+      router.push('/arsip/dashboard')
     }
   }, [status, session, router])
 

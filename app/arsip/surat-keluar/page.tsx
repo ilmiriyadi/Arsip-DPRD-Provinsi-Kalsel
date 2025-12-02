@@ -73,7 +73,7 @@ export default function SuratKeluarPage() {
 
   useEffect(() => {
     if (status === 'unauthenticated') {
-      router.push('/login')
+      router.push('/arsip/login')
     }
   }, [status, router])
 
@@ -214,7 +214,7 @@ export default function SuratKeluarPage() {
                 {session.user.role === 'ADMIN' && (
                   <Link
                     href="/dashboard/surat-keluar/add"
-                    className="civic-btn-primary px-5 py-2.5 rounded-xl"
+                    className="civic-btn-primary inline-flex items-center px-5 py-2.5 border border-transparent rounded-xl shadow-lg text-sm font-medium text-white"
                     style={{ fontFamily: 'Inter, sans-serif' }}
                   >
                     <Plus className="h-4 w-4 mr-2" />
@@ -609,3 +609,4 @@ export default function SuratKeluarPage() {
     </DashboardLayout>
   )
 }
+

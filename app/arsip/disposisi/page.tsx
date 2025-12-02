@@ -76,7 +76,7 @@ export default function DisposisiPage() {
 
   useEffect(() => {
     if (status === 'unauthenticated') {
-      router.push('/login')
+      router.push('/arsip/login')
     }
   }, [status, router])
 
@@ -247,20 +247,20 @@ export default function DisposisiPage() {
               <button
                 onClick={handleExportExcel}
                 disabled={isExporting}
-                className="civic-btn-secondary px-5 py-2.5 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                className="civic-btn-primary inline-flex items-center px-5 py-2.5 border border-transparent rounded-xl shadow-lg text-sm font-medium text-white disabled:opacity-50 disabled:cursor-not-allowed"
                 style={{ fontFamily: 'Inter, sans-serif' }}
               >
                 {isExporting ? (
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                 ) : (
-                  <Download className="h-4 w-4 mr-2" />
+                  <FileText className="h-4 w-4 mr-2" />
                 )}
                 {isExporting ? 'Mengexport...' : 'Export Excel'}
               </button>
               {session.user.role === 'ADMIN' && (
                 <Link
                   href="/dashboard/disposisi/add"
-                  className="civic-btn-primary px-5 py-2.5 rounded-xl"
+                  className="civic-btn-primary inline-flex items-center px-5 py-2.5 border border-transparent rounded-xl shadow-lg text-sm font-medium text-white"
                   style={{ fontFamily: 'Inter, sans-serif' }}
                 >
                   <Plus className="h-4 w-4 mr-2" />
@@ -648,4 +648,5 @@ export default function DisposisiPage() {
     </DashboardLayout>
   )
 }
+
 
