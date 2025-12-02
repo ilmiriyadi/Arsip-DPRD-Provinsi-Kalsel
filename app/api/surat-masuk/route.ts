@@ -197,6 +197,27 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       )
     }
+    
+    // Handle Prisma unique constraint error
+    if (error && typeof error === 'object' && 'code' in error) {
+      if (error.code === 'P2002') {
+        const target = (error as { meta?: { target?: string[] } }).meta?.target
+        if (target && Array.isArray(target)) {
+          if (target.includes('nomorSurat')) {
+            return NextResponse.json(
+              { error: 'Nomor surat sudah ada dalam sistem. Silakan gunakan nomor surat yang berbeda.' },
+              { status: 400 }
+            )
+          }
+          if (target.includes('noUrut')) {
+            return NextResponse.json(
+              { error: 'No urut sudah digunakan. Silakan gunakan no urut yang berbeda.' },
+              { status: 400 }
+            )
+          }
+        }
+      }
+    }
 
     console.error("Error creating surat masuk:", error)
     return NextResponse.json(

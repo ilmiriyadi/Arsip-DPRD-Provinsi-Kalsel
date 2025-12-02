@@ -210,7 +210,7 @@ export default function SettingsPage() {
                 <div className="text-sm text-gray-500">Total Users</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-green-600">{stats.totalSurat}</div>
+                <div className="text-2xl font-bold text-[#C8A348]">{stats.totalSurat}</div>
                 <div className="text-sm text-gray-500">Surat Masuk</div>
               </div>
               <div className="text-center">

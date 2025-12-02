@@ -15,8 +15,7 @@ import {
   X,
   ChevronDown,
   Send,
-  Shield,
-  Users
+  Shield
 } from 'lucide-react'
 
 interface DashboardLayoutProps {

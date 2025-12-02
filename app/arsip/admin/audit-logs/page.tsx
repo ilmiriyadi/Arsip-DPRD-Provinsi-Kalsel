@@ -64,7 +64,7 @@ export default function AuditLogsPage() {
   const getActionBadgeColor = (action: string) => {
     switch (action) {
       case "LOGIN":
-        return "bg-green-100 text-green-800"
+        return "bg-[#C8A348]/20 text-[#C8A348]"
       case "FAILED_LOGIN":
         return "bg-red-100 text-red-800"
       case "CREATE":
@@ -74,7 +74,7 @@ export default function AuditLogsPage() {
       case "DELETE":
         return "bg-red-100 text-red-800"
       case "EXPORT":
-        return "bg-purple-100 text-purple-800"
+        return "bg-[#C8A348]/20 text-[#C8A348]"
       default:
         return "bg-gray-100 text-gray-800"
     }
@@ -212,7 +212,7 @@ export default function AuditLogsPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-semibold text-[#737373]" style={{ fontFamily: 'Inter, sans-serif' }}>Successful Logins</p>
-                  <p className="text-3xl font-bold text-green-600 mt-2" style={{ fontFamily: 'Merriweather, serif' }}>
+                  <p className="text-3xl font-bold text-[#C8A348] mt-2" style={{ fontFamily: 'Merriweather, serif' }}>
                     {logs.filter((l) => l.action === "LOGIN").length}
                   </p>
                 </div>
@@ -326,7 +326,7 @@ export default function AuditLogsPage() {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           {log.success ? (
-                            <span className="inline-flex items-center px-2.5 py-0.5 text-xs font-medium rounded-full bg-green-100 text-green-800">
+                            <span className="inline-flex items-center px-2.5 py-0.5 text-xs font-medium rounded-full bg-[#C8A348]/20 text-[#C8A348]">
                               <CheckCircle className="w-3 h-3 mr-1" />
                               Success
                             </span>

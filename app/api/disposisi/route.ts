@@ -183,10 +183,31 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       )
     }
+    
+    // Handle Prisma unique constraint error
+    if (error && typeof error === 'object' && 'code' in error) {
+      if (error.code === 'P2002') {
+        const target = (error as { meta?: { target?: string[] } }).meta?.target
+        if (target && Array.isArray(target)) {
+          if (target.includes('noUrut')) {
+            return NextResponse.json(
+              { error: 'No urut sudah digunakan. Silakan gunakan no urut yang berbeda.' },
+              { status: 400 }
+            )
+          }
+          if (target.includes('nomorDisposisi')) {
+            return NextResponse.json(
+              { error: 'Nomor disposisi sudah ada dalam sistem.' },
+              { status: 400 }
+            )
+          }
+        }
+      }
+    }
 
     console.error("Error creating disposisi:", error)
     return NextResponse.json(
-      { error: "Terjadi kesalahan server" },
+      { error: "Terjadi kesalahan saat menyimpan disposisi" },
       { status: 500 }
     )
   }

@@ -2,27 +2,19 @@
 
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import Link from 'next/link'
 import DashboardLayout from '@/components/layout/DashboardLayout'
 import { csrfFetch } from '@/lib/csrfFetch'
 import { 
   ClipboardList, 
   Plus, 
-  Search, 
   Filter, 
   Edit, 
   Trash2, 
   Eye,
   ChevronLeft,
   ChevronRight,
-  Hash,
-  FileText,
-  Calendar,
-  Users,
-  CheckCircle,
-  User,
-  Settings,
   Download,
   Loader2
 } from 'lucide-react'
@@ -93,13 +85,7 @@ export default function DisposisiPage() {
     return () => clearTimeout(timer)
   }, [searchTerm, debouncedSearchTerm])
 
-  useEffect(() => {
-    if (session) {
-      fetchDisposisi()
-    }
-  }, [session, pagination.page, debouncedSearchTerm, dateFilter, monthFilter])
-
-  const fetchDisposisi = async () => {
+  const fetchDisposisi = useCallback(async () => {
     try {
       setLoading(true)
       const params = new URLSearchParams({
@@ -127,7 +113,13 @@ export default function DisposisiPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [pagination.page, pagination.limit, debouncedSearchTerm, dateFilter, monthFilter])
+
+  useEffect(() => {
+    if (session) {
+      fetchDisposisi()
+    }
+  }, [session, fetchDisposisi])
 
   const handleDelete = async (id: string) => {
     if (!confirm('Apakah Anda yakin ingin menghapus disposisi ini?')) {
@@ -197,10 +189,10 @@ export default function DisposisiPage() {
     })
   }
 
-  const getStatusBadge = (status: string) => {
+  const getStatusBadge = () => {
     return (
-      <span className="px-3 py-1 inline-flex items-center text-xs leading-5 font-semibold rounded-full civic-badge-gold" style={{ fontFamily: 'Inter, sans-serif' }}>
-        <span className="mr-1">✅</span>
+      <span className="px-3 py-1.5 inline-flex items-center text-xs leading-5 font-semibold rounded-full bg-gradient-to-r from-amber-600 to-amber-700 text-white shadow-sm" style={{ fontFamily: 'Inter, sans-serif' }}>
+        <span className="mr-1.5">✅</span>
         Selesai
       </span>
     )
@@ -349,7 +341,7 @@ export default function DisposisiPage() {
                         </span>
                       )}
                       {dateFilter && (
-                        <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-[#C8A348] text-white border border-green-200">
+                        <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-[#B82025]/20 text-[#B82025] border border-[#B82025]/30">
                           📅 {formatDate(dateFilter)}
                         </span>
                       )}
@@ -383,7 +375,7 @@ export default function DisposisiPage() {
 
         {/* Table */}
         <div className="bg-white shadow-xl rounded-2xl border border-[#E3E3E3]-200 overflow-hidden">
-          <div className="bg-gradient-to-r from-slate-50 to-emerald-50 px-6 py-5 border-b border-[#E3E3E3]-200">
+          <div className="bg-gradient-to-r from-[#F7F7F7] to-white px-6 py-5 border-b border-[#E3E3E3]-200">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <div className="w-8 h-8 bg-[#B82025]-500 #B82025] rounded-lg flex items-center justify-center">
@@ -479,7 +471,7 @@ export default function DisposisiPage() {
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-[#E3E3E3]">
-                      {disposisiList.map((disposisi, index) => (
+                      {disposisiList.map((disposisi) => (
                         <tr key={disposisi.id} className="hover:bg-white hover:border-l-4 hover:border-[#B82025] civic-transition group">
                           <td className="px-6 py-5 whitespace-nowrap">
                             <div className="flex items-center">
@@ -512,7 +504,7 @@ export default function DisposisiPage() {
                             </div>
                           </td>
                           <td className="px-6 py-5 whitespace-nowrap">
-                            {getStatusBadge(disposisi.status)}
+                            {getStatusBadge()}
                           </td>
                           <td className="px-6 py-5 whitespace-nowrap">
                             <div className="text-sm text-[#737373]" style={{ fontFamily: 'Inter, sans-serif' }}>

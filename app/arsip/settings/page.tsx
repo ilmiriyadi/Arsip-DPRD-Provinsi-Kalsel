@@ -175,14 +175,14 @@ export default function SettingsPage() {
   const getRoleBadge = (role: string) => {
     if (role === 'ADMIN') {
       return (
-        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-purple-100 to-indigo-100 text-purple-800 border border-purple-200">
+        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-[#B82025]/20 text-[#B82025] border border-[#B82025]/30">
           <Shield className="w-3 h-3 mr-1" />
           Admin
         </span>
       )
     }
     return (
-      <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-emerald-100 to-teal-100 text-emerald-800 border border-emerald-200">
+      <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-[#C8A348]/20 text-[#C8A348] border border-[#C8A348]/30">
         <Users className="w-3 h-3 mr-1" />
         Member
       </span>

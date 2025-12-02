@@ -29,16 +29,6 @@ interface SuratMasuk {
   keterangan?: string
 }
 
-interface SuratMasukResponse {
-  suratMasuk?: SuratMasuk[]
-  pagination?: {
-    total: number
-    page: number
-    limit: number
-    totalPages: number
-  }
-}
-
 export default function DashboardPage() {
   const { data: session, status } = useSession()
   const router = useRouter()

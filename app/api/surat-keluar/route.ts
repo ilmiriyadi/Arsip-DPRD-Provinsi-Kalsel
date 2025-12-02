@@ -100,7 +100,7 @@ export async function GET(request: NextRequest) {
 
 // POST /api/surat-keluar - Create surat keluar
 export async function POST(request: NextRequest) {
-  return withCsrfProtection(request, async (req) => {
+  return withCsrfProtection(request, async (_req) => {
   try {
     const session = await getServerSession(authOptions)
     
@@ -176,9 +176,22 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(suratKeluar, { status: 201 })
   } catch (error) {
+    // Handle Prisma unique constraint error
+    if (error && typeof error === 'object' && 'code' in error) {
+      if (error.code === 'P2002') {
+        const target = (error as { meta?: { target?: string[] } }).meta?.target
+        if (target && Array.isArray(target) && target.includes('noUrut')) {
+          return NextResponse.json(
+            { error: 'No urut sudah digunakan. Silakan gunakan no urut yang berbeda.' },
+            { status: 400 }
+          )
+        }
+      }
+    }
+    
     console.error('Error creating surat keluar:', error)
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Terjadi kesalahan saat menyimpan surat keluar' },
       { status: 500 }
     )
   }

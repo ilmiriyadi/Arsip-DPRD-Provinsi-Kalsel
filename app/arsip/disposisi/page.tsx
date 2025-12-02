@@ -2,28 +2,20 @@
 
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import Link from 'next/link'
 import DashboardLayout from '@/components/layout/DashboardLayout'
 import { csrfFetch } from '@/lib/csrfFetch'
 import { 
   ClipboardList, 
   Plus, 
-  Search, 
   Filter, 
   Edit, 
   Trash2, 
   Eye,
   ChevronLeft,
   ChevronRight,
-  Hash,
   FileText,
-  Calendar,
-  Users,
-  CheckCircle,
-  User,
-  Settings,
-  Download,
   Loader2
 } from 'lucide-react'
 
@@ -93,13 +85,7 @@ export default function DisposisiPage() {
     return () => clearTimeout(timer)
   }, [searchTerm, debouncedSearchTerm])
 
-  useEffect(() => {
-    if (session) {
-      fetchDisposisi()
-    }
-  }, [session, pagination.page, debouncedSearchTerm, dateFilter, monthFilter])
-
-  const fetchDisposisi = async () => {
+  const fetchDisposisi = useCallback(async () => {
     try {
       setLoading(true)
       const params = new URLSearchParams({
@@ -127,7 +113,13 @@ export default function DisposisiPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [pagination.page, pagination.limit, debouncedSearchTerm, dateFilter, monthFilter])
+
+  useEffect(() => {
+    if (session) {
+      fetchDisposisi()
+    }
+  }, [session, fetchDisposisi])
 
   const handleDelete = async (id: string) => {
     if (!confirm('Apakah Anda yakin ingin menghapus disposisi ini?')) {
@@ -197,10 +189,10 @@ export default function DisposisiPage() {
     })
   }
 
-  const getStatusBadge = (status: string) => {
+  const getStatusBadge = () => {
     return (
-      <span className="px-3 py-1 inline-flex items-center text-xs leading-5 font-semibold rounded-full civic-badge-gold" style={{ fontFamily: 'Inter, sans-serif' }}>
-        <span className="mr-1">✅</span>
+      <span className="px-3 py-1.5 inline-flex items-center text-xs leading-5 font-semibold rounded-full bg-gradient-to-r from-amber-600 to-amber-700 text-white shadow-sm" style={{ fontFamily: 'Inter, sans-serif' }}>
+        <span className="mr-1.5">✅</span>
         Selesai
       </span>
     )
@@ -227,11 +219,11 @@ export default function DisposisiPage() {
   return (
     <DashboardLayout>
       {/* Header */}
-      <div className="civic-card civic-signature border-b border-[#E3E3E3]">
+      <div className="bg-white shadow-lg border-b border-[#E3E3E3] civic-signature">
         <div className="mx-auto px-4 sm:px-6 lg:px-6">
           <div className="flex justify-between items-center py-8">
             <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-[#B82025] rounded-xl flex items-center justify-center">
+              <div className="w-12 h-12 bg-[#B82025] rounded-xl flex items-center justify-center shadow-lg">
                 <ClipboardList className="w-6 h-6 text-white" />
               </div>
               <div>
@@ -259,7 +251,7 @@ export default function DisposisiPage() {
               </button>
               {session.user.role === 'ADMIN' && (
                 <Link
-                  href="/dashboard/disposisi/add"
+                  href="/arsip/disposisi/add"
                   className="civic-btn-primary inline-flex items-center px-5 py-2.5 border border-transparent rounded-xl shadow-lg text-sm font-medium text-white"
                   style={{ fontFamily: 'Inter, sans-serif' }}
                 >
@@ -296,14 +288,14 @@ export default function DisposisiPage() {
                       type="text"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="civic-input w-full px-4 py-3.5"
+                      className="civic-input w-full px-4 py-3.5 border border-[#E3E3E3] rounded-xl bg-white focus:ring-2 focus:ring-[#B82025] focus:border-transparent civic-transition text-[#1A1A1A] placeholder-[#737373] shadow-sm hover:shadow-md"
                       placeholder="Ketik untuk mencari tujuan, isi disposisi, atau nomor surat..."
                       style={{ fontFamily: 'Inter, sans-serif' }}
                     />
                     {searchTerm && (
                       <button
                         onClick={handleClearSearch}
-                        className="absolute right-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400 hover:text-red-500 transition-colors duration-200 bg-slate-100 hover:bg-red-50 rounded-full p-1"
+                        className="absolute right-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-[#737373] hover:text-[#B82025] transition-colors duration-200 bg-[#F7F7F7] hover:bg-red-50 rounded-full p-1"
                         title="Hapus pencarian"
                       >
                         ✕
@@ -314,26 +306,28 @@ export default function DisposisiPage() {
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
                   <div>
-                    <label className="block text-sm font-semibold text-[#1A1A1A] mb-3">
-                      📅 Filter Tanggal
+                    <label className="block text-sm font-semibold text-[#1A1A1A] mb-3" style={{ fontFamily: 'Inter, sans-serif' }}>
+                      Filter Tanggal
                     </label>
                     <input
                       type="date"
                       value={dateFilter}
                       onChange={(e) => setDateFilter(e.target.value)}
-                      className="w-full px-4 py-3.5 border border-[#E3E3E3]-300 rounded-xl bg-[#F7F7F7] focus:bg-white focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200 text-[#1A1A1A] shadow-sm hover:shadow-md"
+                      className="civic-input w-full px-4 py-3.5 border border-[#E3E3E3] rounded-xl bg-white focus:ring-2 focus:ring-[#B82025] focus:border-transparent civic-transition text-[#1A1A1A] shadow-sm hover:shadow-md"
+                      style={{ fontFamily: 'Inter, sans-serif' }}
                     />
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-semibold text-[#1A1A1A] mb-3">
-                      🗓️ Filter Bulan
+                    <label className="block text-sm font-semibold text-[#1A1A1A] mb-3" style={{ fontFamily: 'Inter, sans-serif' }}>
+                      Filter Bulan
                     </label>
                     <input
                       type="month"
                       value={monthFilter}
                       onChange={(e) => setMonthFilter(e.target.value)}
-                      className="w-full px-4 py-3.5 border border-[#E3E3E3]-300 rounded-xl bg-[#F7F7F7] focus:bg-white focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200 text-[#1A1A1A] shadow-sm hover:shadow-md"
+                      className="civic-input w-full px-4 py-3.5 border border-[#E3E3E3] rounded-xl bg-white focus:ring-2 focus:ring-[#B82025] focus:border-transparent civic-transition text-[#1A1A1A] shadow-sm hover:shadow-md"
+                      style={{ fontFamily: 'Inter, sans-serif' }}
                     />
                   </div>
                 </div>
@@ -344,18 +338,18 @@ export default function DisposisiPage() {
                   {(debouncedSearchTerm || dateFilter || monthFilter) && (
                     <>
                       {debouncedSearchTerm && (
-                        <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 border border-emerald-200">
-                          🔍 &quot;{debouncedSearchTerm}&quot;
+                        <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-[#B82025] text-white" style={{ fontFamily: 'Inter, sans-serif' }}>
+                          &quot;{debouncedSearchTerm}&quot;
                         </span>
                       )}
                       {dateFilter && (
-                        <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-[#C8A348] text-white border border-green-200">
-                          📅 {formatDate(dateFilter)}
+                        <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-[#1A1A1A] text-white" style={{ fontFamily: 'Inter, sans-serif' }}>
+                          {formatDate(dateFilter)}
                         </span>
                       )}
                       {monthFilter && (
-                        <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800 border border-purple-200">
-                          🗓️ {monthFilter}
+                        <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-[#1A1A1A] text-white" style={{ fontFamily: 'Inter, sans-serif' }}>
+                          {monthFilter}
                         </span>
                       )}
                     </>
@@ -371,9 +365,10 @@ export default function DisposisiPage() {
                       setMonthFilter('')
                       setPagination(prev => ({ ...prev, page: 1 }))
                     }}
-                    className="inline-flex items-center px-4 py-2.5 bg-gradient-to-r from-red-500 to-pink-500 text-white text-sm font-medium rounded-xl hover:from-red-600 hover:to-pink-600 transition-all duration-200 shadow-lg hover:shadow-xl"
+                    className="civic-btn-secondary inline-flex items-center px-4 py-2.5 text-[#B82025] text-sm font-medium rounded-xl civic-transition shadow-lg hover:shadow-xl"
+                    style={{ fontFamily: 'Inter, sans-serif' }}
                   >
-                    🗑️ Reset Filter
+                    Reset Filter
                   </button>
                 )}
               </div>
@@ -382,19 +377,19 @@ export default function DisposisiPage() {
         </div>
 
         {/* Table */}
-        <div className="bg-white shadow-xl rounded-2xl border border-[#E3E3E3]-200 overflow-hidden">
-          <div className="bg-gradient-to-r from-slate-50 to-emerald-50 px-6 py-5 border-b border-[#E3E3E3]-200">
+        <div className="civic-card bg-white shadow-xl rounded-2xl border border-[#E3E3E3] overflow-hidden">
+          <div className="bg-[#F7F7F7] px-6 py-5 border-b border-[#E3E3E3]">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-[#B82025]-500 #B82025] rounded-lg flex items-center justify-center">
+                <div className="w-8 h-8 bg-[#B82025] rounded-lg flex items-center justify-center">
                   <ClipboardList className="w-4 h-4 text-white" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900">
+                  <h3 className="text-lg font-semibold text-[#1A1A1A]" style={{ fontFamily: 'Merriweather, serif' }}>
                     Daftar Disposisi
                   </h3>
                   {pagination.total > 0 && (
-                    <p className="text-sm text-[#737373]">
+                    <p className="text-sm text-[#737373]" style={{ fontFamily: 'Inter, sans-serif' }}>
                       Total {pagination.total} disposisi • Halaman {pagination.page} dari {pagination.totalPages}
                     </p>
                   )}
@@ -436,7 +431,7 @@ export default function DisposisiPage() {
               </p>
               {session.user.role === 'ADMIN' && (
                 <Link
-                  href="/dashboard/disposisi/add"
+                  href="/arsip/disposisi/add"
                   className="civic-btn-primary px-6 py-3 rounded-xl"
                   style={{ fontFamily: 'Inter, sans-serif' }}
                 >
@@ -479,7 +474,7 @@ export default function DisposisiPage() {
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-[#E3E3E3]">
-                      {disposisiList.map((disposisi, index) => (
+                      {disposisiList.map((disposisi) => (
                         <tr key={disposisi.id} className="hover:bg-white hover:border-l-4 hover:border-[#B82025] civic-transition group">
                           <td className="px-6 py-5 whitespace-nowrap">
                             <div className="flex items-center">
@@ -512,7 +507,7 @@ export default function DisposisiPage() {
                             </div>
                           </td>
                           <td className="px-6 py-5 whitespace-nowrap">
-                            {getStatusBadge(disposisi.status)}
+                            {getStatusBadge()}
                           </td>
                           <td className="px-6 py-5 whitespace-nowrap">
                             <div className="text-sm text-[#737373]" style={{ fontFamily: 'Inter, sans-serif' }}>
@@ -520,10 +515,10 @@ export default function DisposisiPage() {
                             </div>
                           </td>
                           <td className="px-6 py-5 whitespace-nowrap text-right text-sm font-medium">
-                            <div className="flex items-center justify-end space-x-3">
+                            <div className="flex items-center justify-end space-x-2">
                               <Link
-                                href={`/dashboard/disposisi/${disposisi.id}`}
-                                className="text-[#1A1A1A] hover:text-[#B82025] civic-transition p-2 hover:bg-[#F7F7F7] rounded-lg"
+                                href={`/arsip/disposisi/${disposisi.id}`}
+                                className="inline-flex items-center justify-center w-8 h-8 bg-[#1A1A1A] text-white hover:bg-[#B82025] rounded-lg civic-transition shadow-sm hover:shadow-md"
                                 title="Lihat Detail"
                               >
                                 <Eye className="h-4 w-4" />
@@ -532,8 +527,8 @@ export default function DisposisiPage() {
                               {session.user.role === 'ADMIN' && (
                                 <>
                                   <Link
-                                    href={`/dashboard/disposisi/edit/${disposisi.id}`}
-                                    className="text-[#C8A348] hover:text-[#1A1A1A] civic-transition p-2 hover:bg-[#F7F7F7] rounded-lg"
+                                    href={`/arsip/disposisi/edit/${disposisi.id}`}
+                                    className="inline-flex items-center justify-center w-8 h-8 bg-[#C8A348] text-white hover:bg-[#1A1A1A] rounded-lg civic-transition shadow-sm hover:shadow-md"
                                     title="Edit Disposisi"
                                   >
                                     <Edit className="h-4 w-4" />
@@ -541,7 +536,7 @@ export default function DisposisiPage() {
                                   
                                   <button
                                     onClick={() => handleDelete(disposisi.id)}
-                                    className="text-[#B82025] hover:text-[#1A1A1A] civic-transition p-2 hover:bg-red-50 rounded-lg"
+                                    className="inline-flex items-center justify-center w-8 h-8 bg-red-100 text-red-700 hover:bg-red-200 rounded-lg civic-transition shadow-sm hover:shadow-md"
                                     title="Hapus Disposisi"
                                   >
                                     <Trash2 className="h-4 w-4" />

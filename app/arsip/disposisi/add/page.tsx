@@ -173,7 +173,7 @@ function AddDisposisiContent() {
       const data = await response.json()
 
       if (response.ok) {
-        router.push('/dashboard/disposisi')
+        router.push('/arsip/disposisi')
       } else {
         setError(data.error || 'Terjadi kesalahan saat menyimpan disposisi')
       }
@@ -195,10 +195,10 @@ function AddDisposisiContent() {
 
   if (status === 'loading') {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-[#F7F7F7] to-white flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Memuat...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#B82025] mx-auto"></div>
+          <p className="mt-4 text-[#1A1A1A]" style={{ fontFamily: 'Inter, sans-serif' }}>Memuat...</p>
         </div>
       </div>
     )
@@ -209,46 +209,78 @@ function AddDisposisiContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">Buat Disposisi</h1>
-              <p className="mt-1 text-sm text-gray-600">
-                {suratId ? 'Buat disposisi dari surat masuk terpilih' : 'Buat disposisi baru untuk surat masuk'}
-              </p>
-              {suratId && selectedSurat && (
-                <div className="mt-2 text-sm text-green-600">
-                  ✓ Terhubung dengan surat: {selectedSurat.nomorSurat || `No Urut ${selectedSurat.noUrut}`}
-                </div>
-              )}
+    <div className="min-h-screen bg-[#F7F7F7]">
+      {/* Header with Borneo Design and Decorative Elements */}
+      <div className="bg-gradient-to-r from-[#B82025] to-[#8B1A1F] shadow-lg relative overflow-hidden">
+        {/* Decorative background pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-white rounded-full -translate-y-1/2 translate-x-1/2"></div>
+          <div className="absolute bottom-0 left-0 w-48 h-48 bg-[#C8A348] rounded-full translate-y-1/2 -translate-x-1/2"></div>
+        </div>
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          {/* Breadcrumb Navigation */}
+          <div className="flex items-center space-x-2 py-3 text-sm text-white/80" style={{ fontFamily: 'Inter, sans-serif' }}>
+            <Link href="/arsip/dashboard" className="hover:text-white transition-colors">Dashboard</Link>
+            <span>/</span>
+            <Link href="/arsip/disposisi" className="hover:text-white transition-colors">Disposisi</Link>
+            <span>/</span>
+            <span className="text-white font-medium">Tambah Baru</span>
+          </div>
+          
+          <div className="flex justify-between items-center pb-6">
+            <div className="flex items-center space-x-4">
+              {/* Icon Box with backdrop blur */}
+              <div className="w-14 h-14 bg-white/10 backdrop-blur-sm rounded-xl flex items-center justify-center border border-white/20 shadow-lg">
+                <FileText className="h-7 w-7 text-white" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold text-white" style={{ fontFamily: 'Merriweather, serif' }}>
+                  Buat Disposisi Baru
+                </h1>
+                <p className="mt-2 text-sm text-white/90" style={{ fontFamily: 'Inter, sans-serif' }}>
+                  {suratId ? 'Buat disposisi dari surat masuk terpilih' : 'Tambahkan disposisi baru untuk surat masuk'}
+                </p>
+                {suratId && selectedSurat && (
+                  <div className="mt-2 inline-flex items-center px-3 py-1 bg-[#C8A348]/20 border border-[#C8A348]/30 rounded-lg text-sm text-[#C8A348]" style={{ fontFamily: 'Inter, sans-serif' }}>
+                    <CheckCircle className="h-4 w-4 mr-1.5" />
+                    Terhubung: {selectedSurat.nomorSurat || `No Urut ${selectedSurat.noUrut}`}
+                  </div>
+                )}
+              </div>
             </div>
+            <Link
+              href="/arsip/disposisi"
+              className="inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl text-white hover:bg-white/20 transition-all shadow-lg hover:shadow-xl"
+              style={{ fontFamily: 'Inter, sans-serif' }}
+            >
+              <X className="h-4 w-4 mr-2" />
+              Batal
+            </Link>
           </div>
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-white shadow rounded-lg">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="civic-card bg-white shadow-xl rounded-2xl border border-[#E3E3E3]">
           <form onSubmit={handleSubmit}>
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h3 className="text-lg font-medium text-gray-900">
+            <div className="px-6 py-3 border-b border-[#E3E3E3] bg-[#F7F7F7] rounded-t-2xl">
+              <h3 className="text-lg font-semibold text-[#1A1A1A]" style={{ fontFamily: 'Merriweather, serif' }}>
                 Informasi Disposisi
               </h3>
             </div>
 
-            <div className="p-6 space-y-6">
+            <div className="p-5 space-y-5">
               {error && (
-                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md text-sm">
+                <div className="bg-red-50 border-l-4 border-[#B82025] text-[#B82025] px-4 py-3 rounded-r-xl text-sm shadow-sm" style={{ fontFamily: 'Inter, sans-serif' }}>
                   {error}
                 </div>
               )}
 
               {/* Pilih Surat Masuk */}
               <div>
-                <label htmlFor="suratMasukId" className="block text-sm font-medium text-gray-900 mb-2">
-                  Pilih Surat Masuk <span className="text-red-500">*</span>
+                <label htmlFor="suratMasukId" className="block text-sm font-semibold text-[#1A1A1A] mb-2" style={{ fontFamily: 'Inter, sans-serif' }}>
+                  Pilih Surat Masuk <span className="text-[#B82025]">*</span>
                 </label>
                 <select
                   id="suratMasukId"
@@ -256,7 +288,8 @@ function AddDisposisiContent() {
                   value={formData.suratMasukId}
                   onChange={(e) => handleSuratSelection(e.target.value)}
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="civic-input w-full px-4 py-3 border border-[#E3E3E3] rounded-xl focus:ring-2 focus:ring-[#B82025] focus:border-transparent text-[#1A1A1A] shadow-sm hover:shadow-md transition-shadow"
+                  style={{ fontFamily: 'Inter, sans-serif' }}
                 >
                   <option value="">Pilih surat masuk...</option>
                   {suratMasukList.map((surat) => (
@@ -269,16 +302,16 @@ function AddDisposisiContent() {
 
               {/* Detail Surat yang Dipilih */}
               {selectedSurat && (
-                <div className="bg-blue-50 border border-blue-200 rounded-md p-4">
+                <div className="bg-gradient-to-r from-[#F7F7F7] to-[#FAFAFA] border-l-4 border-[#C8A348] rounded-r-xl p-4 shadow-sm">
                   <div className="flex items-start">
-                    <FileText className="h-5 w-5 text-blue-600 mt-0.5 mr-3" />
+                    <FileText className="h-5 w-5 text-[#C8A348] mt-0.5 mr-3" />
                     <div>
-                      <h4 className="text-sm font-medium text-blue-900">Detail Surat yang Dipilih</h4>
-                      <div className="mt-2 space-y-1 text-sm text-blue-800">
-                        <p><span className="font-medium">Nomor:</span> {selectedSurat.nomorSurat || '-'}</p>
-                        <p><span className="font-medium">Perihal:</span> {selectedSurat.perihal}</p>
-                        <p><span className="font-medium">Asal:</span> {selectedSurat.asalSurat}</p>
-                        <p><span className="font-medium">Tanggal:</span> {formatDate(selectedSurat.tanggalSurat)}</p>
+                      <h4 className="text-sm font-semibold text-[#1A1A1A]" style={{ fontFamily: 'Merriweather, serif' }}>Detail Surat yang Dipilih</h4>
+                      <div className="mt-2 space-y-1 text-sm text-[#1A1A1A]" style={{ fontFamily: 'Inter, sans-serif' }}>
+                        <p><span className="font-semibold">Nomor:</span> {selectedSurat.nomorSurat || '-'}</p>
+                        <p><span className="font-semibold">Perihal:</span> {selectedSurat.perihal}</p>
+                        <p><span className="font-semibold">Asal:</span> {selectedSurat.asalSurat}</p>
+                        <p><span className="font-semibold">Tanggal:</span> {formatDate(selectedSurat.tanggalSurat)}</p>
                       </div>
                     </div>
                   </div>
@@ -286,8 +319,8 @@ function AddDisposisiContent() {
               )}
 
               <div>
-                <label htmlFor="noUrut" className="block text-sm font-medium text-gray-900 mb-2">
-                  No Urut <span className="text-red-500">*</span>
+                <label htmlFor="noUrut" className="block text-sm font-semibold text-[#1A1A1A] mb-2" style={{ fontFamily: 'Inter, sans-serif' }}>
+                  No Urut <span className="text-[#B82025]">*</span>
                 </label>
                 <input
                   type="number"
@@ -298,22 +331,24 @@ function AddDisposisiContent() {
                   required
                   min="1"
                   readOnly={!!selectedSurat}
-                  className={`w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                    selectedSurat ? 'bg-gray-100 cursor-not-allowed' : ''
+                  className={`civic-input w-full px-4 py-3 border border-[#E3E3E3] rounded-xl focus:ring-2 focus:ring-[#B82025] focus:border-transparent shadow-sm hover:shadow-md transition-shadow ${
+                    selectedSurat ? 'bg-[#F7F7F7] cursor-not-allowed text-[#737373]' : 'text-[#1A1A1A]'
                   }`}
+                  style={{ fontFamily: 'Inter, sans-serif' }}
                   placeholder="Akan otomatis terisi saat memilih surat masuk"
                 />
                 {selectedSurat && (
-                  <p className="mt-1 text-sm text-green-600">
-                    ✓ No Urut disposisi sama dengan surat masuk #{selectedSurat.noUrut}
+                  <p className="mt-1 text-sm text-[#C8A348] flex items-center" style={{ fontFamily: 'Inter, sans-serif' }}>
+                    <CheckCircle className="h-4 w-4 mr-1" />
+                    No Urut disposisi sama dengan surat masuk #{selectedSurat.noUrut}
                   </p>
                 )}
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="bagianTujuan" className="block text-sm font-medium text-gray-900 mb-2">
-                    Bagian Tujuan <span className="text-red-500">*</span>
+                  <label htmlFor="bagianTujuan" className="block text-sm font-semibold text-[#1A1A1A] mb-2" style={{ fontFamily: 'Inter, sans-serif' }}>
+                    Bagian Tujuan <span className="text-[#B82025]">*</span>
                   </label>
                   <select
                     id="bagianTujuan"
@@ -326,7 +361,8 @@ function AddDisposisiContent() {
                       setFormData(prev => ({ ...prev, tujuanDisposisi: value }))
                     }}
                     required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                    className="civic-input w-full px-4 py-3 border border-[#E3E3E3] rounded-xl focus:ring-2 focus:ring-[#B82025] focus:border-transparent text-[#1A1A1A] shadow-sm hover:shadow-md transition-shadow"
+                    style={{ fontFamily: 'Inter, sans-serif' }}
                   >
                     <option value="">Pilih bagian tujuan...</option>
                     {tujuanOptions.map((option) => (
@@ -337,8 +373,8 @@ function AddDisposisiContent() {
 
                 {selectedBagian && subBagianOptions[selectedBagian as keyof typeof subBagianOptions] && (
                   <div>
-                    <label htmlFor="subBagianTujuan" className="block text-sm font-medium text-gray-900 mb-2">
-                      Sub Bagian <span className="text-gray-500">(Opsional)</span>
+                    <label htmlFor="subBagianTujuan" className="block text-sm font-semibold text-[#1A1A1A] mb-2" style={{ fontFamily: 'Inter, sans-serif' }}>
+                      Sub Bagian <span className="text-[#737373]">(Opsional)</span>
                     </label>
                     <select
                       id="subBagianTujuan"
@@ -359,7 +395,8 @@ function AddDisposisiContent() {
                           }))
                         }
                       }}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                      className="civic-input w-full px-4 py-3 border border-[#E3E3E3] rounded-xl focus:ring-2 focus:ring-[#B82025] focus:border-transparent text-[#1A1A1A] shadow-sm hover:shadow-md transition-shadow"
+                      style={{ fontFamily: 'Inter, sans-serif' }}
                     >
                       <option value="">Pilih sub bagian (atau kosongkan)...</option>
                       {subBagianOptions[selectedBagian as keyof typeof subBagianOptions]?.map((subOption) => (
@@ -370,8 +407,8 @@ function AddDisposisiContent() {
                 )}
 
                 <div>
-                  <label htmlFor="tanggalDisposisi" className="block text-sm font-medium text-gray-900 mb-2">
-                    Tanggal Disposisi <span className="text-red-500">*</span>
+                  <label htmlFor="tanggalDisposisi" className="block text-sm font-semibold text-[#1A1A1A] mb-2" style={{ fontFamily: 'Inter, sans-serif' }}>
+                    Tanggal Disposisi <span className="text-[#B82025]">*</span>
                   </label>
                   <input
                     type="date"
@@ -380,26 +417,27 @@ function AddDisposisiContent() {
                     value={formData.tanggalDisposisi}
                     onChange={handleChange}
                     required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                    className="civic-input w-full px-4 py-3 border border-[#E3E3E3] rounded-xl focus:ring-2 focus:ring-[#B82025] focus:border-transparent text-[#1A1A1A] shadow-sm hover:shadow-md transition-shadow"
+                    style={{ fontFamily: 'Inter, sans-serif' }}
                   />
                 </div>
               </div>
 
               <div>
-                <label htmlFor="status" className="block text-sm font-medium text-gray-900 mb-2">
-                  Status <span className="text-red-500">*</span>
+                <label htmlFor="status" className="block text-sm font-semibold text-[#1A1A1A] mb-2" style={{ fontFamily: 'Inter, sans-serif' }}>
+                  Status <span className="text-[#B82025]">*</span>
                 </label>
-                <div className="flex items-center space-x-2 px-3 py-2 bg-green-50 border border-green-200 rounded-md">
-                  <CheckCircle className="h-5 w-5 text-green-600" />
-                  <span className="text-green-800 font-medium">Selesai</span>
-                  <span className="text-sm text-green-600">(Disposisi otomatis selesai)</span>
+                <div className="flex items-center space-x-2 px-4 py-3 bg-gradient-to-r from-[#C8A348]/10 to-[#C8A348]/5 border-l-4 border-[#C8A348] rounded-r-xl shadow-sm">
+                  <CheckCircle className="h-5 w-5 text-[#C8A348]" />
+                  <span className="text-[#1A1A1A] font-semibold" style={{ fontFamily: 'Inter, sans-serif' }}>Selesai</span>
+                  <span className="text-sm text-[#737373]" style={{ fontFamily: 'Inter, sans-serif' }}>(Disposisi otomatis selesai)</span>
                 </div>
                 <input type="hidden" name="status" value="SELESAI" />
               </div>
 
               <div>
-                <label htmlFor="isiDisposisi" className="block text-sm font-medium text-gray-900 mb-2">
-                  Isi Disposisi <span className="text-red-500">*</span>
+                <label htmlFor="isiDisposisi" className="block text-sm font-semibold text-[#1A1A1A] mb-2" style={{ fontFamily: 'Inter, sans-serif' }}>
+                  Isi Disposisi <span className="text-[#B82025]">*</span>
                 </label>
                 <textarea
                   id="isiDisposisi"
@@ -408,13 +446,14 @@ function AddDisposisiContent() {
                   onChange={handleChange}
                   required
                   rows={4}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="civic-input w-full px-4 py-3 border border-[#E3E3E3] rounded-xl focus:ring-2 focus:ring-[#B82025] focus:border-transparent text-[#1A1A1A] shadow-sm hover:shadow-md transition-shadow resize-none"
                   placeholder="Tulis instruksi atau perintah disposisi..."
+                  style={{ fontFamily: 'Inter, sans-serif' }}
                 />
               </div>
 
               <div>
-                <label htmlFor="keterangan" className="block text-sm font-medium text-gray-900 mb-2">
+                <label htmlFor="keterangan" className="block text-sm font-semibold text-[#1A1A1A] mb-2" style={{ fontFamily: 'Inter, sans-serif' }}>
                   Keterangan
                 </label>
                 <textarea
@@ -423,16 +462,18 @@ function AddDisposisiContent() {
                   value={formData.keterangan}
                   onChange={handleChange}
                   rows={3}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  className="civic-input w-full px-4 py-3 border border-[#E3E3E3] rounded-xl focus:ring-2 focus:ring-[#B82025] focus:border-transparent text-[#1A1A1A] shadow-sm hover:shadow-md transition-shadow resize-none"
                   placeholder="Catatan atau keterangan tambahan (opsional)"
+                  style={{ fontFamily: 'Inter, sans-serif' }}
                 />
               </div>
             </div>
 
-            <div className="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
+            <div className="px-6 py-4 border-t border-[#E3E3E3] flex justify-end space-x-3 bg-[#F7F7F7] rounded-b-2xl">
               <Link
-                href="/dashboard/disposisi"
-                className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-900 bg-white hover:bg-gray-50"
+                href="/arsip/disposisi"
+                className="civic-btn-secondary inline-flex items-center px-5 py-3 border-2 border-[#E3E3E3] rounded-xl shadow-sm text-sm font-semibold text-[#1A1A1A] bg-white hover:bg-[#F7F7F7] hover:shadow-md transition-all"
+                style={{ fontFamily: 'Inter, sans-serif' }}
               >
                 <X className="h-4 w-4 mr-2" />
                 Batal
@@ -440,7 +481,8 @@ function AddDisposisiContent() {
               <button
                 type="submit"
                 disabled={loading}
-                className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="civic-btn-primary inline-flex items-center px-6 py-3 border border-transparent rounded-xl shadow-md text-sm font-semibold text-white bg-[#B82025] hover:bg-[#8B1A1F] hover:shadow-lg focus:ring-2 focus:ring-[#B82025] focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                style={{ fontFamily: 'Inter, sans-serif' }}
               >
                 <Save className="h-4 w-4 mr-2" />
                 {loading ? 'Menyimpan...' : 'Simpan Disposisi'}
@@ -456,10 +498,10 @@ function AddDisposisiContent() {
 export default function AddDisposisiPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-[#F7F7F7] to-white flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Memuat...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#B82025] mx-auto"></div>
+          <p className="mt-4 text-[#1A1A1A]" style={{ fontFamily: 'Inter, sans-serif' }}>Memuat...</p>
         </div>
       </div>
     }>

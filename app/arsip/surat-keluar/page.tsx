@@ -9,7 +9,6 @@ import { csrfFetch } from '@/lib/csrfFetch'
 import { 
   FileOutput, 
   Plus, 
-  Search, 
   Edit, 
   Trash2, 
   Eye,
@@ -213,7 +212,7 @@ export default function SuratKeluarPage() {
               <div className="flex space-x-3">
                 {session.user.role === 'ADMIN' && (
                   <Link
-                    href="/dashboard/surat-keluar/add"
+                    href="/arsip/surat-keluar/add"
                     className="civic-btn-primary inline-flex items-center px-5 py-2.5 border border-transparent rounded-xl shadow-lg text-sm font-medium text-white"
                     style={{ fontFamily: 'Inter, sans-serif' }}
                   >
@@ -391,7 +390,7 @@ export default function SuratKeluarPage() {
                 </p>
                 {session.user.role === 'ADMIN' && (
                   <Link
-                    href="/dashboard/surat-keluar/add"
+                    href="/arsip/surat-keluar/add"
                     className="civic-btn-primary px-6 py-3 rounded-xl"
                     style={{ fontFamily: 'Inter, sans-serif' }}
                   >
@@ -481,7 +480,7 @@ export default function SuratKeluarPage() {
                           <td className="px-6 py-5 whitespace-nowrap text-right text-sm font-medium">
                             <div className="flex items-center justify-end space-x-3">
                               <Link
-                                href={`/dashboard/surat-keluar/${surat.id}`}
+                                href={`/arsip/surat-keluar/${surat.id}`}
                                 className="text-[#1A1A1A] hover:text-[#B82025] civic-transition p-2 hover:bg-[#F7F7F7] rounded-lg"
                                 title="Lihat Detail"
                               >
@@ -491,7 +490,7 @@ export default function SuratKeluarPage() {
                               {session.user.role === 'ADMIN' && (
                                 <>
                                   <Link
-                                    href={`/dashboard/surat-keluar/edit/${surat.id}`}
+                                    href={`/arsip/surat-keluar/edit/${surat.id}`}
                                     className="text-[#C8A348] hover:text-[#1A1A1A] civic-transition p-2 hover:bg-[#F7F7F7] rounded-lg"
                                     title="Edit Surat"
                                   >

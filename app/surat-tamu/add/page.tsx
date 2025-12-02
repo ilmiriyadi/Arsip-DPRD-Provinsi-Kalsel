@@ -48,7 +48,7 @@ export default function AddSuratTamu() {
 
   return (
     <DashboardLayout>
-      <div className="p-6 max-w-2xl mx-auto">
+      <div className="p-6 max-w-6xl mx-auto">
         <h2 className="text-2xl font-semibold mb-4">Tambah Surat Tamu</h2>
         <form onSubmit={handleSubmit} className="space-y-4 bg-white p-6 rounded-lg shadow">
           <div>

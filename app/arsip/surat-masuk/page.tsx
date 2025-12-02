@@ -17,7 +17,11 @@ import {
   ChevronRight,
   Copy,
   Send,
-  ChevronDown
+  ChevronDown,
+  ClipboardList,
+  Building2,
+  MessageSquare,
+  Calendar
 } from 'lucide-react'
 
 interface SuratMasuk {
@@ -71,7 +75,7 @@ export default function SuratMasukPage() {
   
   // Modal states
   const [showTujuanModal, setShowTujuanModal] = useState(false)
-  const [selectedSurat, setSelectedSurat] = useState<{ id: string, nomorSurat: string } | null>(null)
+  const [selectedSurat, setSelectedSurat] = useState<{ id: string, nomorSurat: string, perihal?: string } | null>(null)
   const [selectedTujuan, setSelectedTujuan] = useState('')
   const [selectedSubBagian, setSelectedSubBagian] = useState('')
   const [keteranganDisposisi, setKeteranganDisposisi] = useState('')
@@ -164,11 +168,6 @@ export default function SuratMasukPage() {
     }
   }
 
-  const handleClearSearch = () => {
-    setSearchTerm('')
-    setPagination(prev => ({ ...prev, page: 1 }))
-  }
-
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('id-ID', {
       day: '2-digit',
@@ -246,8 +245,8 @@ export default function SuratMasukPage() {
     { value: 'SEKWAN', label: 'Sekwan' }
   ]
 
-  const handleCopyToDisposisi = (suratId: string, nomorSurat: string | null) => {
-    setSelectedSurat({ id: suratId, nomorSurat: nomorSurat || '-' })
+  const handleCopyToDisposisi = (suratId: string, nomorSurat: string | null, perihal: string) => {
+    setSelectedSurat({ id: suratId, nomorSurat: nomorSurat || '-', perihal })
     setSelectedTujuan('')
     setSelectedSubBagian('')
     setKeteranganDisposisi('')
@@ -377,10 +376,14 @@ export default function SuratMasukPage() {
 
   if (status === 'loading') {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-[#F7F7F7] to-white flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Memuat...</p>
+          <div className="relative">
+            <div className="animate-spin rounded-full h-16 w-16 border-4 border-[#C8A348]/20 mx-auto"></div>
+            <div className="animate-spin rounded-full h-16 w-16 border-4 border-[#B82025] border-t-transparent absolute top-0 left-1/2 -ml-8"></div>
+          </div>
+          <p className="mt-6 text-[#1A1A1A] font-semibold text-lg" style={{ fontFamily: 'Inter, sans-serif' }}>Memuat surat masuk...</p>
+          <p className="mt-2 text-[#737373] text-sm" style={{ fontFamily: 'Inter, sans-serif' }}>Mohon tunggu sebentar</p>
         </div>
       </div>
     )
@@ -438,7 +441,7 @@ export default function SuratMasukPage() {
               </button>
               {session.user.role === 'ADMIN' && (
                 <Link
-                  href="/dashboard/surat-masuk/add"
+                  href="/arsip/surat-masuk/add"
                   className="civic-btn-primary inline-flex items-center px-5 py-2.5 border border-transparent rounded-xl shadow-lg text-sm font-medium text-white"
                   style={{ fontFamily: 'Inter, sans-serif' }}
                 >
@@ -637,7 +640,7 @@ export default function SuratMasukPage() {
               </p>
               {session.user.role === 'ADMIN' && (
                 <Link
-                  href="/dashboard/surat-masuk/add"
+                  href="/arsip/surat-masuk/add"
                   className="civic-btn-primary inline-flex items-center px-6 py-3 border border-transparent shadow-lg text-sm font-medium rounded-xl text-white"
                   style={{ fontFamily: 'Inter, sans-serif' }}
                 >
@@ -753,7 +756,7 @@ export default function SuratMasukPage() {
                         <td className="px-6 py-5 whitespace-nowrap text-right">
                           <div className="flex justify-end space-x-1">
                             <Link
-                              href={`/dashboard/surat-masuk/${surat.id}`}
+                              href={`/arsip/surat-masuk/${surat.id}`}
                               className="inline-flex items-center justify-center w-8 h-8 bg-white border-2 border-[#E3E3E3] text-[#1A1A1A] hover:border-[#B82025] rounded-lg civic-transition shadow-sm hover:shadow-md"
                               title="Lihat Detail"
                             >
@@ -763,7 +766,7 @@ export default function SuratMasukPage() {
                               <>
                                 {(surat._count?.disposisi || 0) === 0 ? (
                                   <button
-                                    onClick={() => handleCopyToDisposisi(surat.id, surat.nomorSurat)}
+                                    onClick={() => handleCopyToDisposisi(surat.id, surat.nomorSurat, surat.perihal)}
                                     className="inline-flex items-center justify-center w-8 h-8 bg-[#B82025] text-white hover:bg-[#1A1A1A] rounded-lg civic-transition shadow-sm hover:shadow-md"
                                     title="Salin ke Disposisi"
                                   >
@@ -771,7 +774,7 @@ export default function SuratMasukPage() {
                                   </button>
                                 ) : (
                                   <Link
-                                    href={`/dashboard/disposisi/add?suratId=${surat.id}`}
+                                    href={`/arsip/disposisi/add?suratId=${surat.id}`}
                                     className="inline-flex items-center justify-center w-8 h-8 bg-[#B82025] text-white hover:bg-[#1A1A1A] rounded-lg civic-transition shadow-sm hover:shadow-md"
                                     title="Tambah Disposisi Baru"
                                   >
@@ -796,7 +799,7 @@ export default function SuratMasukPage() {
                                   </button>
                                 )}
                                 <Link
-                                  href={`/dashboard/surat-masuk/edit/${surat.id}`}
+                                  href={`/arsip/surat-masuk/edit/${surat.id}`}
                                   className="inline-flex items-center justify-center w-8 h-8 bg-[#C8A348] text-white hover:bg-[#1A1A1A] rounded-lg civic-transition shadow-sm hover:shadow-md"
                                   title="Edit"
                                 >
@@ -893,32 +896,48 @@ export default function SuratMasukPage() {
 
       {/* Modal Pilih Tujuan Disposisi */}
       {showTujuanModal && (
-        <div className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full mx-4 max-h-[90vh] flex flex-col overflow-hidden civic-card">
-            <div className="bg-[#B82025] px-6 py-5 text-white">
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-white bg-opacity-20 rounded-xl flex items-center justify-center">
-                  <FileText className="w-5 h-5" />
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full mx-4 max-h-[90vh] flex flex-col overflow-hidden transform transition-all animate-in zoom-in-95 duration-200">
+            {/* Header dengan Gradient */}
+            <div className="relative bg-gradient-to-r from-[#B82025] via-[#A01C20] to-[#8B1A1F] px-8 py-6 text-white overflow-hidden">
+              {/* Decorative circles */}
+              <div className="absolute top-0 right-0 w-32 h-32 bg-white opacity-10 rounded-full -mr-16 -mt-16"></div>
+              <div className="absolute bottom-0 left-0 w-24 h-24 bg-white opacity-10 rounded-full -ml-12 -mb-12"></div>
+              
+              <div className="relative flex items-start space-x-4">
+                {/* Icon Box dengan gradient gold */}
+                <div className="w-14 h-14 bg-gradient-to-br from-[#C8A348] to-[#B8933D] rounded-2xl flex items-center justify-center shadow-lg border-2 border-white/20">
+                  <ClipboardList className="w-7 h-7 text-white" strokeWidth={2.5} />
                 </div>
-                <div>
-                  <h3 className="text-lg font-semibold" style={{ fontFamily: 'Merriweather, serif' }}>
+                
+                <div className="flex-1">
+                  <h3 className="text-2xl font-bold mb-1" style={{ fontFamily: 'Merriweather, serif' }}>
                     Pilih Tujuan Disposisi
                   </h3>
-                  <p className="text-white text-sm" style={{ fontFamily: 'Inter, sans-serif' }}>
-                    Surat: <span className="font-medium">{selectedSurat?.nomorSurat || '-'}</span>
+                  <div className="flex items-center space-x-2 text-white/90">
+                    <FileText className="w-4 h-4" />
+                    <p className="text-sm font-medium" style={{ fontFamily: 'Inter, sans-serif' }}>
+                      Surat: {selectedSurat?.nomorSurat || 'Tanpa Nomor'} 
+                    </p>
+                  </div>
+                  <p className="text-xs text-white/75 mt-1" style={{ fontFamily: 'Inter, sans-serif' }}>
+                    {selectedSurat?.perihal?.substring(0, 60)}{selectedSurat?.perihal && selectedSurat.perihal.length > 60 ? '...' : ''}
                   </p>
                 </div>
               </div>
             </div>
             
-            <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
+            <div className="flex-1 overflow-y-auto px-8 py-6 space-y-6 bg-gradient-to-b from-white to-[#FAFAFA]">
               <div>
-                <label className="block text-sm font-semibold text-[#1A1A1A] mb-3" style={{ fontFamily: 'Inter, sans-serif' }}>
-                  Pilih Bagian Tujuan
-                </label>
-                <div className="space-y-2">
+                <div className="flex items-center space-x-2 mb-4">
+                  <Building2 className="w-5 h-5 text-[#B82025]" />
+                  <label className="block text-base font-bold text-[#1A1A1A]" style={{ fontFamily: 'Merriweather, serif' }}>
+                    Pilih Bagian Tujuan
+                  </label>
+                </div>
+                <div className="space-y-2.5">
                   {tujuanOptions.map((option) => (
-                    <label key={option} className="flex items-center p-2.5 rounded-lg border-2 border-[#E3E3E3] hover:border-[#B82025] hover:bg-[#F7F7F7] civic-transition cursor-pointer group">
+                    <label key={option} className="relative flex items-center p-4 rounded-xl border-2 border-[#E3E3E3] hover:border-[#B82025] hover:bg-gradient-to-r hover:from-[#FEF7F7] hover:to-white transition-all duration-200 cursor-pointer group shadow-sm hover:shadow-md">
                       <input
                         type="radio"
                         name="tujuan"
@@ -928,31 +947,37 @@ export default function SuratMasukPage() {
                           setSelectedTujuan(e.target.value)
                           setSelectedSubBagian('') // Reset sub bagian when changing main bagian
                         }}
-                        className="h-4 w-4 text-[#B82025] focus:ring-[#B82025] border-[#E3E3E3]"
+                        className="h-5 w-5 text-[#B82025] focus:ring-2 focus:ring-[#B82025] focus:ring-offset-2 border-2 border-[#E3E3E3] transition-all"
                       />
-                      <span className="ml-3 text-sm font-medium text-[#1A1A1A] group-hover:text-[#B82025]" style={{ fontFamily: 'Inter, sans-serif' }}>{option}</span>
+                      <span className="ml-4 text-base font-semibold text-[#1A1A1A] group-hover:text-[#B82025] transition-colors" style={{ fontFamily: 'Inter, sans-serif' }}>{option}</span>
+                      {selectedTujuan === option && (
+                        <div className="absolute right-4 w-2 h-2 rounded-full bg-[#B82025] animate-pulse"></div>
+                      )}
                     </label>
                   ))}
                 </div>
               </div>
 
               {selectedTujuan && subBagianOptions[selectedTujuan as keyof typeof subBagianOptions] && (
-                <div>
-                  <label className="block text-sm font-semibold text-[#1A1A1A] mb-3" style={{ fontFamily: 'Inter, sans-serif' }}>
-                    Pilih Sub Bagian
-                  </label>
-                  <div className="space-y-1.5">
+                <div className="animate-in slide-in-from-top-2 duration-300">
+                  <div className="flex items-center space-x-2 mb-4">
+                    <ChevronDown className="w-5 h-5 text-[#C8A348]" />
+                    <label className="block text-base font-bold text-[#1A1A1A]" style={{ fontFamily: 'Merriweather, serif' }}>
+                      Pilih Sub Bagian
+                    </label>
+                  </div>
+                  <div className="space-y-2 pl-4 border-l-4 border-[#C8A348]/30">
                     {subBagianOptions[selectedTujuan as keyof typeof subBagianOptions].map((subOption) => (
-                      <label key={subOption} className="flex items-center p-2 rounded-lg border border-[#E3E3E3] hover:border-[#B82025] hover:bg-[#F7F7F7] civic-transition cursor-pointer group">
+                      <label key={subOption} className="flex items-center p-3 rounded-lg border-2 border-[#E3E3E3] hover:border-[#C8A348] hover:bg-[#FFFBF5] transition-all duration-200 cursor-pointer group shadow-sm hover:shadow">
                         <input
                           type="radio"
                           name="subBagian"
                           value={subOption}
                           checked={selectedSubBagian === subOption}
                           onChange={(e) => setSelectedSubBagian(e.target.value)}
-                          className="h-4 w-4 text-[#B82025] focus:ring-[#B82025] border-[#E3E3E3]"
+                          className="h-4 w-4 text-[#C8A348] focus:ring-2 focus:ring-[#C8A348] focus:ring-offset-2 border-2 border-[#E3E3E3]"
                         />
-                        <span className="ml-3 text-xs font-medium text-[#737373] group-hover:text-[#B82025]" style={{ fontFamily: 'Inter, sans-serif' }}>{subOption}</span>
+                        <span className="ml-3 text-sm font-medium text-[#737373] group-hover:text-[#C8A348] transition-colors" style={{ fontFamily: 'Inter, sans-serif' }}>{subOption}</span>
                       </label>
                     ))}
                   </div>
@@ -960,39 +985,46 @@ export default function SuratMasukPage() {
               )}
 
               <div>
-                <label className="block text-sm font-semibold text-[#1A1A1A] mb-3" style={{ fontFamily: 'Inter, sans-serif' }}>
-                  Keterangan Disposisi
-                </label>
+                <div className="flex items-center space-x-2 mb-3">
+                  <MessageSquare className="w-5 h-5 text-[#B82025]" />
+                  <label className="block text-base font-bold text-[#1A1A1A]" style={{ fontFamily: 'Merriweather, serif' }}>
+                    Keterangan Disposisi
+                  </label>
+                </div>
                 <textarea
                   value={keteranganDisposisi}
                   onChange={(e) => setKeteranganDisposisi(e.target.value)}
-                  placeholder="Masukkan keterangan disposisi..."
-                  rows={2}
-                  className="civic-input w-full px-3 py-2 border-2 border-[#E3E3E3] rounded-lg bg-white focus:ring-2 focus:ring-[#B82025] focus:border-[#B82025] civic-transition text-[#1A1A1A] placeholder-[#737373] resize-none"
+                  placeholder="Masukkan keterangan atau instruksi disposisi..."
+                  rows={3}
+                  className="w-full px-4 py-3 border-2 border-[#E3E3E3] rounded-xl bg-white focus:ring-2 focus:ring-[#B82025] focus:border-[#B82025] transition-all text-[#1A1A1A] placeholder-[#999] resize-none shadow-sm hover:shadow"
                   style={{ fontFamily: 'Inter, sans-serif' }}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-[#1A1A1A] mb-3" style={{ fontFamily: 'Inter, sans-serif' }}>
-                  Tanggal Disposisi
-                </label>
+                <div className="flex items-center space-x-2 mb-3">
+                  <Calendar className="w-5 h-5 text-[#B82025]" />
+                  <label className="block text-base font-bold text-[#1A1A1A]" style={{ fontFamily: 'Merriweather, serif' }}>
+                    Tanggal Disposisi
+                  </label>
+                </div>
                 <input
                   type="date"
                   value={tanggalDisposisi}
                   onChange={(e) => setTanggalDisposisi(e.target.value)}
                   required
-                  className="civic-input w-full px-3 py-2 border-2 border-[#E3E3E3] rounded-lg bg-white focus:ring-2 focus:ring-[#B82025] focus:border-[#B82025] civic-transition text-[#1A1A1A]"
+                  className="w-full px-4 py-3 border-2 border-[#E3E3E3] rounded-xl bg-white focus:ring-2 focus:ring-[#B82025] focus:border-[#B82025] transition-all text-[#1A1A1A] shadow-sm hover:shadow"
                   style={{ fontFamily: 'Inter, sans-serif' }}
                 />
               </div>
             </div>
 
-            <div className="flex-shrink-0 px-6 py-4 bg-[#F7F7F7] border-t border-[#E3E3E3] flex justify-end space-x-3">
+            {/* Footer dengan action buttons */}
+            <div className="flex-shrink-0 px-8 py-5 bg-gradient-to-t from-[#F7F7F7] to-white border-t-2 border-[#E3E3E3] flex justify-end space-x-3">
               <button
                 type="button"
                 onClick={handleCancelCopy}
-                className="civic-btn-secondary px-4 py-2 text-sm font-medium text-[#1A1A1A] bg-white border border-[#E3E3E3] rounded-lg hover:bg-[#F7F7F7] hover:border-[#B82025] focus:outline-none focus:ring-2 focus:ring-[#B82025] focus:ring-offset-2 civic-transition shadow-sm"
+                className="px-6 py-3 text-base font-semibold text-[#737373] bg-white border-2 border-[#E3E3E3] rounded-xl hover:bg-[#F7F7F7] hover:border-[#B82025] hover:text-[#B82025] focus:outline-none focus:ring-2 focus:ring-[#B82025] focus:ring-offset-2 transition-all shadow-sm hover:shadow"
                 style={{ fontFamily: 'Inter, sans-serif' }}
               >
                 Batal
@@ -1000,9 +1032,10 @@ export default function SuratMasukPage() {
               <button
                 type="button"
                 onClick={handleConfirmCopy}
-                className="civic-btn-primary px-4 py-2 text-sm font-medium text-white border border-transparent rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B82025] focus:ring-offset-2 civic-transition shadow-lg hover:shadow-xl"
+                className="px-6 py-3 text-base font-semibold text-white bg-gradient-to-r from-[#B82025] to-[#8B1A1F] border-2 border-transparent rounded-xl hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-[#B82025] focus:ring-offset-2 transition-all shadow-lg hover:scale-105 active:scale-100"
                 style={{ fontFamily: 'Inter, sans-serif' }}
               >
+                <ClipboardList className="w-5 h-5 inline-block mr-2" />
                 Buat Disposisi
               </button>
             </div>

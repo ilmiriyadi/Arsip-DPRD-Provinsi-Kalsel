@@ -8,7 +8,8 @@ import { authOptions } from './auth'
  */
 
 const CSRF_TOKEN_LENGTH = 32
-const CSRF_COOKIE_NAME = '__Host-csrf-token'
+// Use __Host- prefix only in production (requires HTTPS)
+const CSRF_COOKIE_NAME = process.env.NODE_ENV === 'production' ? '__Host-csrf-token' : 'csrf-token'
 const CSRF_HEADER_NAME = 'x-csrf-token'
 
 /**

@@ -97,7 +97,7 @@ export default function DetailDisposisiPage() {
       })
 
       if (response.ok) {
-        router.push('/dashboard/disposisi')
+        router.push('/arsip/disposisi')
       } else {
         alert('Gagal menghapus disposisi')
       }
@@ -128,10 +128,14 @@ export default function DetailDisposisiPage() {
 
   if (status === 'loading' || loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-[#F7F7F7] to-white flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Memuat...</p>
+          <div className="relative">
+            <div className="animate-spin rounded-full h-16 w-16 border-4 border-[#C8A348]/20 mx-auto"></div>
+            <div className="animate-spin rounded-full h-16 w-16 border-4 border-[#B82025] border-t-transparent absolute top-0 left-1/2 -ml-8"></div>
+          </div>
+          <p className="mt-6 text-[#1A1A1A] font-semibold text-lg" style={{ fontFamily: 'Inter, sans-serif' }}>Memuat detail disposisi...</p>
+          <p className="mt-2 text-[#737373] text-sm" style={{ fontFamily: 'Inter, sans-serif' }}>Mohon tunggu sebentar</p>
         </div>
       </div>
     )
@@ -141,10 +145,13 @@ export default function DetailDisposisiPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <ClipboardList className="mx-auto h-12 w-12 text-gray-400" />
-          <h3 className="mt-2 text-sm font-medium text-gray-900">{error}</h3>
+      <div className="min-h-screen bg-gradient-to-br from-[#F7F7F7] to-white flex items-center justify-center">
+        <div className="text-center px-4">
+          <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
+            <ClipboardList className="h-10 w-10 text-[#B82025]" />
+          </div>
+          <h3 className="text-2xl font-bold text-[#1A1A1A] mb-2" style={{ fontFamily: 'Merriweather, serif' }}>Terjadi Kesalahan</h3>
+          <p className="text-[#737373] mb-6" style={{ fontFamily: 'Inter, sans-serif' }}>{error}</p>
           <div className="mt-6">
             <Link
               href="/dashboard/disposisi"

@@ -84,7 +84,7 @@ export default function SuratTamuPage() {
         fetchData()
       }
     }
-  }, [session, debouncedQuery, pagination.page])
+  }, [session, debouncedQuery, pagination.page, pagination.limit])
 
   const handleClearSearch = () => {
     setQuery('')

@@ -2,10 +2,10 @@
 
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState, use } from 'react'
+import { useEffect, useState, use, useCallback } from 'react'
 import Link from 'next/link'
 import DashboardLayout from '@/components/layout/DashboardLayout'
-import { Save, X, ArrowLeft } from 'lucide-react'
+import { Save, X, ArrowLeft, Send, FileText } from 'lucide-react'
 import { csrfFetch } from '@/lib/csrfFetch'
 
 interface SuratKeluar {
@@ -76,14 +76,7 @@ export default function EditSuratKeluarPage({ params }: PageProps) {
     }
   }, [status, session, router])
 
-  useEffect(() => {
-    if (session && resolvedParams.id) {
-      fetchSuratData()
-      fetchSuratMasuk()
-    }
-  }, [session, resolvedParams.id])
-
-  const fetchSuratData = async () => {
+  const fetchSuratData = useCallback(async () => {
     try {
       setFetchLoading(true)
       const response = await csrfFetch(`/api/surat-keluar/${resolvedParams.id}`)
@@ -113,9 +106,9 @@ export default function EditSuratKeluarPage({ params }: PageProps) {
     } finally {
       setFetchLoading(false)
     }
-  }
+  }, [resolvedParams.id])
 
-  const fetchSuratMasuk = async () => {
+  const fetchSuratMasuk = useCallback(async () => {
     try {
       const response = await csrfFetch('/api/surat-masuk?limit=100')
       if (response.ok) {
@@ -125,7 +118,14 @@ export default function EditSuratKeluarPage({ params }: PageProps) {
     } catch (error) {
       console.error('Error fetching surat masuk:', error)
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    if (session && resolvedParams.id) {
+      fetchSuratData()
+      fetchSuratMasuk()
+    }
+  }, [session, resolvedParams.id, fetchSuratData, fetchSuratMasuk])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -175,7 +175,7 @@ export default function EditSuratKeluarPage({ params }: PageProps) {
       })
 
       if (response.ok) {
-        router.push('/dashboard/surat-keluar')
+        router.push('/arsip/surat-keluar')
       } else {
         const data = await response.json()
         setError(data.error || 'Terjadi kesalahan saat mengupdate surat keluar')
@@ -190,10 +190,14 @@ export default function EditSuratKeluarPage({ params }: PageProps) {
 
   if (status === 'loading' || fetchLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-[#F7F7F7] to-white flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Memuat...</p>
+          <div className="relative">
+            <div className="animate-spin rounded-full h-16 w-16 border-4 border-[#C8A348]/20 mx-auto"></div>
+            <div className="animate-spin rounded-full h-16 w-16 border-4 border-[#B82025] border-t-transparent absolute top-0 left-1/2 -ml-8"></div>
+          </div>
+          <p className="mt-6 text-[#1A1A1A] font-semibold text-lg" style={{ fontFamily: 'Inter, sans-serif' }}>Memuat data surat...</p>
+          <p className="mt-2 text-[#737373] text-sm" style={{ fontFamily: 'Inter, sans-serif' }}>Mohon tunggu sebentar</p>
         </div>
       </div>
     )
@@ -205,9 +209,13 @@ export default function EditSuratKeluarPage({ params }: PageProps) {
 
   if (error && !surat) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-red-600 text-lg font-medium">{error}</div>
+      <div className="min-h-screen bg-gradient-to-br from-[#F7F7F7] to-white flex items-center justify-center">
+        <div className="text-center px-4">
+          <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
+            <FileText className="h-10 w-10 text-[#B82025]" />
+          </div>
+          <h3 className="text-2xl font-bold text-[#1A1A1A] mb-2" style={{ fontFamily: 'Merriweather, serif' }}>Terjadi Kesalahan</h3>
+          <p className="text-[#737373] mb-6" style={{ fontFamily: 'Inter, sans-serif' }}>{error}</p>
           <div className="mt-4">
             <Link
               href="/dashboard/surat-keluar"
@@ -224,39 +232,71 @@ export default function EditSuratKeluarPage({ params }: PageProps) {
 
   return (
     <DashboardLayout>
-      <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <div className="flex items-center space-x-4">
-              <Link
-                href="/dashboard/surat-keluar"
-                className="text-gray-400 hover:text-gray-600"
-              >
-                <ArrowLeft className="h-6 w-6" />
+      <div className="min-h-screen bg-gradient-to-br from-[#F7F7F7] to-white">
+      {/* Header with Decorative Background */}
+      <div className="relative bg-gradient-to-r from-[#B82025] to-[#8B1A1F] shadow-lg overflow-hidden">
+        {/* Decorative Background Elements */}
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full -mr-32 -mt-32"></div>
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white opacity-5 rounded-full -ml-24 -mb-24"></div>
+        
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="py-8">
+            {/* Breadcrumb */}
+            <nav className="flex items-center space-x-2 text-sm mb-4">
+              <Link href="/arsip/dashboard" className="text-white/70 hover:text-white transition-colors" style={{ fontFamily: 'Inter, sans-serif' }}>
+                Dashboard
               </Link>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">Edit Surat Keluar</h1>
-                <p className="mt-1 text-sm text-gray-600">
-                  Edit informasi surat keluar yang sudah ada
-                </p>
+              <span className="text-white/50">/</span>
+              <Link href="/arsip/surat-keluar" className="text-white/70 hover:text-white transition-colors" style={{ fontFamily: 'Inter, sans-serif' }}>
+                Surat Keluar
+              </Link>
+              <span className="text-white/50">/</span>
+              <span className="text-white font-medium" style={{ fontFamily: 'Inter, sans-serif' }}>Edit</span>
+            </nav>
+
+            {/* Title Section */}
+            <div className="flex items-start justify-between">
+              <div className="flex items-center space-x-4">
+                {/* Icon Box */}
+                <div className="w-16 h-16 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center border border-white/20 shadow-lg">
+                  <Send className="w-8 h-8 text-white" />
+                </div>
+                
+                {/* Title and Description */}
+                <div>
+                  <h1 className="text-3xl font-bold text-white" style={{ fontFamily: 'Merriweather, serif' }}>
+                    Edit Surat Keluar
+                  </h1>
+                  <p className="mt-2 text-sm text-white/90" style={{ fontFamily: 'Inter, sans-serif' }}>
+                    Perbarui informasi surat keluar yang sudah ada di sistem
+                  </p>
+                </div>
               </div>
+
+              {/* Back Button */}
+              <Link
+                href="/arsip/surat-keluar"
+                className="inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl text-white hover:bg-white/20 transition-all shadow-lg hover:shadow-xl"
+                style={{ fontFamily: 'Inter, sans-serif' }}
+              >
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Kembali
+              </Link>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-white shadow rounded-lg">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="bg-white shadow-xl rounded-2xl border border-[#E3E3E3]">
           <form onSubmit={handleSubmit}>
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h3 className="text-lg font-medium text-gray-900">
+            <div className="px-6 py-3 border-b border-[#E3E3E3] bg-[#F7F7F7] rounded-t-2xl">
+              <h3 className="text-lg font-semibold text-[#1A1A1A]" style={{ fontFamily: 'Merriweather, serif' }}>
                 Informasi Surat Keluar
               </h3>
             </div>
 
-            <div className="p-6 space-y-6">
+            <div className="p-6 space-y-5">
               {error && (
                 <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md text-sm">
                   {error}

@@ -2,7 +2,7 @@
 
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import Link from 'next/link'
 import { csrfFetch } from '@/lib/csrfFetch'
 import { 
@@ -62,13 +62,7 @@ export default function ManajemenUserPage() {
     }
   }, [status, session, router])
 
-  useEffect(() => {
-    if (session && session.user.role === 'ADMIN') {
-      fetchUsers()
-    }
-  }, [session, pagination.page, searchTerm, roleFilter])
-
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     try {
       setLoading(true)
       const params = new URLSearchParams({
@@ -94,7 +88,13 @@ export default function ManajemenUserPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [pagination.page, pagination.limit, searchTerm, roleFilter])
+
+  useEffect(() => {
+    if (session && session.user.role === 'ADMIN') {
+      fetchUsers()
+    }
+  }, [session, fetchUsers])
 
   const handleDelete = async (id: string, userName: string) => {
     if (!confirm(`Apakah Anda yakin ingin menghapus user "${userName}"?\n\nTindakan ini tidak dapat dibatalkan.`)) {
@@ -136,7 +136,7 @@ export default function ManajemenUserPage() {
   const getRoleBadge = (role: string) => {
     if (role === 'ADMIN') {
       return (
-        <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
+        <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-[#B82025]/20 text-[#B82025]">
           <Crown className="h-3 w-3 mr-1" />
           Admin
         </span>

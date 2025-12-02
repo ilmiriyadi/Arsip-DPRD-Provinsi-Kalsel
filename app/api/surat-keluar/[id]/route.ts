@@ -69,7 +69,7 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  return withCsrfProtection(request, async (req) => {
+  return withCsrfProtection(request, async (_req) => {
   const { id } = await params
   try {
     const session = await getServerSession(authOptions)
@@ -169,7 +169,7 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  return withCsrfProtection(request, async (req) => {
+  return withCsrfProtection(request, async (_req) => {
   const { id } = await params
   try {
     const session = await getServerSession(authOptions)

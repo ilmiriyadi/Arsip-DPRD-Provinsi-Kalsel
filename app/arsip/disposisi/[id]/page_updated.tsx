@@ -126,7 +126,7 @@ export default function DetailDisposisiPage() {
     })
   }
 
-  const getStatusBadge = (status: string) => {
+  const getStatusBadge = () => {
     return (
       <span className="inline-flex items-center px-3 py-1 text-sm font-semibold rounded-full bg-green-100 text-green-800">
         <CheckCircle className="h-4 w-4 mr-1" />
@@ -137,10 +137,14 @@ export default function DetailDisposisiPage() {
 
   if (status === 'loading' || loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-[#F7F7F7] to-white flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Memuat...</p>
+          <div className="relative">
+            <div className="animate-spin rounded-full h-16 w-16 border-4 border-[#C8A348]/20 mx-auto"></div>
+            <div className="animate-spin rounded-full h-16 w-16 border-4 border-[#B82025] border-t-transparent absolute top-0 left-1/2 -ml-8"></div>
+          </div>
+          <p className="mt-6 text-[#1A1A1A] font-semibold text-lg" style={{ fontFamily: 'Inter, sans-serif' }}>Memuat detail disposisi...</p>
+          <p className="mt-2 text-[#737373] text-sm" style={{ fontFamily: 'Inter, sans-serif' }}>Mohon tunggu sebentar</p>
         </div>
       </div>
     )
@@ -286,7 +290,7 @@ export default function DetailDisposisiPage() {
                   <label className="block text-sm font-medium text-slate-800 mb-2">
                     Status
                   </label>
-                  {getStatusBadge(disposisi.status)}
+                  {getStatusBadge()}
                 </div>
               </div>
             </div>

@@ -63,7 +63,7 @@ export async function DELETE(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  return withCsrfProtection(req, async (request) => {
+  return withCsrfProtection(req, async (_request) => {
     try {
       const session = await getServerSession(authOptions)
       if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })

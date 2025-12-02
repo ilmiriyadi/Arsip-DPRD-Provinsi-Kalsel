@@ -29,16 +29,6 @@ interface SuratMasuk {
   keterangan?: string
 }
 
-interface SuratMasukResponse {
-  suratMasuk?: SuratMasuk[]
-  pagination?: {
-    total: number
-    page: number
-    limit: number
-    totalPages: number
-  }
-}
-
 export default function DashboardPage() {
   const { data: session, status } = useSession()
   const router = useRouter()
@@ -221,7 +211,7 @@ export default function DashboardPage() {
               </div>
               <div className="space-y-4">
                 <Link
-                  href="/dashboard/surat-masuk/add"
+                  href="/arsip/surat-masuk/add"
                   className="flex items-center p-4 bg-white border-2 border-[#E3E3E3] rounded-lg hover:border-[#B82025] civic-transition group"
                   style={{ fontFamily: 'Inter, sans-serif' }}
                 >
@@ -235,7 +225,7 @@ export default function DashboardPage() {
                 </Link>
 
                 <Link
-                  href="/dashboard/disposisi/add"
+                  href="/arsip/disposisi/add"
                   className="flex items-center p-4 bg-white border-2 border-[#E3E3E3] rounded-lg hover:border-[#1A1A1A] civic-transition group"
                   style={{ fontFamily: 'Inter, sans-serif' }}
                 >
@@ -249,7 +239,7 @@ export default function DashboardPage() {
                 </Link>
 
                 <Link
-                  href="/dashboard/surat-keluar/add"
+                  href="/arsip/surat-keluar/add"
                   className="flex items-center p-4 bg-white border-2 border-[#E3E3E3] rounded-lg hover:border-[#B82025] civic-transition group"
                   style={{ fontFamily: 'Inter, sans-serif' }}
                 >
@@ -263,7 +253,7 @@ export default function DashboardPage() {
                 </Link>
 
                 <Link
-                  href="/dashboard/surat-masuk"
+                  href="/arsip/surat-masuk"
                   className="flex items-center p-4 bg-white border-2 border-[#E3E3E3] rounded-lg hover:border-[#1A1A1A] civic-transition group"
                   style={{ fontFamily: 'Inter, sans-serif' }}
                 >
@@ -303,7 +293,7 @@ export default function DashboardPage() {
                         <p className="text-xs text-[#737373] mt-1">{formatDate(surat.tanggalSurat)}</p>
                       </div>
                       <Link
-                        href={`/dashboard/surat-masuk/${surat.id}`}
+                        href={`/arsip/surat-masuk/${surat.id}`}
                         className="p-2 text-[#737373] hover:text-[#B82025] civic-transition"
                       >
                         <Eye className="w-5 h-5" />
@@ -311,7 +301,7 @@ export default function DashboardPage() {
                     </div>
                   ))}
                   <Link
-                    href="/dashboard/surat-masuk"
+                    href="/arsip/surat-masuk"
                     className="block text-center text-sm text-[#B82025] hover:text-[#1A1A1A] font-semibold py-3 civic-transition"
                     style={{ fontFamily: 'Inter, sans-serif' }}
                   >
