@@ -23,11 +23,6 @@ const nextConfig: NextConfig = {
             key: "X-Frame-Options",
             value: "DENY",
           },
-          // XSS Protection
-          {
-            key: "X-XSS-Protection",
-            value: "1; mode=block",
-          },
           // Referrer Policy
           {
             key: "Referrer-Policy",
