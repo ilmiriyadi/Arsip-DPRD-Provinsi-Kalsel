@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@auth/core": "^0.35.3",
     "@auth/prisma-adapter": "^2.11.0",
     "@hookform/resolvers": "^5.2.2",
     "@prisma/client": "^6.17.0",
@@ -17,8 +18,8 @@
     "date-fns": "^4.1.0",
     "exceljs": "^4.4.0",
     "lucide-react": "^0.545.0",
-    "next": "15.5.4",
-    "next-auth": "^4.24.11",
+    "next": "latest",
+    "next-auth": "^5.0.0-beta.25",
     "prisma": "^6.17.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",
